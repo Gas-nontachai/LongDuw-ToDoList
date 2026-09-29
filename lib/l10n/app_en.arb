@@ -1,0 +1,36 @@
+{
+  "@@locale": "en",
+  "appTitle": "Todo List",
+  "addTodo": "Add todo",
+  "editTodo": "Edit todo",
+  "deleteTodoQuestion": "Delete todo?",
+  "removeTodoConfirmation": "Remove \"{title}\"?",
+  "@removeTodoConfirmation": {
+    "description": "Confirmation message shown before deleting a todo.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "save": "Save",
+  "title": "Title",
+  "enterTitle": "Enter a title",
+  "noTodosYet": "No todos yet. Add one!",
+  "retry": "Retry",
+  "couldNotLoadTodos": "Could not load todos.",
+  "todoAdded": "Todo added",
+  "todoUpdated": "Todo updated",
+  "todoDeleted": "Todo deleted",
+  "savingData": "Saving...",
+  "somethingWentWrong": "Something went wrong. Please try again.",
+  "addTodoTooltip": "Add todo",
+  "editTooltip": "Edit",
+  "deleteTooltip": "Delete",
+  "dismissTooltip": "Dismiss",
+  "changeLanguage": "Change language",
+  "english": "English",
+  "thai": "ไทย"
+}

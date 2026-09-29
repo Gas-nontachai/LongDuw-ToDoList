@@ -1,0 +1,36 @@
+{
+  "@@locale": "th",
+  "appTitle": "รายการสิ่งที่ต้องทำ",
+  "addTodo": "เพิ่มรายการ",
+  "editTodo": "แก้ไขรายการ",
+  "deleteTodoQuestion": "ลบรายการนี้หรือไม่?",
+  "removeTodoConfirmation": "ต้องการลบ \"{title}\" หรือไม่?",
+  "@removeTodoConfirmation": {
+    "description": "ข้อความยืนยันก่อนลบรายการ",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "ยกเลิก",
+  "delete": "ลบ",
+  "save": "บันทึก",
+  "title": "ชื่อรายการ",
+  "enterTitle": "กรุณาใส่ชื่อรายการ",
+  "noTodosYet": "ยังไม่มีรายการ เพิ่มรายการแรกเลย!",
+  "retry": "ลองใหม่",
+  "couldNotLoadTodos": "ไม่สามารถโหลดรายการได้",
+  "todoAdded": "เพิ่มรายการแล้ว",
+  "todoUpdated": "อัปเดตรายการแล้ว",
+  "todoDeleted": "ลบรายการแล้ว",
+  "savingData": "กำลังบันทึกข้อมูล...",
+  "somethingWentWrong": "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+  "addTodoTooltip": "เพิ่มรายการ",
+  "editTooltip": "แก้ไข",
+  "deleteTooltip": "ลบ",
+  "dismissTooltip": "ปิด",
+  "changeLanguage": "เปลี่ยนภาษา",
+  "english": "English",
+  "thai": "ไทย"
+}
