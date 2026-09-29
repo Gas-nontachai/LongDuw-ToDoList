@@ -152,11 +152,23 @@ abstract class AppLocalizations {
   /// **'Title'**
   String get title;
 
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
   /// No description provided for @enterTitle.
   ///
   /// In en, this message translates to:
   /// **'Enter a title'**
   String get enterTitle;
+
+  /// No description provided for @enterDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter details'**
+  String get enterDetails;
 
   /// No description provided for @status.
   ///

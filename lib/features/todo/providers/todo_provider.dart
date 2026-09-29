@@ -49,11 +49,11 @@ class TodoNotifier extends AsyncNotifier<List<Todo>> {
     state = await AsyncValue.guard(_service.getTodos);
   }
 
-  Future<void> addTodo(String title) async {
+  Future<void> addTodo(String title, String details) async {
     final operations = ref.read(todoOperationProvider.notifier);
     operations.setCreating(true);
     try {
-      final created = await _service.createTodo(title);
+      final created = await _service.createTodo(title, details);
       state = AsyncData([...state.value ?? [], created]);
     } finally {
       operations.setCreating(false);

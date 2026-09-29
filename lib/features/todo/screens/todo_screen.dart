@@ -18,11 +18,13 @@ class TodoScreen extends ConsumerWidget {
 
   Future<void> _addTodo(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context)!;
-    final title = await showTodoForm(context);
-    if (title == null || !context.mounted) return;
+    final formData = await showTodoForm(context);
+    if (formData == null || !context.mounted) return;
     await _runOperation(
       context,
-      () => ref.read(todoProvider.notifier).addTodo(title),
+      () => ref
+          .read(todoProvider.notifier)
+          .addTodo(formData.title, formData.details),
       l10n.todoAdded,
     );
   }
@@ -37,13 +39,15 @@ class TodoScreen extends ConsumerWidget {
 
   Future<void> _editTodo(BuildContext context, WidgetRef ref, Todo todo) async {
     final l10n = AppLocalizations.of(context)!;
-    final title = await showTodoForm(context, todo: todo);
-    if (title == null || !context.mounted) return;
+    final formData = await showTodoForm(context, todo: todo);
+    if (formData == null || !context.mounted) return;
     await _runOperation(
       context,
       () => ref
           .read(todoProvider.notifier)
-          .updateTodo(todo.copyWith(title: title)),
+          .updateTodo(
+            todo.copyWith(title: formData.title, details: formData.details),
+          ),
       l10n.todoUpdated,
     );
   }

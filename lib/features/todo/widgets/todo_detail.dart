@@ -30,6 +30,7 @@ class TodoDetailDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(todo.details, style: theme.textTheme.bodyLarge),
           const SizedBox(height: 16),
           Row(
             mainAxisSize: MainAxisSize.min,

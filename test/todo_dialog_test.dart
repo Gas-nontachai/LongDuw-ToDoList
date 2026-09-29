@@ -14,8 +14,8 @@ class FakeTodoService extends TodoService {
   Future<List<Todo>> getTodos() async => const [];
 
   @override
-  Future<Todo> createTodo(String title) async =>
-      Todo(id: '1', title: title, completed: false);
+  Future<Todo> createTodo(String title, String details) async =>
+      Todo(id: '1', title: title, details: details, completed: false);
 }
 
 void main() {
@@ -31,7 +31,9 @@ void main() {
     await tester.pump();
     await tester.tap(find.byTooltip('Add todo'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), 'Test todo');
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), 'Test todo');
+    await tester.enterText(fields.at(1), 'Test details');
     await tester.tap(find.widgetWithText(FilledButton, 'Add todo'));
     await tester.pumpAndSettle();
 

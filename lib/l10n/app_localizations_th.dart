@@ -39,7 +39,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String get title => 'ชื่อรายการ';
 
   @override
+  String get details => 'รายละเอียด';
+
+  @override
   String get enterTitle => 'กรุณาใส่ชื่อรายการ';
+
+  @override
+  String get enterDetails => 'กรุณาใส่รายละเอียด';
 
   @override
   String get status => 'สถานะ';

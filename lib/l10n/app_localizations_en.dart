@@ -39,7 +39,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get title => 'Title';
 
   @override
+  String get details => 'Details';
+
+  @override
   String get enterTitle => 'Enter a title';
+
+  @override
+  String get enterDetails => 'Enter details';
 
   @override
   String get status => 'Status';
