@@ -8,6 +8,7 @@ import '../../../shared/widgets/app_toast.dart';
 import '../models/todo.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/todo_form.dart';
+import '../widgets/todo_detail.dart';
 import '../widgets/todo_item.dart';
 
 class TodoScreen extends ConsumerWidget {
@@ -24,6 +25,14 @@ class TodoScreen extends ConsumerWidget {
       () => ref.read(todoProvider.notifier).addTodo(title),
       l10n.todoAdded,
     );
+  }
+
+  Future<void> _getTodoById(
+    BuildContext context,
+    WidgetRef ref,
+    Todo todo,
+  ) async {
+    await showTodoDetail(context, todo: todo);
   }
 
   Future<void> _editTodo(BuildContext context, WidgetRef ref, Todo todo) async {
@@ -182,6 +191,7 @@ class TodoScreen extends ConsumerWidget {
                       return TodoItem(
                         todo: todo,
                         isBusy: operations.busyIds.contains(todo.id),
+                        onClick: () => _getTodoById(context, ref, todo),
                         onToggle: () => _runOperation(
                           context,
                           () =>

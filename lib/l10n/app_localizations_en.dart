@@ -42,6 +42,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterTitle => 'Enter a title';
 
   @override
+  String get status => 'Status';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get incomplete => 'Incomplete';
+
+  @override
   String get noTodosYet => 'No todos yet. Add one!';
 
   @override

@@ -17,6 +17,14 @@ class TodoService {
         .toList();
   }
 
+ Future<Todo> getTodoById(String id) async {
+    final response = await _apiClient.get('/todos/$id');
+    if (response.data is! Map) {
+      throw const FormatException('The API returned an invalid todo.');
+    }
+    return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
+  }
+
   Future<Todo> createTodo(String title) async {
     final response = await _apiClient.post(
       '/todos',

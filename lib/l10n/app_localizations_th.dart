@@ -42,6 +42,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get enterTitle => 'กรุณาใส่ชื่อรายการ';
 
   @override
+  String get status => 'สถานะ';
+
+  @override
+  String get completed => 'เสร็จแล้ว';
+
+  @override
+  String get incomplete => 'ยังไม่เสร็จ';
+
+  @override
   String get noTodosYet => 'ยังไม่มีรายการ เพิ่มรายการแรกเลย!';
 
   @override

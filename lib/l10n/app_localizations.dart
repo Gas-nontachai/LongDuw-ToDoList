@@ -158,6 +158,24 @@ abstract class AppLocalizations {
   /// **'Enter a title'**
   String get enterTitle;
 
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @incomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Incomplete'**
+  String get incomplete;
+
   /// No description provided for @noTodosYet.
   ///
   /// In en, this message translates to:

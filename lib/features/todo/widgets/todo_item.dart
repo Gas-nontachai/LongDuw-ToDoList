@@ -5,6 +5,7 @@ import '../models/todo.dart';
 
 class TodoItem extends StatelessWidget {
   const TodoItem({
+    required this.onClick,
     required this.todo,
     required this.isBusy,
     required this.onToggle,
@@ -17,6 +18,7 @@ class TodoItem extends StatelessWidget {
   final VoidCallback onToggle;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class TodoItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       child: ListTile(
+        onTap: onClick,
         leading: Checkbox(
           value: todo.completed,
           onChanged: isBusy ? null : (_) => onToggle(),
