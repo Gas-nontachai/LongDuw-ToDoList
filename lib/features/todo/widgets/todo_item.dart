@@ -7,6 +7,7 @@ class TodoItem extends StatelessWidget {
   const TodoItem({
     required this.onClick,
     required this.todo,
+    required this.itemNumber,
     required this.isBusy,
     required this.onToggle,
     required this.onEdit,
@@ -14,6 +15,7 @@ class TodoItem extends StatelessWidget {
     super.key,
   });
   final Todo todo;
+  final int itemNumber;
   final bool isBusy;
   final VoidCallback onToggle;
   final VoidCallback onEdit;
@@ -27,9 +29,21 @@ class TodoItem extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: onClick,
-        leading: Checkbox(
-          value: todo.completed,
-          onChanged: isBusy ? null : (_) => onToggle(),
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 28,
+              child: Text(
+                '#$itemNumber',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ),
+            Checkbox(
+              value: todo.completed,
+              onChanged: isBusy ? null : (_) => onToggle(),
+            ),
+          ],
         ),
         title: Text(
           todo.title,
