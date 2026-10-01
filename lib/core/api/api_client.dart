@@ -1,12 +1,25 @@
 import 'package:dio/dio.dart';
 
 class ApiClient {
+  static String get baseUrl {
+    const value = String.fromEnvironment('API_BASE_URL');
+
+    if (value.isEmpty) {
+      throw StateError(
+        'API_BASE_URL is not configured. '
+        'Run Flutter with --dart-define-from-file=config/dev.json.',
+      );
+    }
+
+    return value;
+  }
+
   ApiClient({Dio? dio})
     : _dio =
           dio ??
           Dio(
             BaseOptions(
-              baseUrl: 'https://6abb3f05b2118ed7abb80bda.mockapi.io/api/v1',
+              baseUrl: baseUrl,
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 10),
               headers: {'Content-Type': 'application/json'},

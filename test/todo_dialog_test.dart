@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +9,7 @@ import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart'
 import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
 
 class FakeTodoService extends TodoService {
-  FakeTodoService() : super(ApiClient());
+  FakeTodoService() : super(ApiClient(dio: Dio()));
 
   @override
   Future<List<Todo>> getTodos() async => const [];

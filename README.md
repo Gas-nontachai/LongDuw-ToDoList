@@ -2,6 +2,30 @@
 
 A new Flutter project.
 
+## Run with environment config
+
+The API base URL is required and read from the `API_BASE_URL` compile-time
+define. There is no fallback URL in the application code.
+
+คัดลอก `config/dev.example.json` เป็น `config/dev.json` แล้วใส่ค่า environment
+ที่ต้องการก่อนรัน โปรเจกต์จะไม่ commit ไฟล์ `config/*.json` จริงลง Git
+
+```bash
+flutter run --dart-define-from-file=config/dev.json
+```
+
+ใน VS Code ให้เปิด Run and Debug แล้วเลือก `Flutter (dev)` หรือ
+`Flutter (dev): Chrome` จากไฟล์ `.vscode/launch.json`
+
+For another environment, create a JSON file with the same key and pass it to
+`--dart-define-from-file`:
+
+```json
+{
+  "API_BASE_URL": "https://example.com/api/v1"
+}
+```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
