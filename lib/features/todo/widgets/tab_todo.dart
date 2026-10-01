@@ -28,37 +28,42 @@ class TabBarTodo extends StatelessWidget {
     return DefaultTabController(
       initialIndex: 1,
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: [
-              Tab(icon: const Icon(Icons.check), text: l10n.completed),
-              Tab(icon: const Icon(Icons.close), text: l10n.incomplete),
-            ],
+      child: Column(
+        children: [
+          Material(
+            color: Theme.of(context).colorScheme.surface,
+            child: TabBar(
+              tabs: [
+                Tab(icon: const Icon(Icons.check), text: l10n.completed),
+                Tab(icon: const Icon(Icons.close), text: l10n.incomplete),
+              ],
+            ),
           ),
-        ),
-        body: TabBarView(
-          children: [
-            TodoList(
-              todos: todos,
-              showCompleted: true,
-              busyIds: busyIds,
-              onTodoTap: onTodoTap,
-              onToggle: onToggle,
-              onEdit: onEdit,
-              onDelete: onDelete,
+          Expanded(
+            child: TabBarView(
+              children: [
+                TodoList(
+                  todos: todos,
+                  showCompleted: true,
+                  busyIds: busyIds,
+                  onTodoTap: onTodoTap,
+                  onToggle: onToggle,
+                  onEdit: onEdit,
+                  onDelete: onDelete,
+                ),
+                TodoList(
+                  todos: todos,
+                  showCompleted: false,
+                  busyIds: busyIds,
+                  onTodoTap: onTodoTap,
+                  onToggle: onToggle,
+                  onEdit: onEdit,
+                  onDelete: onDelete,
+                ),
+              ],
             ),
-            TodoList(
-              todos: todos,
-              showCompleted: false,
-              busyIds: busyIds,
-              onTodoTap: onTodoTap,
-              onToggle: onToggle,
-              onEdit: onEdit,
-              onDelete: onDelete,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

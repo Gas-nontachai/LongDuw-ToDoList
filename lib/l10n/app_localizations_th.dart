@@ -48,6 +48,12 @@ class AppLocalizationsTh extends AppLocalizations {
   String get enterDetails => 'กรุณาใส่รายละเอียด';
 
   @override
+  String get searchTodosHint => 'พิมพ์คำค้นหา';
+
+  @override
+  String get clearSearchTooltip => 'ล้างคำค้นหา';
+
+  @override
   String get status => 'สถานะ';
 
   @override

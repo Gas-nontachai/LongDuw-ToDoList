@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/debouncer.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_error.dart';
 import '../../../shared/widgets/app_loading.dart';
@@ -11,10 +12,44 @@ import '../widgets/todo_form.dart';
 import '../widgets/todo_detail.dart';
 import '../widgets/tab_todo.dart';
 
-class TodoScreen extends ConsumerWidget {
+class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({required this.onLocaleChanged, super.key});
 
   final ValueChanged<Locale> onLocaleChanged;
+
+  @override
+  ConsumerState<TodoScreen> createState() => _TodoScreenState();
+}
+
+class _TodoScreenState extends ConsumerState<TodoScreen> {
+  final _searchDebouncer = Debouncer();
+  final _searchController = TextEditingController();
+  String _searchInput = '';
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchDebouncer.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String value) {
+    setState(() => _searchInput = value);
+    _searchDebouncer.run(() {
+      if (!mounted) return;
+      setState(() => _searchQuery = value.trim().toLowerCase());
+    });
+  }
+
+  List<Todo> _filterTodos(List<Todo> todos) {
+    if (_searchQuery.isEmpty) return todos;
+
+    return todos.where((todo) {
+      return todo.title.toLowerCase().contains(_searchQuery) ||
+          todo.details.toLowerCase().contains(_searchQuery);
+    }).toList();
+  }
 
   Future<void> _addTodo(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context)!;
@@ -147,7 +182,7 @@ class TodoScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final todos = ref.watch(todoProvider);
     final operations = ref.watch(todoOperationProvider);
@@ -158,7 +193,7 @@ class TodoScreen extends ConsumerWidget {
           PopupMenuButton<Locale>(
             tooltip: l10n.changeLanguage,
             icon: const Icon(Icons.language),
-            onSelected: onLocaleChanged,
+            onSelected: widget.onLocaleChanged,
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: const Locale('en'),
@@ -175,19 +210,45 @@ class TodoScreen extends ConsumerWidget {
           onRetry: () => ref.read(todoProvider.notifier).refreshTodos(),
         ),
         data: (items) {
+          final filteredItems = _filterTodos(items);
           return RefreshIndicator(
             onRefresh: ref.read(todoProvider.notifier).refreshTodos,
-            child: TabBarTodo(
-              todos: items,
-              busyIds: operations.busyIds,
-              onTodoTap: (todo) => _getTodoById(context, ref, todo),
-              onToggle: (todo) => _runOperation(
-                context,
-                () => ref.read(todoProvider.notifier).toggleTodo(todo),
-                l10n.todoUpdated,
-              ),
-              onEdit: (todo) => _editTodo(context, ref, todo),
-              onDelete: (todo) => _deleteTodo(context, ref, todo),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: _onSearchChanged,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                      hintText: l10n.searchTodosHint,
+                      suffixIcon: _searchInput.isEmpty
+                          ? null
+                          : IconButton(
+                              tooltip: l10n.clearSearchTooltip,
+                              icon: const Icon(Icons.clear),
+                              onPressed: _searchController.clear,
+                            ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarTodo(
+                    todos: filteredItems,
+                    busyIds: operations.busyIds,
+                    onTodoTap: (todo) => _getTodoById(context, ref, todo),
+                    onToggle: (todo) => _runOperation(
+                      context,
+                      () => ref.read(todoProvider.notifier).toggleTodo(todo),
+                      l10n.todoUpdated,
+                    ),
+                    onEdit: (todo) => _editTodo(context, ref, todo),
+                    onDelete: (todo) => _deleteTodo(context, ref, todo),
+                  ),
+                ),
+              ],
             ),
           );
         },

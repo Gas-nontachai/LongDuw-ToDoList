@@ -170,6 +170,18 @@ abstract class AppLocalizations {
   /// **'Enter details'**
   String get enterDetails;
 
+  /// No description provided for @searchTodosHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a search term'**
+  String get searchTodosHint;
+
+  /// No description provided for @clearSearchTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearchTooltip;
+
   /// No description provided for @status.
   ///
   /// In en, this message translates to:

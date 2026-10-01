@@ -20,6 +20,8 @@
   "details": "Details",
   "enterTitle": "Enter a title",
   "enterDetails": "Enter details",
+  "searchTodosHint": "Enter a search term",
+  "clearSearchTooltip": "Clear search",
   "status": "Status",
   "completed": "Completed",
   "incomplete": "Incomplete",

@@ -20,6 +20,8 @@
   "details": "รายละเอียด",
   "enterTitle": "กรุณาใส่ชื่อรายการ",
   "enterDetails": "กรุณาใส่รายละเอียด",
+  "searchTodosHint": "พิมพ์คำค้นหา",
+  "clearSearchTooltip": "ล้างคำค้นหา",
   "status": "สถานะ",
   "completed": "เสร็จแล้ว",
   "incomplete": "ยังไม่เสร็จ",

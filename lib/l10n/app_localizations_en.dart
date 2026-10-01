@@ -48,6 +48,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterDetails => 'Enter details';
 
   @override
+  String get searchTodosHint => 'Enter a search term';
+
+  @override
+  String get clearSearchTooltip => 'Clear search';
+
+  @override
   String get status => 'Status';
 
   @override
