@@ -9,7 +9,7 @@ import '../models/todo.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/todo_form.dart';
 import '../widgets/todo_detail.dart';
-import '../widgets/todo_item.dart';
+import '../widgets/tab_todo.dart';
 
 class TodoScreen extends ConsumerWidget {
   const TodoScreen({required this.onLocaleChanged, super.key});
@@ -177,36 +177,18 @@ class TodoScreen extends ConsumerWidget {
         data: (items) {
           return RefreshIndicator(
             onRefresh: ref.read(todoProvider.notifier).refreshTodos,
-            child: items.isEmpty
-                ? ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
-                      SizedBox(
-                        height: 300,
-                        child: Center(child: Text(l10n.noTodosYet)),
-                      ),
-                    ],
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      final todo = items[index];
-                      return TodoItem(
-                        todo: todo,
-                        isBusy: operations.busyIds.contains(todo.id),
-                        onClick: () => _getTodoById(context, ref, todo),
-                        onToggle: () => _runOperation(
-                          context,
-                          () =>
-                              ref.read(todoProvider.notifier).toggleTodo(todo),
-                          l10n.todoUpdated,
-                        ),
-                        onEdit: () => _editTodo(context, ref, todo),
-                        onDelete: () => _deleteTodo(context, ref, todo),
-                      );
-                    },
-                  ),
+            child: TabBarTodo(
+              todos: items,
+              busyIds: operations.busyIds,
+              onTodoTap: (todo) => _getTodoById(context, ref, todo),
+              onToggle: (todo) => _runOperation(
+                context,
+                () => ref.read(todoProvider.notifier).toggleTodo(todo),
+                l10n.todoUpdated,
+              ),
+              onEdit: (todo) => _editTodo(context, ref, todo),
+              onDelete: (todo) => _deleteTodo(context, ref, todo),
+            ),
           );
         },
       ),
