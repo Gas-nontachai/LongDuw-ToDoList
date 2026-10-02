@@ -136,10 +136,11 @@ void main() {
       expect(createdLabel.dy, closeTo(dueLabel.dy, 1));
       expect(createdLabel.dx, greaterThan(dueLabel.dx));
       if (width >= 520) {
-        expect(
-          tester.getRect(find.byType(TodoPriorityBadge)).right,
-          closeTo(bounds.right - 24, 1),
-        );
+        final menuBounds = tester.getRect(find.byTooltip('More actions'));
+        final badgeBounds = tester.getRect(find.byType(TodoPriorityBadge));
+        expect(menuBounds.right, closeTo(bounds.right - 24, 1));
+        expect(menuBounds.left - badgeBounds.right, closeTo(8, 1));
+        expect(menuBounds.center.dy, closeTo(badgeBounds.center.dy, 1));
         expect(createdLabel.dy, closeTo(dueLabel.dy, 1));
         expect(createdLabel.dx, greaterThan(dueLabel.dx));
         expect(

@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icon_assets.dart';
 import '../../../shared/widgets/app_icon.dart';
 import '../models/todo.dart';
+import 'todo_actions_menu.dart';
 import 'todo_priority_badge.dart';
 
 enum TodoDetailAction { edit, delete }
@@ -190,19 +191,6 @@ class TodoDetailSheet extends StatelessWidget {
         );
         return AppExpandableSheet(
           showCloseButton: false,
-          headerActions: [
-            IconButton(
-              tooltip: l10n.editTooltip,
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () => Navigator.of(context).pop(TodoDetailAction.edit),
-            ),
-            IconButton(
-              tooltip: l10n.deleteTooltip,
-              icon: Icon(Icons.delete_outline, color: colors.error),
-              onPressed: () =>
-                  Navigator.of(context).pop(TodoDetailAction.delete),
-            ),
-          ],
           body: SizedBox(
             width: double.maxFinite,
             child: Column(
@@ -222,7 +210,9 @@ class TodoDetailSheet extends StatelessWidget {
                         textWidth(statusLabel, statusStyle) +
                         24 +
                         8 +
-                        priorityWidth;
+                        priorityWidth +
+                        8 +
+                        48;
                     final compact = fullWidth > headerConstraints.maxWidth;
                     final heading = Row(
                       mainAxisSize: MainAxisSize.min,
@@ -255,11 +245,19 @@ class TodoDetailSheet extends StatelessWidget {
                           )
                         else
                           Text(priorityLabel, style: labelStyle),
+                        const SizedBox(width: 8),
+                        TodoActionsMenu(
+                          onEdit: () =>
+                              Navigator.of(context).pop(TodoDetailAction.edit),
+                          onDelete: () =>
+                              Navigator.of(context)
+                                  .pop(TodoDetailAction.delete),
+                        ),
                       ],
                     );
                     // Give enlarged text its own row when even icons won't fit.
                     if (compact &&
-                        headingWidth + 62 > headerConstraints.maxWidth) {
+                        headingWidth + 118 > headerConstraints.maxWidth) {
                       return Wrap(
                         spacing: 16,
                         runSpacing: 8,

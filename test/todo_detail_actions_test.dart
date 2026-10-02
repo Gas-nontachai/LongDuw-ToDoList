@@ -63,7 +63,14 @@ void main() {
         )!;
         await tester.tap(find.text('Original task'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip(l10n.editTooltip));
+        await tester.tap(
+          find.descendant(
+            of: find.byType(TodoDetailSheet),
+            matching: find.byTooltip(l10n.moreActions),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(MenuItemButton, l10n.editTooltip));
         await tester.pumpAndSettle();
         expect(find.byType(TodoDetailSheet), findsNothing);
         expect(find.byType(TodoFormSheet), findsOneWidget);
@@ -80,7 +87,16 @@ void main() {
 
         await tester.tap(find.text('Updated task'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip(l10n.deleteTooltip));
+        await tester.tap(
+          find.descendant(
+            of: find.byType(TodoDetailSheet),
+            matching: find.byTooltip(l10n.moreActions),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(MenuItemButton, l10n.deleteTooltip),
+        );
         await tester.pumpAndSettle();
         expect(
           find.text(l10n.removeTodoConfirmation('Updated task')),
@@ -94,7 +110,16 @@ void main() {
 
         await tester.tap(find.text('Updated task'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip(l10n.deleteTooltip));
+        await tester.tap(
+          find.descendant(
+            of: find.byType(TodoDetailSheet),
+            matching: find.byTooltip(l10n.moreActions),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(MenuItemButton, l10n.deleteTooltip),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.widgetWithText(FilledButton, l10n.delete));
         await tester.pumpAndSettle();

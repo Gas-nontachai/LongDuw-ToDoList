@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../core/config/priority_config.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../shared/design/app_icons.dart';
 import '../models/todo.dart';
 import '../models/todo_due_status.dart';
+import 'todo_actions_menu.dart';
 import 'todo_priority_badge.dart';
 
 class TodoItem extends StatefulWidget {
@@ -77,41 +77,14 @@ class _TodoItemState extends State<TodoItem> {
     final dueLabel = remainingLabel == null
         ? dateLabel
         : '$dateLabel · $remainingLabel';
-    return MenuAnchor(
+    return TodoActionsMenu(
+      enabled: !widget.isBusy,
+      onView: widget.onClick,
+      onEdit: widget.onEdit,
+      onDelete: widget.onDelete,
       onOpen: () => setState(() => _menuOpen = true),
       onClose: () => setState(() => _menuOpen = false),
-      style: MenuStyle(
-        alignment: Alignment.topRight,
-        backgroundColor: WidgetStatePropertyAll(colors.surface),
-        elevation: const WidgetStatePropertyAll(12),
-        padding: const WidgetStatePropertyAll(EdgeInsets.all(8)),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        ),
-      ),
-      menuChildren: [
-        MenuItemButton(
-          leadingIcon: const Icon(CupertinoIcons.eye),
-          onPressed: widget.onClick,
-          child: Text(l10n.viewTodo),
-        ),
-        const Divider(height: 1),
-        MenuItemButton(
-          leadingIcon: const Icon(AppIcons.edit),
-          onPressed: widget.onEdit,
-          child: Text(l10n.editTooltip),
-        ),
-        const Divider(height: 1),
-        MenuItemButton(
-          leadingIcon: Icon(AppIcons.delete, color: colors.error),
-          onPressed: widget.onDelete,
-          child: Text(
-            l10n.deleteTooltip,
-            style: TextStyle(color: colors.error),
-          ),
-        ),
-      ],
-      builder: (context, controller, child) => Material(
+      builder: (context, toggleMenu) => Material(
         color: _menuOpen ? colors.surfaceContainerLow : Colors.transparent,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
@@ -157,6 +130,8 @@ class _TodoItemState extends State<TodoItem> {
                           Expanded(
                             child: Text(
                               dueLabel,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: dueColor, fontSize: 14),
                             ),
                           ),
@@ -173,15 +148,7 @@ class _TodoItemState extends State<TodoItem> {
                   tooltip: l10n.moreActions,
                   icon: const Icon(Icons.more_vert),
                   color: muted,
-                  onPressed: widget.isBusy
-                      ? null
-                      : () {
-                          if (controller.isOpen) {
-                            controller.close();
-                          } else {
-                            controller.open();
-                          }
-                        },
+                  onPressed: toggleMenu,
                 ),
                 const SizedBox(width: 8),
               ],

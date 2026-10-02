@@ -97,7 +97,10 @@ void main() {
             color,
           );
           if (suffix != null) {
-            expect(tester.getSize(find.text(label)).height, greaterThan(22));
+            expect(
+              tester.getSize(find.text(label)).height,
+              lessThanOrEqualTo(22),
+            );
           }
           if (language == 'en') {
             expect(l10n.daysRemaining(1), '1 day remaining');
