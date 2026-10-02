@@ -3,25 +3,52 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../features/todo/screens/todo_screen.dart';
 import '../l10n/app_localizations.dart';
+import 'app_preferences.dart';
 import 'theme.dart';
 
 class TodoApp extends StatefulWidget {
-  const TodoApp({super.key});
+  const TodoApp({super.key, required this.preferences});
+
+  final AppPreferences preferences;
 
   @override
   State<TodoApp> createState() => _TodoAppState();
 }
 
 class _TodoAppState extends State<TodoApp> {
-  Locale? _locale;
-  ThemeMode _themeMode = ThemeMode.system;
+  late Locale? _locale;
+  late ThemeMode _themeMode;
 
-  void _changeLocale(Locale locale) {
-    setState(() => _locale = locale);
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.preferences.locale;
+    _themeMode = widget.preferences.themeMode;
   }
 
-  void _changeThemeMode(ThemeMode mode) {
+  Future<void> _changeLocale(Locale locale) async {
+    setState(() => _locale = locale);
+    await _savePreference(() => widget.preferences.saveLocale(locale));
+  }
+
+  Future<void> _changeThemeMode(ThemeMode mode) async {
     setState(() => _themeMode = mode);
+    await _savePreference(() => widget.preferences.saveThemeMode(mode));
+  }
+
+  Future<void> _savePreference(Future<void> Function() save) async {
+    try {
+      await save();
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'app preferences',
+          context: ErrorDescription('while saving an app preference'),
+        ),
+      );
+    }
   }
 
   @override

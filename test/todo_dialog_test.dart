@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/app/app.dart';
+import 'package:my_first_flutter_app/app/app_preferences.dart';
 import 'package:my_first_flutter_app/app/theme.dart';
 import 'package:my_first_flutter_app/core/api/api_client.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
@@ -10,6 +11,8 @@ import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart'
 import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_form.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 class FakeTodoService extends TodoService {
   FakeTodoService() : super(ApiClient(dio: Dio()));
@@ -23,6 +26,11 @@ class FakeTodoService extends TodoService {
 }
 
 void main() {
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+  });
+
   testWidgets('theme follows the system and can switch beside language', (
     tester,
   ) async {
@@ -33,7 +41,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: const TodoApp(),
+        child: TodoApp(preferences: await AppPreferences.load()),
       ),
     );
     await tester.pumpAndSettle();
@@ -83,6 +91,22 @@ void main() {
     await tester.tap(find.text('ยกเลิก'));
     await tester.pumpAndSettle();
     expect(find.text('draft'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    // Recreate the app and its preferences cache to simulate a fresh launch.
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
+        child: TodoApp(preferences: await AppPreferences.load()),
+      ),
+    );
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.themeMode, ThemeMode.dark);
+    expect(app.locale, const Locale('th'));
+    await tester.pumpAndSettle();
+    expect(screenBrightness(), Brightness.dark);
+    expect(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -148,7 +172,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(),
+        child: TodoApp(preferences: await AppPreferences.load()),
       ),
     );
     await tester.pump();
