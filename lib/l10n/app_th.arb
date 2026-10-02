@@ -23,6 +23,7 @@
   "searchTodosHint": "พิมพ์คำค้นหา",
   "clearSearchTooltip": "ล้างคำค้นหา",
   "status": "สถานะ",
+  "all": "ทั้งหมด",
   "completed": "เสร็จแล้ว",
   "incomplete": "ยังไม่เสร็จ",
   "noTodosYet": "ยังไม่มีรายการ เพิ่มรายการแรกเลย!",

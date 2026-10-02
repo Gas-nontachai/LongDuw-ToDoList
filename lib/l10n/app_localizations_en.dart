@@ -57,6 +57,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get status => 'Status';
 
   @override
+  String get all => 'All';
+
+  @override
   String get completed => 'Completed';
 
   @override

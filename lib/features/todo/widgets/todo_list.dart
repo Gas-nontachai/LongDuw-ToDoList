@@ -18,7 +18,9 @@ class TodoList extends StatefulWidget {
   });
 
   final List<Todo> todos;
-  final bool showCompleted;
+
+  /// Null shows all todos; otherwise filters by completion status.
+  final bool? showCompleted;
   final Set<String> busyIds;
   final ValueChanged<Todo> onTodoTap;
   final ValueChanged<Todo> onToggle;
@@ -35,11 +37,11 @@ class _TodoListState extends State<TodoList> {
   var _currentPage = 1;
   String? _itemsSignature;
 
-  String _signature(List<Todo> todos, bool showCompleted) {
+  String _signature(List<Todo> todos, bool? showCompleted) {
     return [
       showCompleted,
       for (final todo in todos)
-        if (todo.completed == showCompleted)
+        if (showCompleted == null || todo.completed == showCompleted)
           '${todo.id}:${todo.completed}:${todo.title}:${todo.details}',
     ].join('|');
   }
@@ -68,7 +70,11 @@ class _TodoListState extends State<TodoList> {
     }
 
     final filteredTodos = widget.todos
-        .where((todo) => todo.completed == widget.showCompleted)
+        .where(
+          (todo) =>
+              widget.showCompleted == null ||
+              todo.completed == widget.showCompleted,
+        )
         .toList();
 
     if (filteredTodos.isEmpty) {

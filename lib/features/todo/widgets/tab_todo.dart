@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
-import '../../../shared/design/app_icons.dart';
+import '../../../shared/widgets/app_tab_bar.dart';
 import '../models/todo.dart';
 import 'todo_list.dart';
 
@@ -28,25 +27,42 @@ class TabBarTodo extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
-      initialIndex: 1,
-      length: 2,
+      initialIndex: 0,
+      length: 3,
       child: Column(
         children: [
-          Material(
-            color: Theme.of(context).colorScheme.surface,
-            child: TabBar(
-              tabs: [
-                Tab(
-                  icon: const Icon(CupertinoIcons.check_mark),
-                  text: l10n.completed,
-                ),
-                Tab(icon: const Icon(AppIcons.close), text: l10n.incomplete),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Builder(
+              builder: (context) {
+                final controller = DefaultTabController.of(context);
+                return AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, child) => AppTabBar(
+                    tabs: [l10n.all, l10n.completed, l10n.incomplete],
+                    selectedIndex: controller.index,
+                    onChanged: (index) => controller.animateTo(
+                      index,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           Expanded(
             child: TabBarView(
               children: [
+                TodoList(
+                  todos: todos,
+                  showCompleted: null,
+                  busyIds: busyIds,
+                  onTodoTap: onTodoTap,
+                  onToggle: onToggle,
+                  onEdit: onEdit,
+                  onDelete: onDelete,
+                ),
                 TodoList(
                   todos: todos,
                   showCompleted: true,

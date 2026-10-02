@@ -57,6 +57,9 @@ class AppLocalizationsTh extends AppLocalizations {
   String get status => 'สถานะ';
 
   @override
+  String get all => 'ทั้งหมด';
+
+  @override
   String get completed => 'เสร็จแล้ว';
 
   @override

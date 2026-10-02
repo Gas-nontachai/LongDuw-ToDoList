@@ -188,6 +188,12 @@ abstract class AppLocalizations {
   /// **'Status'**
   String get status;
 
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
   /// No description provided for @completed.
   ///
   /// In en, this message translates to:
