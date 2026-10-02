@@ -196,6 +196,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     final todos = ref.watch(todoProvider);
     final operations = ref.watch(todoOperationProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isThai = Localizations.localeOf(context).languageCode == 'th';
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -213,17 +214,14 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
               isDark ? ThemeMode.light : ThemeMode.dark,
             ),
           ),
-          PopupMenuButton<Locale>(
+          IconButton(
             tooltip: l10n.changeLanguage,
-            icon: const Icon(CupertinoIcons.globe),
-            onSelected: widget.onLocaleChanged,
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: const Locale('en'),
-                child: Text(l10n.english),
-              ),
-              PopupMenuItem(value: const Locale('th'), child: Text(l10n.thai)),
-            ],
+            icon: Text(
+              isThai ? 'TH' : 'EN',
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+            onPressed: () =>
+                widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
           ),
         ],
       ),

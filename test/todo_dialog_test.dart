@@ -61,13 +61,23 @@ void main() {
     expect(screenBrightness(), Brightness.dark);
     expect(find.text('draft'), findsOneWidget);
 
+    expect(find.text('EN'), findsOneWidget);
     await tester.tap(find.byTooltip('Change language'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('ไทย'));
-    await tester.pumpAndSettle();
+    expect(find.text('TH'), findsOneWidget);
     expect(screenBrightness(), Brightness.dark);
     expect(find.text('draft'), findsOneWidget);
     expect(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('เปลี่ยนภาษา'));
+    await tester.pumpAndSettle();
+    expect(find.text('EN'), findsOneWidget);
+    expect(find.byTooltip('Switch to light mode'), findsOneWidget);
+    expect((await AppPreferences.load()).locale, const Locale('en'));
+
+    await tester.tap(find.byTooltip('Change language'));
+    await tester.pumpAndSettle();
+    expect(find.text('TH'), findsOneWidget);
 
     await tester.tap(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'));
     await tester.pumpAndSettle();
@@ -107,6 +117,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(screenBrightness(), Brightness.dark);
     expect(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'), findsOneWidget);
+    expect(find.text('TH'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
