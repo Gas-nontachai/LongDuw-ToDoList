@@ -13,6 +13,7 @@ ThemeData _buildTheme(Brightness brightness) {
     brightness: brightness,
   );
   return ThemeData(
+    fontFamily: 'Kanit',
     colorScheme: colorScheme,
     useMaterial3: true,
     scaffoldBackgroundColor: colorScheme.surface,
@@ -22,6 +23,7 @@ ThemeData _buildTheme(Brightness brightness) {
       elevation: 0,
       scrolledUnderElevation: 0,
       titleTextStyle: TextStyle(
+        fontFamily: 'Kanit',
         color: colorScheme.onSurface,
         fontSize: 22,
         fontWeight: FontWeight.w700,
