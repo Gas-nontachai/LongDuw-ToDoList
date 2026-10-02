@@ -53,7 +53,7 @@ ThemeData _buildTheme(Brightness brightness) {
       backgroundColor: colorScheme.primaryContainer,
       foregroundColor: colorScheme.onPrimaryContainer,
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: const CircleBorder(),
     ),
     tabBarTheme: TabBarThemeData(
       labelColor: colorScheme.primary,
