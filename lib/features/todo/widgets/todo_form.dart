@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/config/priority_config.dart';
-import '../../../core/config/dialog_config.dart';
+import '../../../shared/widgets/app_expandable_sheet.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_text_field.dart';
@@ -9,9 +9,13 @@ import '../models/todo.dart';
 import 'todo_priority_badge.dart';
 
 Future<TodoFormData?> showTodoForm(BuildContext context, {Todo? todo}) {
-  return showDialog<TodoFormData>(
+  return showModalBottomSheet<TodoFormData>(
     context: context,
-    builder: (_) => TodoFormDialog(todo: todo),
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Colors.transparent,
+    constraints: const BoxConstraints(maxWidth: double.infinity),
+    builder: (_) => TodoFormSheet(todo: todo),
   );
 }
 
@@ -29,16 +33,16 @@ class TodoFormData {
   final DateTime? dueDate;
 }
 
-class TodoFormDialog extends StatefulWidget {
-  const TodoFormDialog({this.todo, super.key});
+class TodoFormSheet extends StatefulWidget {
+  const TodoFormSheet({this.todo, super.key});
 
   final Todo? todo;
 
   @override
-  State<TodoFormDialog> createState() => _TodoFormDialogState();
+  State<TodoFormSheet> createState() => _TodoFormSheetState();
 }
 
-class _TodoFormDialogState extends State<TodoFormDialog> {
+class _TodoFormSheetState extends State<TodoFormSheet> {
   late final TextEditingController _controller;
   late final TextEditingController _detailsController;
   late final TextEditingController _dueDateController;
@@ -116,98 +120,86 @@ class _TodoFormDialogState extends State<TodoFormDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return AlertDialog(
-          constraints: BoxConstraints.tightFor(
-            width: constraints.maxWidth * DialogConfig.widthFactor,
-          ),
-          scrollable: true,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 24,
-          ),
-          title: Text(widget.todo == null ? l10n.addTodo : l10n.editTodo),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AppTextField(
-                    controller: _controller,
-                    autofocus: true,
-                    textInputAction: TextInputAction.done,
-                    label: l10n.title,
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? l10n.enterTitle
-                        : null,
-                    onFieldSubmitted: (_) => _save(),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _detailsController,
-                    textInputAction: TextInputAction.done,
-                    maxLines: 3,
-                    decoration: InputDecoration(labelText: l10n.details),
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? l10n.enterDetails
-                        : null,
-                    onFieldSubmitted: (_) => _save(),
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    initialValue: _priority,
-                    isExpanded: true,
-                    decoration: InputDecoration(labelText: l10n.priority),
-                    items: [
-                      for (final priority in PriorityConfig.values)
-                        DropdownMenuItem(
-                          value: priority,
-                          child: TodoPriorityBadge(priority: priority),
-                        ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) setState(() => _priority = value);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _dueDateController,
-                    readOnly: true,
-                    onTap: _pickDueDate,
-                    decoration: InputDecoration(
-                      labelText: l10n.dueDate,
-                      hintText: l10n.selectDueDate,
-                      suffixIcon: _dueDate == null
-                          ? const Icon(Icons.calendar_today_outlined)
-                          : IconButton(
-                              tooltip: l10n.clearDueDate,
-                              icon: const Icon(Icons.clear),
-                              onPressed: () => setState(() {
-                                _dueDate = null;
-                                _updateDueDateText();
-                              }),
-                            ),
-                    ),
-                  ),
-                ],
+    return AppExpandableSheet(
+      title: widget.todo == null ? l10n.addTodo : l10n.editTodo,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppTextField(
+                controller: _controller,
+                autofocus: false,
+                textInputAction: TextInputAction.done,
+                label: l10n.title,
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? l10n.enterTitle
+                    : null,
+                onFieldSubmitted: (_) => _save(),
               ),
-            ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _detailsController,
+                textInputAction: TextInputAction.done,
+                maxLines: 3,
+                decoration: InputDecoration(labelText: l10n.details),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? l10n.enterDetails
+                    : null,
+                onFieldSubmitted: (_) => _save(),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                initialValue: _priority,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: l10n.priority),
+                items: [
+                  for (final priority in PriorityConfig.values)
+                    DropdownMenuItem(
+                      value: priority,
+                      child: TodoPriorityBadge(priority: priority),
+                    ),
+                ],
+                onChanged: (value) {
+                  if (value != null) setState(() => _priority = value);
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _dueDateController,
+                readOnly: true,
+                onTap: _pickDueDate,
+                decoration: InputDecoration(
+                  labelText: l10n.dueDate,
+                  hintText: l10n.selectDueDate,
+                  suffixIcon: _dueDate == null
+                      ? const Icon(Icons.calendar_today_outlined)
+                      : IconButton(
+                          tooltip: l10n.clearDueDate,
+                          icon: const Icon(Icons.clear),
+                          onPressed: () => setState(() {
+                            _dueDate = null;
+                            _updateDueDateText();
+                          }),
+                        ),
+                ),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(l10n.cancel),
-            ),
-            FilledButton(
-              onPressed: _save,
-              child: Text(widget.todo == null ? l10n.addTodo : l10n.save),
-            ),
-          ],
-        );
-      },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: _save,
+          child: Text(widget.todo == null ? l10n.addTodo : l10n.save),
+        ),
+      ],
     );
   }
 }

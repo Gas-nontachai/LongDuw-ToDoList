@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/config/priority_config.dart';
+import '../../../shared/widgets/app_expandable_sheet.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../models/todo_query.dart';
@@ -42,7 +43,8 @@ Future<TodoFilter?> showTodoFilterSheet(
   context: context,
   isScrollControlled: true,
   useSafeArea: true,
-  showDragHandle: true,
+  backgroundColor: Colors.transparent,
+  constraints: const BoxConstraints(maxWidth: double.infinity),
   builder: (_) => _TodoFilterSheet(value: value),
 );
 
@@ -51,7 +53,8 @@ Future<TodoSort?> showTodoSortSheet(BuildContext context, TodoSort value) =>
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      constraints: const BoxConstraints(maxWidth: double.infinity),
       builder: (_) => _TodoSortSheet(value: value),
     );
 
@@ -121,61 +124,19 @@ class _SheetFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * .85,
-      ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 16, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  ),
-                  TextButton(onPressed: onReset, child: Text(l10n.resetQuery)),
-                ],
-              ),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 8,
-                ),
-                child: body,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(l10n.cancel),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: onApply,
-                      child: Text(applyLabel),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return AppExpandableSheet(
+      title: title,
+      headerActions: [
+        TextButton(onPressed: onReset, child: Text(l10n.resetQuery)),
+      ],
+      body: body,
+      actions: [
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.cancel),
         ),
-      ),
+        FilledButton(onPressed: onApply, child: Text(applyLabel)),
+      ],
     );
   }
 }

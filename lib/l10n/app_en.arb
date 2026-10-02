@@ -112,5 +112,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "expandSheet": "Expand to full screen",
+  "collapseSheet": "Collapse sheet"
 }

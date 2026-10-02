@@ -559,6 +559,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No tasks match your search or filters'**
   String get noMatchingTodos;
+
+  /// No description provided for @expandSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand to full screen'**
+  String get expandSheet;
+
+  /// No description provided for @collapseSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse sheet'**
+  String get collapseSheet;
 }
 
 class _AppLocalizationsDelegate

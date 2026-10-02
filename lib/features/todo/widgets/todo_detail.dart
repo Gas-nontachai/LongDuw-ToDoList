@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/config/priority_config.dart';
-import '../../../core/config/dialog_config.dart';
+import '../../../shared/widgets/app_expandable_sheet.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icon_assets.dart';
@@ -9,15 +9,24 @@ import '../../../shared/widgets/app_icon.dart';
 import '../models/todo.dart';
 import 'todo_priority_badge.dart';
 
-Future<void> showTodoDetail(BuildContext context, {required Todo todo}) {
-  return showDialog<void>(
+enum TodoDetailAction { edit, delete }
+
+Future<TodoDetailAction?> showTodoDetail(
+  BuildContext context, {
+  required Todo todo,
+}) {
+  return showModalBottomSheet<TodoDetailAction>(
     context: context,
-    builder: (_) => TodoDetailDialog(todo: todo),
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Colors.transparent,
+    constraints: const BoxConstraints(maxWidth: double.infinity),
+    builder: (_) => TodoDetailSheet(todo: todo),
   );
 }
 
-class TodoDetailDialog extends StatelessWidget {
-  const TodoDetailDialog({required this.todo, super.key});
+class TodoDetailSheet extends StatelessWidget {
+  const TodoDetailSheet({required this.todo, super.key});
 
   final Todo todo;
 
@@ -158,7 +167,7 @@ class TodoDetailDialog extends StatelessWidget {
     );
     return LayoutBuilder(
       builder: (context, constraints) {
-        final dialogWidth = constraints.maxWidth * DialogConfig.widthFactor;
+        final dialogWidth = constraints.maxWidth;
         final dateGap = dialogWidth < 520 ? 16.0 : 32.0;
         final dateColumnWidth = (dialogWidth - 48 - dateGap) / 2;
         final dateScale = (dateColumnWidth / 180).clamp(0.85, 1.0);
@@ -179,20 +188,22 @@ class TodoDetailDialog extends StatelessWidget {
           compact: compactDates,
           scale: dateScale,
         );
-        return AlertDialog(
-          constraints: BoxConstraints.tightFor(width: dialogWidth),
-          scrollable: true,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 24,
-          ),
-          backgroundColor: colors.surfaceContainerLow,
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-          content: SizedBox(
+        return AppExpandableSheet(
+          showCloseButton: false,
+          headerActions: [
+            IconButton(
+              tooltip: l10n.editTooltip,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () => Navigator.of(context).pop(TodoDetailAction.edit),
+            ),
+            IconButton(
+              tooltip: l10n.deleteTooltip,
+              icon: Icon(Icons.delete_outline, color: colors.error),
+              onPressed: () =>
+                  Navigator.of(context).pop(TodoDetailAction.delete),
+            ),
+          ],
+          body: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -294,7 +305,6 @@ class TodoDetailDialog extends StatelessWidget {
               ],
             ),
           ),
-          actionsPadding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           actions: [
             FilledButton(
               style: FilledButton.styleFrom(

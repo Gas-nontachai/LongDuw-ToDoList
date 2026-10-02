@@ -67,62 +67,95 @@ void main() {
     },
   );
 
-  for (final width in [320.0, 800.0]) {
-    testWidgets(
-      'detail uses 70% of available width and contains long text ($width)',
-      (tester) async {
-        await tester.binding.setSurfaceSize(Size(width, 600));
-        addTearDown(() => tester.binding.setSurfaceSize(null));
-        final title = List.filled(100, 'LongTitleชื่อยาว').join();
-        await tester.pumpWidget(
-          app(
-            TodoDetailDialog(
-              todo: Todo(
-                id: '1',
-                title: title,
-                completed: false,
-                priority: 'medium',
-                details: title,
-              ),
-            ),
-            'en',
+  testWidgets('short detail fits content and can expand and collapse', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(400, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      app(
+        TodoDetailSheet(
+          todo: Todo(
+            id: 'short',
+            title: 'Todo 4',
+            details: 'Details for todo 4',
+            completed: false,
+            dueDate: DateTime(2026, 10, 3),
           ),
+        ),
+        'en',
+      ),
+    );
+    await tester.pumpAndSettle();
+    final sheet = find.byKey(const ValueKey('expandable-sheet'));
+    final compactHeight = tester.getSize(sheet).height;
+    expect(compactHeight, lessThan(600));
+    final lastValue = find.byType(SelectableText).last;
+    final close = find.byType(FilledButton);
+    expect(
+      tester.getRect(close).top - tester.getRect(lastValue).bottom,
+      lessThan(60),
+    );
+    await tester.tap(find.byTooltip('Expand to full screen'));
+    await tester.pumpAndSettle();
+    expect(tester.getSize(sheet).height, closeTo(900, 1));
+    await tester.tap(find.byTooltip('Collapse sheet'));
+    await tester.pumpAndSettle();
+    expect(tester.getSize(sheet).height, closeTo(compactHeight, 1));
+    expect(find.text('Details for todo 4'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final width in [320.0, 800.0]) {
+    testWidgets('detail fills sheet width and contains long text ($width)', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(Size(width, 600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final title = List.filled(100, 'LongTitleชื่อยาว').join();
+      await tester.pumpWidget(
+        app(
+          TodoDetailSheet(
+            todo: Todo(
+              id: '1',
+              title: title,
+              completed: false,
+              priority: 'medium',
+              details: title,
+            ),
+          ),
+          'en',
+        ),
+      );
+      await tester.pumpAndSettle();
+      final dialog = find.byKey(const ValueKey('expandable-sheet'));
+      final bounds = tester.getRect(dialog);
+      expect(bounds.width, closeTo(width, 1));
+      final dueLabel = tester.getTopLeft(find.text('Due date'));
+      final createdLabel = tester.getTopLeft(find.text('Created at'));
+      expect(createdLabel.dy, closeTo(dueLabel.dy, 1));
+      expect(createdLabel.dx, greaterThan(dueLabel.dx));
+      if (width >= 520) {
+        expect(
+          tester.getRect(find.byType(TodoPriorityBadge)).right,
+          closeTo(bounds.right - 24, 1),
         );
-        await tester.pumpAndSettle();
-        final dialog = find
-            .descendant(
-              of: find.byType(Dialog),
-              matching: find.byType(Material),
-            )
-            .first;
-        final bounds = tester.getRect(dialog);
-        expect(bounds.width, closeTo(width * 0.7, 1));
-        final dueLabel = tester.getTopLeft(find.text('Due date'));
-        final createdLabel = tester.getTopLeft(find.text('Created at'));
         expect(createdLabel.dy, closeTo(dueLabel.dy, 1));
         expect(createdLabel.dx, greaterThan(dueLabel.dx));
-        if (width * 0.7 >= 520) {
-          expect(
-            tester.getRect(find.byType(TodoPriorityBadge)).right,
-            closeTo(bounds.right - 24, 1),
-          );
-          expect(createdLabel.dy, closeTo(dueLabel.dy, 1));
-          expect(createdLabel.dx, greaterThan(dueLabel.dx));
-          expect(
-            tester.getCenter(find.text('Medium')).dy,
-            closeTo(tester.getCenter(find.text('Incomplete')).dy, 2),
-          );
-        }
+        expect(
+          tester.getCenter(find.text('Medium')).dy,
+          closeTo(tester.getCenter(find.text('Incomplete')).dy, 2),
+        );
+      }
 
-        for (final element in find.byType(SelectableText).evaluate()) {
-          final rect = tester.getRect(find.byWidget(element.widget));
-          expect(rect.left, greaterThanOrEqualTo(bounds.left));
-          expect(rect.right, lessThanOrEqualTo(bounds.right));
-        }
-        expect(find.text(title), findsNWidgets(2));
-        expect(tester.takeException(), isNull);
-      },
-    );
+      for (final element in find.byType(SelectableText).evaluate()) {
+        final rect = tester.getRect(find.byWidget(element.widget));
+        expect(rect.left, greaterThanOrEqualTo(bounds.left));
+        expect(rect.right, lessThanOrEqualTo(bounds.right));
+      }
+      expect(find.text(title), findsNWidgets(2));
+      expect(tester.takeException(), isNull);
+    });
   }
 
   for (final language in ['en', 'th']) {
@@ -135,7 +168,7 @@ void main() {
             await tester.binding.setSurfaceSize(Size(width, 700));
             await tester.pumpWidget(
               app(
-                TodoDetailDialog(
+                TodoDetailSheet(
                   todo: Todo(
                     id: 'responsive',
                     title: 'Task',
@@ -150,7 +183,7 @@ void main() {
               ),
             );
             await tester.pumpAndSettle();
-            final context = tester.element(find.byType(TodoDetailDialog));
+            final context = tester.element(find.byType(TodoDetailSheet));
             final l10n = AppLocalizations.of(context)!;
             final dueLabel = tester.getTopLeft(find.text(l10n.dueDate));
             final createdLabel = tester.getTopLeft(find.text(l10n.createdAt));
@@ -189,7 +222,7 @@ void main() {
               );
             }
             // Badges must not squeeze the heading below its natural width
-            // unless the dialog itself is too narrow for that text.
+            // unless the sheet itself is too narrow for that text.
             final heading = find.text(l10n.details).first;
             final paragraph = tester.renderObject<RenderParagraph>(heading);
             expect(
@@ -197,7 +230,7 @@ void main() {
               greaterThanOrEqualTo(
                 math.min(
                       paragraph.getMaxIntrinsicWidth(double.infinity),
-                      width * 0.7 - 48 - 38,
+                      width - 48 - 38,
                     ) -
                     0.1,
               ),
@@ -226,7 +259,7 @@ void main() {
             child: child!,
           ),
           home: Scaffold(
-            body: TodoDetailDialog(
+            body: TodoDetailSheet(
               todo: Todo(
                 id: '1',
                 title: 'ชื่อรายการที่ยาวมาก',
@@ -243,7 +276,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('ชื่อรายการที่ยาวมาก'), findsOneWidget);
       final l10n = AppLocalizations.of(
-        tester.element(find.byType(TodoDetailDialog)),
+        tester.element(find.byType(TodoDetailSheet)),
       )!;
       final dueLabel = tester.getTopLeft(find.text(l10n.dueDate));
       final createdLabel = tester.getTopLeft(find.text(l10n.createdAt));
@@ -305,7 +338,7 @@ void main() {
         final details = List.filled(60, 'Full details รายละเอียด').join('\n');
         await tester.pumpWidget(
           app(
-            TodoDetailDialog(
+            TodoDetailSheet(
               todo: Todo(
                 id: 'task-123',
                 title: 'Full task title',
@@ -320,7 +353,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        final context = tester.element(find.byType(TodoDetailDialog));
+        final context = tester.element(find.byType(TodoDetailSheet));
         final l10n = AppLocalizations.of(context)!;
         expect(find.text('Full task title'), findsOneWidget);
         expect(find.text(details), findsOneWidget);

@@ -112,5 +112,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "expandSheet": "ขยายเต็มจอ",
+  "collapseSheet": "ย่อหน้าต่าง"
 }

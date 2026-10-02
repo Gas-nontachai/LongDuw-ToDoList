@@ -249,4 +249,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get noMatchingTodos => 'ไม่พบงานที่ตรงกับคำค้นหาหรือตัวกรอง';
+
+  @override
+  String get expandSheet => 'ขยายเต็มจอ';
+
+  @override
+  String get collapseSheet => 'ย่อหน้าต่าง';
 }

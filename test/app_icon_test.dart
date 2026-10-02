@@ -75,7 +75,7 @@ void main() {
         find.text(MaterialLocalizations.of(iconContext).closeButtonLabel),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(TodoDetailDialog), findsNothing);
+      expect(find.byType(TodoDetailSheet), findsNothing);
       expect(tester.takeException(), isNull);
     });
   }

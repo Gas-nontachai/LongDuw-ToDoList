@@ -267,4 +267,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMatchingTodos => 'No tasks match your search or filters';
+
+  @override
+  String get expandSheet => 'Expand to full screen';
+
+  @override
+  String get collapseSheet => 'Collapse sheet';
 }

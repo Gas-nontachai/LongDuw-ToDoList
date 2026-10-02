@@ -104,7 +104,7 @@ void main() {
     await tester.tap(find.byTooltip('เพิ่มรายการ'));
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.byType(TodoFormDialog))).brightness,
+      Theme.of(tester.element(find.byType(TodoFormSheet))).brightness,
       Brightness.dark,
     );
     await tester.tap(find.widgetWithText(FilledButton, 'เพิ่มรายการ'));
@@ -189,7 +189,7 @@ void main() {
         await tester.testTextInput.receiveAction(TextInputAction.done);
         await tester.pumpAndSettle();
         expect(find.text(l10n.enterTitle), findsOneWidget);
-        expect(find.byType(TodoFormDialog), findsOneWidget);
+        expect(find.byType(TodoFormSheet), findsOneWidget);
         expect(result, isNull);
 
         await tester.tap(find.byType(DropdownButtonFormField<String>));
@@ -201,7 +201,7 @@ void main() {
         await tester.enterText(fields.first, ' Updated title ');
         await tester.testTextInput.receiveAction(TextInputAction.done);
         await tester.pumpAndSettle();
-        expect(find.byType(TodoFormDialog), findsNothing);
+        expect(find.byType(TodoFormSheet), findsNothing);
         expect(result?.title, 'Updated title');
         expect(result?.details, 'Original details');
         expect(result?.priority, 'high');
@@ -212,7 +212,7 @@ void main() {
 
   for (final width in [320.0, 800.0]) {
     testWidgets(
-      'form uses 70% of available width without growing for long titles ($width)',
+      'form fills sheet width and preserves drafts when expanded ($width)',
       (tester) async {
         await tester.binding.setSurfaceSize(Size(width, 700));
         addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -243,14 +243,9 @@ void main() {
         );
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
-        final dialog = find
-            .descendant(
-              of: find.byType(Dialog),
-              matching: find.byType(Material),
-            )
-            .first;
+        final dialog = find.byKey(const ValueKey('expandable-sheet'));
         final initialRect = tester.getRect(dialog);
-        expect(initialRect.width, closeTo(width * 0.7, 1));
+        expect(initialRect.width, closeTo(width, 1));
         final titleField = find.byType(TextFormField).first;
         final initialFieldWidth = tester.getSize(titleField).width;
         final longTitle = List.filled(100, 'Long title ชื่อยาว').join(' ');
@@ -258,6 +253,13 @@ void main() {
         await tester.pumpAndSettle();
         expect(tester.getRect(dialog), initialRect);
         expect(tester.getSize(titleField).width, initialFieldWidth);
+        await tester.tap(find.byTooltip('Expand to full screen'));
+        await tester.pumpAndSettle();
+        expect(tester.getSize(dialog).height, closeTo(700, 1));
+        expect(find.text(longTitle), findsOneWidget);
+        await tester.tap(find.byTooltip('Collapse sheet'));
+        await tester.pumpAndSettle();
+        expect(tester.getRect(dialog), initialRect);
         final editable = tester.widget<EditableText>(
           find.descendant(of: titleField, matching: find.byType(EditableText)),
         );
@@ -270,6 +272,51 @@ void main() {
       },
     );
   }
+
+  testWidgets('form keeps save visible above keyboard and preserves draft', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 700));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    addTearDown(tester.view.resetViewInsets);
+    TodoFormData? result;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () async => result = await showTodoForm(context),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.first, 'Draft title');
+    await tester.enterText(fields.at(1), 'Draft details');
+    tester.view.viewInsets = FakeViewPadding(
+      bottom: 300 * tester.view.devicePixelRatio,
+    );
+    await tester.pumpAndSettle();
+    final save = find.widgetWithText(FilledButton, 'Add todo');
+    expect(tester.getRect(save).bottom, lessThanOrEqualTo(400));
+    await tester.tap(find.byTooltip('Expand to full screen'));
+    await tester.pumpAndSettle();
+    tester.view.resetViewInsets();
+    await tester.pumpAndSettle();
+    expect(find.text('Draft title'), findsOneWidget);
+    expect(find.text('Draft details'), findsOneWidget);
+    await tester.tap(save);
+    await tester.pumpAndSettle();
+    expect(result?.title, 'Draft title');
+    expect(result?.details, 'Draft details');
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('saving the add dialog keeps the widget tree valid', (
     tester,

@@ -126,7 +126,16 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
     WidgetRef ref,
     Todo todo,
   ) async {
-    await showTodoDetail(context, todo: todo);
+    final action = await showTodoDetail(context, todo: todo);
+    if (!context.mounted) return;
+    switch (action) {
+      case TodoDetailAction.edit:
+        await _editTodo(context, ref, todo);
+      case TodoDetailAction.delete:
+        await _deleteTodo(context, ref, todo);
+      case null:
+        break;
+    }
   }
 
   Future<void> _editTodo(BuildContext context, WidgetRef ref, Todo todo) async {
