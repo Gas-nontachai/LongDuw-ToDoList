@@ -13,6 +13,8 @@ import '../providers/todo_provider.dart';
 import '../widgets/todo_form.dart';
 import '../widgets/todo_detail.dart';
 import '../widgets/tab_todo.dart';
+import '../../../shared/design/app_icon_assets.dart';
+import '../../../shared/widgets/app_icon.dart';
 
 class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({
@@ -196,7 +198,13 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.appTitle),
+        title: Row(
+          children: [
+            const AppIcon.asset(AppIconAssets.task, size: 24),
+            const SizedBox(width: 8),
+            Text(l10n.appTitle),
+          ],
+        ),
         actions: [
           IconButton(
             tooltip: isDark ? l10n.switchToLightMode : l10n.switchToDarkMode,
