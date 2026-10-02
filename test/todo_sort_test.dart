@@ -65,9 +65,7 @@ void main() {
       final l10n = AppLocalizations.of(
         tester.element(find.byType(TodoScreen)),
       )!;
-      final sortButton = find.byWidgetPredicate(
-        (widget) => widget is PopupMenuButton,
-      );
+      final sortButton = find.byKey(const ValueKey('todo-sort-button'));
       List<String> visibleTitles() => tester
           .widgetList<TodoItem>(find.byType(TodoItem))
           .map((item) => item.todo.title)
@@ -75,14 +73,10 @@ void main() {
       Future<void> sortBy(String label) async {
         await tester.tap(sortButton);
         await tester.pumpAndSettle();
-        await tester.tap(
-          find.ancestor(
-            of: find.text(label),
-            matching: find.byWidgetPredicate(
-              (widget) => widget is CheckedPopupMenuItem,
-            ),
-          ),
-        );
+        await tester.ensureVisible(find.text(label));
+        await tester.tap(find.text(label));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(l10n.applySort));
         await tester.pumpAndSettle();
       }
 

@@ -427,6 +427,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 day overdue} other{{count} days overdue}}'**
   String overdueDays(int count);
+
+  /// No description provided for @filterTodos.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filterTodos;
+
+  /// No description provided for @resetQuery.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetQuery;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply filters ({count})'**
+  String applyFilters(int count);
+
+  /// No description provided for @applySort.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply sorting'**
+  String get applySort;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// No description provided for @filterOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get filterOverdue;
+
+  /// No description provided for @filterToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get filterToday;
+
+  /// No description provided for @filterSevenDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Within 7 days'**
+  String get filterSevenDays;
+
+  /// No description provided for @filterThreeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Within 3 days'**
+  String get filterThreeDays;
+
+  /// No description provided for @duePresenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date availability'**
+  String get duePresenceTitle;
+
+  /// No description provided for @hasDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Has a due date'**
+  String get hasDueDate;
+
+  /// No description provided for @noDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'No due date'**
+  String get noDueDate;
+
+  /// No description provided for @dateRangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get dateRangeTitle;
+
+  /// No description provided for @selectDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date range'**
+  String get selectDateRange;
+
+  /// No description provided for @clearDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear date range'**
+  String get clearDateRange;
+
+  /// No description provided for @sortDueAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date: nearest first'**
+  String get sortDueAscending;
+
+  /// No description provided for @sortDueDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date: farthest first'**
+  String get sortDueDescending;
+
+  /// No description provided for @sortPriorityDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: high → low'**
+  String get sortPriorityDescending;
+
+  /// No description provided for @sortPriorityAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: low → high'**
+  String get sortPriorityAscending;
+
+  /// No description provided for @sortCreatedDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: newest first'**
+  String get sortCreatedDescending;
+
+  /// No description provided for @sortCreatedAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Created: oldest first'**
+  String get sortCreatedAscending;
+
+  /// No description provided for @noMatchingTodos.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks match your search or filters'**
+  String get noMatchingTodos;
 }
 
 class _AppLocalizationsDelegate

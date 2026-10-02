@@ -199,4 +199,72 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get filterTodos => 'Filter';
+
+  @override
+  String get resetQuery => 'Reset';
+
+  @override
+  String applyFilters(int count) {
+    return 'Apply filters ($count)';
+  }
+
+  @override
+  String get applySort => 'Apply sorting';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get filterOverdue => 'Overdue';
+
+  @override
+  String get filterToday => 'Today';
+
+  @override
+  String get filterSevenDays => 'Within 7 days';
+
+  @override
+  String get filterThreeDays => 'Within 3 days';
+
+  @override
+  String get duePresenceTitle => 'Due date availability';
+
+  @override
+  String get hasDueDate => 'Has a due date';
+
+  @override
+  String get noDueDate => 'No due date';
+
+  @override
+  String get dateRangeTitle => 'Date range';
+
+  @override
+  String get selectDateRange => 'Select a date range';
+
+  @override
+  String get clearDateRange => 'Clear date range';
+
+  @override
+  String get sortDueAscending => 'Due date: nearest first';
+
+  @override
+  String get sortDueDescending => 'Due date: farthest first';
+
+  @override
+  String get sortPriorityDescending => 'Priority: high → low';
+
+  @override
+  String get sortPriorityAscending => 'Priority: low → high';
+
+  @override
+  String get sortCreatedDescending => 'Created: newest first';
+
+  @override
+  String get sortCreatedAscending => 'Created: oldest first';
+
+  @override
+  String get noMatchingTodos => 'No tasks match your search or filters';
 }

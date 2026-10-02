@@ -83,5 +83,34 @@
         "type": "int"
       }
     }
+  },
+  "filterTodos": "Filter",
+  "resetQuery": "Reset",
+  "applyFilters": "Apply filters ({count})",
+  "applySort": "Apply sorting",
+  "sortBy": "Sort by",
+  "filterOverdue": "Overdue",
+  "filterToday": "Today",
+  "filterSevenDays": "Within 7 days",
+  "filterThreeDays": "Within 3 days",
+  "duePresenceTitle": "Due date availability",
+  "hasDueDate": "Has a due date",
+  "noDueDate": "No due date",
+  "dateRangeTitle": "Date range",
+  "selectDateRange": "Select a date range",
+  "clearDateRange": "Clear date range",
+  "sortDueAscending": "Due date: nearest first",
+  "sortDueDescending": "Due date: farthest first",
+  "sortPriorityDescending": "Priority: high → low",
+  "sortPriorityAscending": "Priority: low → high",
+  "sortCreatedDescending": "Created: newest first",
+  "sortCreatedAscending": "Created: oldest first",
+  "noMatchingTodos": "No tasks match your search or filters",
+  "@applyFilters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

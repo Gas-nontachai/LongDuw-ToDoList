@@ -16,10 +16,12 @@ class TodoList extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     this.now,
+    this.hasQuery = false,
     super.key,
   });
 
   final List<Todo> todos;
+  final bool hasQuery;
 
   /// Null shows all todos; otherwise filters by completion status.
   final bool? showCompleted;
@@ -98,7 +100,11 @@ class _TodoListState extends State<TodoList> with WidgetsBindingObserver {
           SizedBox(
             height: 300,
             child: Center(
-              child: Text(AppLocalizations.of(context)!.noTodosYet),
+              child: Text(
+                widget.hasQuery
+                    ? AppLocalizations.of(context)!.noMatchingTodos
+                    : AppLocalizations.of(context)!.noTodosYet,
+              ),
             ),
           ),
         ],

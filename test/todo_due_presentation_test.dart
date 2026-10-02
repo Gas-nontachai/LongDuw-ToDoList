@@ -31,6 +31,7 @@ void main() {
           (-1, false),
           (0, false),
           (1, false),
+          (2, false),
           (3, false),
           (4, false),
           (-1, true),
@@ -74,7 +75,7 @@ void main() {
                   dueDate,
                   localizations: MaterialLocalizations.of(context),
                 );
-          final suffix = offset == null || done
+          final suffix = offset == null || done || offset > 3
               ? null
               : offset < 0
               ? l10n.overdueDays(-offset)
@@ -85,7 +86,7 @@ void main() {
           final text = tester.widget<Text>(find.text(label));
           final color = offset == null || done || offset > 3
               ? colors.onSurfaceVariant
-              : offset < 0
+              : offset <= 1
               ? colors.error
               : dark
               ? const Color(0xFFFFD166)

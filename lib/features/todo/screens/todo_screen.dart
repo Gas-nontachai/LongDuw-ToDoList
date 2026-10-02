@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,17 +9,16 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icons.dart';
 import '../../../shared/widgets/app_error.dart';
 import '../../../shared/widgets/app_loading.dart';
-import '../../../shared/widgets/app_sort_button.dart';
 import '../../../shared/widgets/app_toast.dart';
 import '../models/todo.dart';
+import '../models/todo_query.dart';
+import '../widgets/todo_query_controls.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/todo_form.dart';
 import '../widgets/todo_detail.dart';
 import '../widgets/tab_todo.dart';
 import '../../../shared/design/app_icon_assets.dart';
 import '../../../shared/widgets/app_icon.dart';
-
-enum _TodoSort { original, titleAscending, titleDescending }
 
 class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({
@@ -34,22 +35,28 @@ class TodoScreen extends ConsumerStatefulWidget {
 }
 
 class _TodoScreenState extends ConsumerState<TodoScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _searchDebouncer = Debouncer();
   final _searchController = TextEditingController();
   String _searchInput = '';
   String _searchQuery = '';
-  _TodoSort _sort = _TodoSort.original;
+  TodoSort _sort = TodoSort.original;
+  TodoFilter _filter = TodoFilter();
+  Timer? _midnightTimer;
   late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    WidgetsBinding.instance.addObserver(this);
+    _scheduleMidnight();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _midnightTimer?.cancel();
     _tabController.dispose();
     _searchDebouncer.dispose();
     _searchController.dispose();
@@ -64,25 +71,36 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
     });
   }
 
-  List<Todo> _filterTodos(List<Todo> todos) {
-    final matches = todos.indexed.where((entry) {
-      final todo = entry.$2;
-      return _searchQuery.isEmpty ||
-          todo.title.toLowerCase().contains(_searchQuery) ||
-          todo.details.toLowerCase().contains(_searchQuery);
-    }).toList();
+  void _scheduleMidnight() {
+    _midnightTimer?.cancel();
+    final now = DateTime.now();
+    final nextDay = DateTime(now.year, now.month, now.day + 1);
+    _midnightTimer = Timer(nextDay.difference(now), () {
+      if (!mounted) return;
+      setState(() {});
+      _scheduleMidnight();
+    });
+  }
 
-    if (_sort != _TodoSort.original) {
-      matches.sort((a, b) {
-        final comparison = a.$2.title.trim().toLowerCase().compareTo(
-          b.$2.title.trim().toLowerCase(),
-        );
-        // Keep the original order for matching titles in either direction.
-        if (comparison == 0) return a.$1.compareTo(b.$1);
-        return _sort == _TodoSort.titleAscending ? comparison : -comparison;
-      });
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _midnightTimer?.cancel();
+    if (state == AppLifecycleState.resumed) {
+      setState(() {});
+      _scheduleMidnight();
     }
-    return matches.map((entry) => entry.$2).toList();
+  }
+
+  Future<void> _openFilter() async {
+    FocusScope.of(context).unfocus();
+    final value = await showTodoFilterSheet(context, _filter);
+    if (value != null && mounted) setState(() => _filter = value);
+  }
+
+  Future<void> _openSort() async {
+    FocusScope.of(context).unfocus();
+    final value = await showTodoSortSheet(context, _sort);
+    if (value != null && mounted) setState(() => _sort = value);
   }
 
   Future<void> _addTodo(BuildContext context, WidgetRef ref) async {
@@ -233,7 +251,13 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
     final operations = ref.watch(todoOperationProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isThai = Localizations.localeOf(context).languageCode == 'th';
-    final filteredItems = _filterTodos(todos.value ?? []);
+    final filteredItems = queryTodos(
+      todos.value ?? [],
+      filter: _filter,
+      sort: _sort,
+      now: DateTime.now(),
+      search: _searchQuery,
+    );
     final taskCount = todos.value?.where((todo) => !todo.completed).length ?? 0;
     return Scaffold(
       appBar: AppBar(
@@ -336,16 +360,21 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
                         ),
                       ),
                       const SizedBox(width: 8),
-                      AppSortButton<_TodoSort>(
-                        value: _sort,
-                        options: {
-                          _TodoSort.original: l10n.sortOriginal,
-                          _TodoSort.titleAscending: l10n.sortTitleAscending,
-                          _TodoSort.titleDescending: l10n.sortTitleDescending,
-                        },
-                        tooltip: l10n.sortTodosTooltip,
-                        isActive: _sort != _TodoSort.original,
-                        onChanged: (value) => setState(() => _sort = value),
+                      TodoQueryButton(
+                        key: const ValueKey('todo-filter-button'),
+                        icon: Icons.filter_alt_outlined,
+                        tooltip: l10n.filterTodos,
+                        isActive: _filter.isActive,
+                        onPressed: _openFilter,
+                      ),
+                      const SizedBox(width: 8),
+                      TodoQueryButton(
+                        key: const ValueKey('todo-sort-button'),
+                        icon: AppIcons.sort,
+                        tooltip:
+                            '${l10n.sortTodosTooltip}: ${todoSortLabel(_sort, l10n)}',
+                        isActive: _sort != TodoSort.original,
+                        onPressed: _openSort,
                       ),
                     ],
                   ),
@@ -354,6 +383,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
                   child: TabBarTodo(
                     controller: _tabController,
                     todos: filteredItems,
+                    hasQuery: _filter.isActive || _searchQuery.isNotEmpty,
                     busyIds: operations.busyIds,
                     onTodoTap: (todo) => _getTodoById(context, ref, todo),
                     onToggle: (todo) => _runOperation(

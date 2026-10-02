@@ -181,4 +181,72 @@ class AppLocalizationsTh extends AppLocalizations {
   String overdueDays(int count) {
     return 'เกินกำหนด $count วัน';
   }
+
+  @override
+  String get filterTodos => 'ตัวกรอง';
+
+  @override
+  String get resetQuery => 'รีเซ็ต';
+
+  @override
+  String applyFilters(int count) {
+    return 'ใช้ตัวกรอง ($count)';
+  }
+
+  @override
+  String get applySort => 'ใช้การจัดเรียง';
+
+  @override
+  String get sortBy => 'เรียงตาม';
+
+  @override
+  String get filterOverdue => 'เลยกำหนด';
+
+  @override
+  String get filterToday => 'วันนี้';
+
+  @override
+  String get filterSevenDays => 'ภายใน 7 วัน';
+
+  @override
+  String get filterThreeDays => 'ภายใน 3 วัน';
+
+  @override
+  String get duePresenceTitle => 'มีวันครบกำหนดหรือไม่';
+
+  @override
+  String get hasDueDate => 'มีวันกำหนด';
+
+  @override
+  String get noDueDate => 'ไม่กำหนดวัน';
+
+  @override
+  String get dateRangeTitle => 'ช่วงวันที่';
+
+  @override
+  String get selectDateRange => 'เลือกช่วงวันที่';
+
+  @override
+  String get clearDateRange => 'ล้างช่วงวันที่';
+
+  @override
+  String get sortDueAscending => 'วันครบกำหนด (ใกล้สุดก่อน)';
+
+  @override
+  String get sortDueDescending => 'วันครบกำหนด (ไกลสุดก่อน)';
+
+  @override
+  String get sortPriorityDescending => 'ความสำคัญ (สูง → ต่ำ)';
+
+  @override
+  String get sortPriorityAscending => 'ความสำคัญ (ต่ำ → สูง)';
+
+  @override
+  String get sortCreatedDescending => 'วันที่สร้าง (ใหม่สุดก่อน)';
+
+  @override
+  String get sortCreatedAscending => 'วันที่สร้าง (เก่าสุดก่อน)';
+
+  @override
+  String get noMatchingTodos => 'ไม่พบงานที่ตรงกับคำค้นหาหรือตัวกรอง';
 }

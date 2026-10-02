@@ -14,11 +14,13 @@ class TabBarTodo extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.controller,
+    this.hasQuery = false,
     super.key,
   });
 
   final TabController? controller;
   final List<Todo> todos;
+  final bool hasQuery;
   final Set<String> busyIds;
   final ValueChanged<Todo> onTodoTap;
   final ValueChanged<Todo> onToggle;
@@ -60,6 +62,7 @@ class TabBarTodo extends StatelessWidget {
               children: [
                 TodoList(
                   todos: todos,
+                  hasQuery: hasQuery,
                   showCompleted: null,
                   busyIds: busyIds,
                   onTodoTap: onTodoTap,
@@ -69,6 +72,7 @@ class TabBarTodo extends StatelessWidget {
                 ),
                 TodoList(
                   todos: todos,
+                  hasQuery: hasQuery,
                   showCompleted: false,
                   busyIds: busyIds,
                   onTodoTap: onTodoTap,
@@ -78,6 +82,7 @@ class TabBarTodo extends StatelessWidget {
                 ),
                 TodoList(
                   todos: todos,
+                  hasQuery: hasQuery,
                   showCompleted: true,
                   busyIds: busyIds,
                   onTodoTap: onTodoTap,

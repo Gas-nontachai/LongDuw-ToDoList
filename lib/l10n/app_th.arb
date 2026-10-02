@@ -83,5 +83,34 @@
         "type": "int"
       }
     }
+  },
+  "filterTodos": "ตัวกรอง",
+  "resetQuery": "รีเซ็ต",
+  "applyFilters": "ใช้ตัวกรอง ({count})",
+  "applySort": "ใช้การจัดเรียง",
+  "sortBy": "เรียงตาม",
+  "filterOverdue": "เลยกำหนด",
+  "filterToday": "วันนี้",
+  "filterSevenDays": "ภายใน 7 วัน",
+  "filterThreeDays": "ภายใน 3 วัน",
+  "duePresenceTitle": "มีวันครบกำหนดหรือไม่",
+  "hasDueDate": "มีวันกำหนด",
+  "noDueDate": "ไม่กำหนดวัน",
+  "dateRangeTitle": "ช่วงวันที่",
+  "selectDateRange": "เลือกช่วงวันที่",
+  "clearDateRange": "ล้างช่วงวันที่",
+  "sortDueAscending": "วันครบกำหนด (ใกล้สุดก่อน)",
+  "sortDueDescending": "วันครบกำหนด (ไกลสุดก่อน)",
+  "sortPriorityDescending": "ความสำคัญ (สูง → ต่ำ)",
+  "sortPriorityAscending": "ความสำคัญ (ต่ำ → สูง)",
+  "sortCreatedDescending": "วันที่สร้าง (ใหม่สุดก่อน)",
+  "sortCreatedAscending": "วันที่สร้าง (เก่าสุดก่อน)",
+  "noMatchingTodos": "ไม่พบงานที่ตรงกับคำค้นหาหรือตัวกรอง",
+  "@applyFilters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

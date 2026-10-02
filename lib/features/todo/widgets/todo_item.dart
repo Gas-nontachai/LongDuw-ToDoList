@@ -43,6 +43,7 @@ class _TodoItemState extends State<TodoItem> {
     final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final muted = colors.onSurfaceVariant;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final dueInfo = TodoDueInfo.calculate(
       dueDate: todo.dueDate,
       completed: todo.completed,
@@ -50,11 +51,12 @@ class _TodoItemState extends State<TodoItem> {
     );
     final days = dueInfo.daysRemaining;
     final dueColor = switch (dueInfo.status) {
-      TodoDueStatus.overdue => colors.error,
+      TodoDueStatus.overdue =>
+        isDark ? const Color(0xFFFF6B6B) : const Color(0xFFB71C1C),
       TodoDueStatus.dueSoon =>
-        days != null && days <= 1
+        days == 0
             ? colors.error
-            : Theme.of(context).brightness == Brightness.dark
+            : isDark
             ? const Color(0xFFFFD166)
             : const Color(0xFF956000),
       _ => muted,
