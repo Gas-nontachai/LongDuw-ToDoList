@@ -35,6 +35,8 @@ const _todos = [
 class _TestTodos extends TodoNotifier {
   @override
   Future<List<Todo>> build() async => _todos;
+
+  void replaceTodos(List<Todo> todos) => state = AsyncData(todos);
 }
 
 void main() {
@@ -84,28 +86,31 @@ void main() {
         await tester.pumpAndSettle();
       }
 
+      expect(find.text(l10n.taskCount(1)), findsOneWidget);
       expect(visibleTitles(), ['Zulu', 'alpha', 'Bravo']);
       expect(
         tester.getCenter(sortButton).dx,
         greaterThan(tester.getCenter(find.byType(TextField)).dx),
       );
       await sortBy(l10n.sortTitleAscending);
-      expect(visibleTitles(), ['alpha', 'Bravo', 'Zulu']);
+      expect(visibleTitles(), ['Zulu', 'alpha', 'Bravo']);
       await sortBy(l10n.sortTitleDescending);
       expect(visibleTitles(), ['Zulu', 'Bravo', 'alpha']);
 
       await tester.enterText(find.byType(TextField), 'match');
       await tester.pumpAndSettle();
       expect(visibleTitles(), ['Zulu', 'alpha']);
+      expect(find.text(l10n.taskCount(1)), findsOneWidget);
       await sortBy(l10n.sortTitleAscending);
-      expect(visibleTitles(), ['alpha', 'Zulu']);
+      expect(visibleTitles(), ['Zulu', 'alpha']);
       await tester.tap(find.byTooltip(l10n.clearSearchTooltip));
       await tester.pumpAndSettle();
-      expect(visibleTitles(), ['alpha', 'Bravo', 'Zulu']);
+      expect(visibleTitles(), ['Zulu', 'alpha', 'Bravo']);
 
-      await tester.tap(find.text(l10n.completed));
+      await tester.tap(find.text(l10n.completed).first);
       await tester.pumpAndSettle();
       expect(visibleTitles(), ['alpha', 'Bravo']);
+      expect(find.text(l10n.taskCount(1)), findsOneWidget);
       await sortBy(l10n.sortTitleDescending);
       expect(visibleTitles(), ['Bravo', 'alpha']);
       await tester.tap(find.text(l10n.all));
@@ -113,6 +118,17 @@ void main() {
       await sortBy(l10n.sortOriginal);
       expect(visibleTitles(), ['Zulu', 'alpha', 'Bravo']);
       expect(_todos.map((todo) => todo.title), ['Zulu', 'alpha', 'Bravo']);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(TodoScreen)),
+      );
+      (container.read(todoProvider.notifier) as _TestTodos).replaceTodos(
+        _todos.sublist(1),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.taskCount(0)), findsOneWidget);
+      await tester.tap(find.text(l10n.incomplete));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.taskCount(0)), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   }

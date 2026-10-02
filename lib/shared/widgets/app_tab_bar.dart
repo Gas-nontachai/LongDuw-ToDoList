@@ -19,13 +19,13 @@ class AppTabBar extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     const duration = Duration(milliseconds: 200);
-    final tabRadius = BorderRadius.circular(12);
+    final tabRadius = BorderRadius.circular(18);
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        color: colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(22),
       ),
       child: Row(
         children: [
@@ -64,23 +64,26 @@ class AppTabBar extends StatelessWidget {
                             horizontal: 8,
                             vertical: 8,
                           ),
-                          child: AnimatedDefaultTextStyle(
-                            duration: duration,
-                            curve: Curves.easeInOut,
-                            style:
-                                (theme.textTheme.labelLarge ??
-                                        const TextStyle())
-                                    .copyWith(
-                                      color: index == selectedIndex
-                                          ? colors.onSurface
-                                          : colors.onSurfaceVariant,
-                                      fontWeight: index == selectedIndex
-                                          ? FontWeight.w600
-                                          : FontWeight.w400,
-                                    ),
-                            child: Text(
-                              tabs[index],
-                              textAlign: TextAlign.center,
+                          child: Center(
+                            heightFactor: 1,
+                            child: AnimatedDefaultTextStyle(
+                              duration: duration,
+                              curve: Curves.easeInOut,
+                              style:
+                                  (theme.textTheme.labelLarge ??
+                                          const TextStyle())
+                                      .copyWith(
+                                        color: index == selectedIndex
+                                            ? colors.onSurface
+                                            : colors.onSurfaceVariant,
+                                        fontWeight: index == selectedIndex
+                                            ? FontWeight.w600
+                                            : FontWeight.w400,
+                                      ),
+                              child: Text(
+                                tabs[index],
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),

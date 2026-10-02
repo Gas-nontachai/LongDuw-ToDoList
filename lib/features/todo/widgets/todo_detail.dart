@@ -51,58 +51,134 @@ class TodoDetailDialog extends StatelessWidget {
       ],
     );
 
-    Widget dateField(IconData icon, String label, String value) => Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: Icon(icon, size: 22, color: colors.onSurfaceVariant),
-        ),
-        const SizedBox(width: 12),
-        Expanded(child: field(label, textValue(value))),
-      ],
-    );
-
-    final status = Semantics(
-      label:
-          '${l10n.status}: ${todo.completed ? l10n.completed : l10n.incomplete}',
-      excludeSemantics: true,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: todo.completed
-              ? colors.primaryContainer
-              : colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Text(
-          todo.completed ? l10n.completed : l10n.incomplete,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: todo.completed
-                ? colors.onPrimaryContainer
-                : colors.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
+    Widget dateField(
+      IconData icon,
+      String label,
+      String value, {
+      required bool compact,
+      required double scale,
+    }) {
+      final dateIcon = Icon(
+        icon,
+        size: 18 * scale,
+        color: colors.onSurfaceVariant,
+      );
+      final content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontSize: 12 * scale,
+              color: colors.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
+          const SizedBox(height: 4),
+          textValue(
+            value,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 13 * scale,
+              color: colors.onSurfaceVariant,
+              height: 1.4,
+            ),
+          ),
+        ],
+      );
+      if (compact) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [dateIcon, const SizedBox(height: 6), content],
+        );
+      }
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(padding: const EdgeInsets.only(top: 2), child: dateIcon),
+          const SizedBox(width: 8),
+          Expanded(child: content),
+        ],
+      );
+    }
+
+    final statusLabel = todo.completed ? l10n.completed : l10n.incomplete;
+    final statusDescription = '${l10n.status}: $statusLabel';
+    final statusStyle = theme.textTheme.labelMedium?.copyWith(
+      color: todo.completed
+          ? colors.onPrimaryContainer
+          : colors.onSurfaceVariant,
+      fontWeight: FontWeight.w600,
+    );
+    final headingStyle = theme.textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w700,
+    );
+    final knownPriority = PriorityConfig.values.contains(todo.priority);
+    final priorityLabel = knownPriority
+        ? PriorityConfig.options(l10n)[todo.priority]!
+        : '${l10n.priority}: ${todo.priority.isEmpty ? l10n.notSpecified : todo.priority}';
+
+    double textWidth(String text, TextStyle? style) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      final width = painter.width;
+      painter.dispose();
+      return width;
+    }
+
+    Widget statusBadge(bool compact) => Tooltip(
+      message: statusDescription,
+      child: Semantics(
+        label: statusDescription,
+        excludeSemantics: true,
+        child: compact
+            ? Icon(
+                todo.completed
+                    ? Icons.check_circle_outline
+                    : Icons.radio_button_unchecked,
+                size: 20,
+                color: statusStyle?.color,
+              )
+            : Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: todo.completed
+                      ? colors.primaryContainer
+                      : colors.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Text(statusLabel, style: statusStyle, maxLines: 1),
+              ),
       ),
     );
-    final dueDate = dateField(
-      Icons.calendar_month_outlined,
-      l10n.dueDate,
-      DateTimeUtils.formatDate(todo.dueDate, localizations: materialL10n),
-    );
-    final createdDate = dateField(
-      Icons.schedule_outlined,
-      l10n.createdAt,
-      createdAtText,
-    );
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final dialogWidth = constraints.maxWidth * DialogConfig.widthFactor;
-        final useDateColumns =
-            dialogWidth >= 520 &&
-            MediaQuery.textScalerOf(context).scale(16) <= 22;
+        final dateGap = dialogWidth < 520 ? 16.0 : 32.0;
+        final dateColumnWidth = (dialogWidth - 48 - dateGap) / 2;
+        final dateScale = (dateColumnWidth / 180).clamp(0.85, 1.0);
+        final compactDates =
+            dateColumnWidth < 180 ||
+            MediaQuery.textScalerOf(context).scale(16) > 22;
+        final dueDate = dateField(
+          Icons.calendar_month_outlined,
+          l10n.dueDate,
+          DateTimeUtils.formatDate(todo.dueDate, localizations: materialL10n),
+          compact: compactDates,
+          scale: dateScale,
+        );
+        final createdDate = dateField(
+          Icons.schedule_outlined,
+          l10n.createdAt,
+          createdAtText,
+          compact: compactDates,
+          scale: dateScale,
+        );
         return AlertDialog(
           constraints: BoxConstraints.tightFor(width: dialogWidth),
           scrollable: true,
@@ -122,46 +198,72 @@ class TodoDetailDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 24,
-                    runSpacing: 12,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const AppIcon.asset(AppIconAssets.task, size: 28),
-                          const SizedBox(width: 10),
-                          Flexible(
-                            child: Text(
-                              l10n.details,
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
+                LayoutBuilder(
+                  builder: (context, headerConstraints) {
+                    final headingWidth =
+                        38 + textWidth(l10n.details, headingStyle);
+                    final priorityWidth = knownPriority
+                        ? 41 + textWidth(priorityLabel, statusStyle)
+                        : textWidth(priorityLabel, labelStyle);
+                    final fullWidth =
+                        headingWidth +
+                        16 +
+                        textWidth(statusLabel, statusStyle) +
+                        24 +
+                        8 +
+                        priorityWidth;
+                    final compact = fullWidth > headerConstraints.maxWidth;
+                    final heading = Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const AppIcon.asset(AppIconAssets.task, size: 28),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: Text(l10n.details, style: headingStyle),
+                        ),
+                      ],
+                    );
+                    final badges = Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        statusBadge(compact),
+                        const SizedBox(width: 8),
+                        if (knownPriority)
+                          TodoPriorityBadge(
+                            priority: todo.priority,
+                            compact: compact,
+                          )
+                        else if (compact)
+                          Tooltip(
+                            message: priorityLabel,
+                            child: Icon(
+                              Icons.flag_outlined,
+                              size: 18,
+                              semanticLabel: priorityLabel,
                             ),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 8,
+                          )
+                        else
+                          Text(priorityLabel, style: labelStyle),
+                      ],
+                    );
+                    // Give enlarged text its own row when even icons won't fit.
+                    if (compact &&
+                        headingWidth + 62 > headerConstraints.maxWidth) {
+                      return Wrap(
+                        spacing: 16,
                         runSpacing: 8,
-                        children: [
-                          status,
-                          if (PriorityConfig.values.contains(todo.priority))
-                            TodoPriorityBadge(priority: todo.priority)
-                          else
-                            Text(
-                              '${l10n.priority}: ${todo.priority.isEmpty ? l10n.notSpecified : todo.priority}',
-                              style: labelStyle,
-                            ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [heading, badges],
+                      );
+                    }
+                    return Row(
+                      children: [
+                        Expanded(child: heading),
+                        const SizedBox(width: 16),
+                        badges,
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 28),
                 field(
@@ -179,22 +281,16 @@ class TodoDetailDialog extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Divider(height: 1),
                 const SizedBox(height: 20),
-                if (useDateColumns)
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: dueDate),
-                        const VerticalDivider(width: 32),
-                        Expanded(child: createdDate),
-                      ],
-                    ),
-                  )
-                else ...[
-                  dueDate,
-                  const SizedBox(height: 20),
-                  createdDate,
-                ],
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: dueDate),
+                      VerticalDivider(width: dateGap),
+                      Expanded(child: createdDate),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

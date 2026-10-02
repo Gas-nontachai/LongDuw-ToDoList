@@ -157,4 +157,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notSpecified => 'Not specified';
+
+  @override
+  String get viewTodo => 'View';
+
+  @override
+  String get moreActions => 'More actions';
+
+  @override
+  String taskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks remaining',
+      one: '1 task remaining',
+    );
+    return '$_temp0';
+  }
 }

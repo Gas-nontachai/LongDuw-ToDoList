@@ -48,23 +48,67 @@ class TodoList extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
+    final pending = filteredTodos.where((todo) => !todo.completed).toList();
+    final completed = filteredTodos.where((todo) => todo.completed).toList();
+    final ordered = showCompleted == null
+        ? [...pending, ...completed]
+        : filteredTodos;
+    final sectionIndex = showCompleted == null && completed.isNotEmpty
+        ? pending.length
+        : -1;
+    return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(12),
-      itemCount: filteredTodos.length,
-      itemBuilder: (context, index) {
-        final todo = filteredTodos[index];
-        return TodoItem(
-          key: ValueKey(todo.id),
-          todo: todo,
-          itemNumber: index + 1,
-          isBusy: busyIds.contains(todo.id),
-          onClick: () => onTodoTap(todo),
-          onToggle: () => onToggle(todo),
-          onEdit: () => onEdit(todo),
-          onDelete: () => onDelete(todo),
-        );
-      },
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              for (var index = 0; index < ordered.length; index++) ...[
+                if (index == sectionIndex)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
+                    child: Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.completed,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                  )
+                else if (index > 0)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Divider(height: 1),
+                  ),
+                TodoItem(
+                  key: ValueKey(ordered[index].id),
+                  todo: ordered[index],
+                  itemNumber: index + 1,
+                  isBusy: busyIds.contains(ordered[index].id),
+                  onClick: () => onTodoTap(ordered[index]),
+                  onToggle: () => onToggle(ordered[index]),
+                  onEdit: () => onEdit(ordered[index]),
+                  onDelete: () => onDelete(ordered[index]),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -391,6 +391,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not specified'**
   String get notSpecified;
+
+  /// No description provided for @viewTodo.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get viewTodo;
+
+  /// No description provided for @moreActions.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get moreActions;
+
+  /// No description provided for @taskCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task remaining} other{{count} tasks remaining}}'**
+  String taskCount(int count);
 }
 
 class _AppLocalizationsDelegate

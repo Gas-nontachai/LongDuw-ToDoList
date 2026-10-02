@@ -56,5 +56,15 @@
   "sortTitleDescending": "ชื่อ: ฮ → ก / Z → A",
   "createdAt": "วันที่สร้าง",
   "todoId": "รหัสรายการ",
-  "notSpecified": "ไม่ได้ระบุ"
+  "notSpecified": "ไม่ได้ระบุ",
+  "viewTodo": "ดู",
+  "moreActions": "เมนูเพิ่มเติม",
+  "taskCount": "เหลืออีก {count} งาน",
+  "@taskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

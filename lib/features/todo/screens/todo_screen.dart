@@ -33,15 +33,24 @@ class TodoScreen extends ConsumerStatefulWidget {
   ConsumerState<TodoScreen> createState() => _TodoScreenState();
 }
 
-class _TodoScreenState extends ConsumerState<TodoScreen> {
+class _TodoScreenState extends ConsumerState<TodoScreen>
+    with SingleTickerProviderStateMixin {
   final _searchDebouncer = Debouncer();
   final _searchController = TextEditingController();
   String _searchInput = '';
   String _searchQuery = '';
   _TodoSort _sort = _TodoSort.original;
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _searchDebouncer.dispose();
     _searchController.dispose();
     super.dispose();
@@ -224,17 +233,38 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     final operations = ref.watch(todoOperationProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isThai = Localizations.localeOf(context).languageCode == 'th';
+    final filteredItems = _filterTodos(todos.value ?? []);
+    final taskCount = todos.value?.where((todo) => !todo.completed).length ?? 0;
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 96,
+        titleSpacing: 24,
         title: Row(
           children: [
-            const AppIcon.asset(AppIconAssets.task, size: 24),
-            const SizedBox(width: 8),
+            const AppIcon.asset(AppIconAssets.task, size: 28),
+            const SizedBox(width: 14),
             Expanded(
-              child: Text(
-                l10n.appTitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.appTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (todos.hasValue) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.taskCount(taskCount),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ],
@@ -264,7 +294,6 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
           onRetry: () => ref.read(todoProvider.notifier).refreshTodos(),
         ),
         data: (items) {
-          final filteredItems = _filterTodos(items);
           return RefreshIndicator(
             onRefresh: ref.read(todoProvider.notifier).refreshTodos,
             child: Column(
@@ -278,6 +307,15 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                           controller: _searchController,
                           onChanged: _onSearchChanged,
                           decoration: InputDecoration(
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
                             prefixIcon: Icon(AppIcons.search),
                             hintText: l10n.searchTodosHint,
                             suffixIcon: _searchInput.isEmpty
@@ -314,6 +352,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                 ),
                 Expanded(
                   child: TabBarTodo(
+                    controller: _tabController,
                     todos: filteredItems,
                     busyIds: operations.busyIds,
                     onTodoTap: (todo) => _getTodoById(context, ref, todo),
@@ -331,16 +370,22 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: operations.isCreating ? null : () => _addTodo(context, ref),
-        tooltip: l10n.addTodoTooltip,
-        child: operations.isCreating
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Icon(AppIcons.add),
+      floatingActionButton: SizedBox(
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          onPressed: operations.isCreating
+              ? null
+              : () => _addTodo(context, ref),
+          tooltip: l10n.addTodoTooltip,
+          child: operations.isCreating
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(AppIcons.add, size: 34),
+        ),
       ),
     );
   }

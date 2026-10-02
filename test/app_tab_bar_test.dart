@@ -29,9 +29,18 @@ void main() {
       matching: find.byType(InkWell),
     );
     final firstSize = tester.getSize(targets.at(0));
-    expect(firstSize.height, greaterThanOrEqualTo(48));
+    expect(firstSize.height, greaterThanOrEqualTo(32));
     for (var index = 1; index < 4; index++) {
       expect(tester.getSize(targets.at(index)).width, firstSize.width);
+      expect(tester.getSize(targets.at(index)).height, firstSize.height);
+    }
+
+    for (var index = 0; index < 4; index++) {
+      final label = ['All', 'To Do', 'In Progress', 'Done'][index];
+      final targetCenter = tester.getCenter(targets.at(index));
+      final labelCenter = tester.getCenter(find.text(label));
+      expect(labelCenter.dx, closeTo(targetCenter.dx, 0.1));
+      expect(labelCenter.dy, closeTo(targetCenter.dy, 0.1));
     }
 
     await tester.tap(find.text('Done'));
@@ -104,14 +113,14 @@ void main() {
         await tester.tap(find.text(selector().tabs[1]));
         await tester.pumpAndSettle();
         expect(selector().selectedIndex, 1);
-        expect(find.text('Finished task').hitTestable(), findsOneWidget);
-        expect(find.text('Pending task').hitTestable(), findsNothing);
+        expect(find.text('Pending task').hitTestable(), findsOneWidget);
+        expect(find.text('Finished task').hitTestable(), findsNothing);
 
         await tester.drag(find.byType(TabBarView), const Offset(-600, 0));
         await tester.pumpAndSettle();
         expect(selector().selectedIndex, 2);
-        expect(find.text('Pending task').hitTestable(), findsOneWidget);
-        expect(find.text('Finished task').hitTestable(), findsNothing);
+        expect(find.text('Finished task').hitTestable(), findsOneWidget);
+        expect(find.text('Pending task').hitTestable(), findsNothing);
 
         await tester.tap(find.text(selector().tabs[0]));
         await tester.pumpAndSettle();

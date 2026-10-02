@@ -13,9 +13,11 @@ class TabBarTodo extends StatelessWidget {
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
+    this.controller,
     super.key,
   });
 
+  final TabController? controller;
   final List<Todo> todos;
   final Set<String> busyIds;
   final ValueChanged<Todo> onTodoTap;
@@ -35,11 +37,12 @@ class TabBarTodo extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Builder(
               builder: (context) {
-                final controller = DefaultTabController.of(context);
+                final controller =
+                    this.controller ?? DefaultTabController.of(context);
                 return AnimatedBuilder(
                   animation: controller,
                   builder: (context, child) => AppTabBar(
-                    tabs: [l10n.all, l10n.completed, l10n.incomplete],
+                    tabs: [l10n.all, l10n.incomplete, l10n.completed],
                     selectedIndex: controller.index,
                     onChanged: (index) => controller.animateTo(
                       index,
@@ -53,6 +56,7 @@ class TabBarTodo extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              controller: controller,
               children: [
                 TodoList(
                   todos: todos,
@@ -65,7 +69,7 @@ class TabBarTodo extends StatelessWidget {
                 ),
                 TodoList(
                   todos: todos,
-                  showCompleted: true,
+                  showCompleted: false,
                   busyIds: busyIds,
                   onTodoTap: onTodoTap,
                   onToggle: onToggle,
@@ -74,7 +78,7 @@ class TabBarTodo extends StatelessWidget {
                 ),
                 TodoList(
                   todos: todos,
-                  showCompleted: false,
+                  showCompleted: true,
                   busyIds: busyIds,
                   onTodoTap: onTodoTap,
                   onToggle: onToggle,

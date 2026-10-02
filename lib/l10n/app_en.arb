@@ -56,5 +56,15 @@
   "sortTitleDescending": "Title: Z → A",
   "createdAt": "Created at",
   "todoId": "ID",
-  "notSpecified": "Not specified"
+  "notSpecified": "Not specified",
+  "viewTodo": "View",
+  "moreActions": "More actions",
+  "taskCount": "{count, plural, =1{1 task remaining} other{{count} tasks remaining}}",
+  "@taskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

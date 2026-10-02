@@ -8,10 +8,19 @@ final ThemeData appTheme = _buildTheme(Brightness.light);
 final ThemeData appDarkTheme = _buildTheme(Brightness.dark);
 
 ThemeData _buildTheme(Brightness brightness) {
-  final colorScheme = ColorScheme.fromSeed(
+  final generated = ColorScheme.fromSeed(
     seedColor: const Color(0xFF007F78),
     brightness: brightness,
   );
+  final colorScheme = brightness == Brightness.light
+      ? generated.copyWith(
+          surface: const Color(0xFFFCFDFE),
+          surfaceContainerLow: const Color(0xFFF0F5F7),
+          onSurface: const Color(0xFF10131B),
+          onSurfaceVariant: const Color(0xFF748096),
+          outlineVariant: const Color(0xFFE1E9EE),
+        )
+      : generated;
   return ThemeData(
     fontFamily: 'Kanit',
     colorScheme: colorScheme,
@@ -50,8 +59,12 @@ ThemeData _buildTheme(Brightness brightness) {
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: colorScheme.primaryContainer,
-      foregroundColor: colorScheme.onPrimaryContainer,
+      backgroundColor: brightness == Brightness.light
+          ? const Color(0xFF70E5DE)
+          : colorScheme.primaryContainer,
+      foregroundColor: brightness == Brightness.light
+          ? const Color(0xFF006B69)
+          : colorScheme.onPrimaryContainer,
       elevation: 2,
       shape: const CircleBorder(),
     ),

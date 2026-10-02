@@ -157,4 +157,15 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get notSpecified => 'ไม่ได้ระบุ';
+
+  @override
+  String get viewTodo => 'ดู';
+
+  @override
+  String get moreActions => 'เมนูเพิ่มเติม';
+
+  @override
+  String taskCount(int count) {
+    return 'เหลืออีก $count งาน';
+  }
 }
