@@ -273,4 +273,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get collapseSheet => 'Collapse sheet';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navTasks => 'Tasks';
+
+  @override
+  String get navStats => 'Stats';
+
+  @override
+  String get navSettings => 'Settings';
 }

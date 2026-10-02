@@ -114,5 +114,9 @@
     }
   },
   "expandSheet": "Expand to full screen",
-  "collapseSheet": "Collapse sheet"
+  "collapseSheet": "Collapse sheet",
+  "navHome": "Home",
+  "navTasks": "Tasks",
+  "navStats": "Stats",
+  "navSettings": "Settings"
 }

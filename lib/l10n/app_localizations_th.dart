@@ -255,4 +255,16 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get collapseSheet => 'ย่อหน้าต่าง';
+
+  @override
+  String get navHome => 'หน้าแรก';
+
+  @override
+  String get navTasks => 'งาน';
+
+  @override
+  String get navStats => 'สถิติ';
+
+  @override
+  String get navSettings => 'ตั้งค่า';
 }

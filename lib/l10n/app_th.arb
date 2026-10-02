@@ -114,5 +114,9 @@
     }
   },
   "expandSheet": "ขยายเต็มจอ",
-  "collapseSheet": "ย่อหน้าต่าง"
+  "collapseSheet": "ย่อหน้าต่าง",
+  "navHome": "หน้าแรก",
+  "navTasks": "งาน",
+  "navStats": "สถิติ",
+  "navSettings": "ตั้งค่า"
 }
