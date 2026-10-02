@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons, IconData;
 
 /// Semantic application icons backed by the built-in Cupertino icon font.
 abstract final class AppIcons {
+  static const IconData sort = CupertinoIcons.sort_down;
   static const IconData search = CupertinoIcons.search;
   static const IconData add = CupertinoIcons.add;
   static const IconData edit = CupertinoIcons.pencil;

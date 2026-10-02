@@ -115,4 +115,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thai => 'ไทย';
+
+  @override
+  String get sortTodosTooltip => 'Sort todos';
+
+  @override
+  String get sortOriginal => 'Original order';
+
+  @override
+  String get sortTitleAscending => 'Title: A → Z';
+
+  @override
+  String get sortTitleDescending => 'Title: Z → A';
 }

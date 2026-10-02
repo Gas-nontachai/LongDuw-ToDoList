@@ -42,5 +42,9 @@
   "switchToLightMode": "Switch to light mode",
   "switchToDarkMode": "Switch to dark mode",
   "english": "English",
-  "thai": "ไทย"
+  "thai": "ไทย",
+  "sortTodosTooltip": "Sort todos",
+  "sortOriginal": "Original order",
+  "sortTitleAscending": "Title: A → Z",
+  "sortTitleDescending": "Title: Z → A"
 }

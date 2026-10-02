@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icons.dart';
 import '../../../shared/widgets/app_error.dart';
 import '../../../shared/widgets/app_loading.dart';
+import '../../../shared/widgets/app_sort_button.dart';
 import '../../../shared/widgets/app_toast.dart';
 import '../models/todo.dart';
 import '../providers/todo_provider.dart';
@@ -15,6 +16,8 @@ import '../widgets/todo_detail.dart';
 import '../widgets/tab_todo.dart';
 import '../../../shared/design/app_icon_assets.dart';
 import '../../../shared/widgets/app_icon.dart';
+
+enum _TodoSort { original, titleAscending, titleDescending }
 
 class TodoScreen extends ConsumerStatefulWidget {
   const TodoScreen({
@@ -35,6 +38,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
   final _searchController = TextEditingController();
   String _searchInput = '';
   String _searchQuery = '';
+  _TodoSort _sort = _TodoSort.original;
 
   @override
   void dispose() {
@@ -52,12 +56,24 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
   }
 
   List<Todo> _filterTodos(List<Todo> todos) {
-    if (_searchQuery.isEmpty) return todos;
-
-    return todos.where((todo) {
-      return todo.title.toLowerCase().contains(_searchQuery) ||
+    final matches = todos.indexed.where((entry) {
+      final todo = entry.$2;
+      return _searchQuery.isEmpty ||
+          todo.title.toLowerCase().contains(_searchQuery) ||
           todo.details.toLowerCase().contains(_searchQuery);
     }).toList();
+
+    if (_sort != _TodoSort.original) {
+      matches.sort((a, b) {
+        final comparison = a.$2.title.trim().toLowerCase().compareTo(
+          b.$2.title.trim().toLowerCase(),
+        );
+        // Keep the original order for matching titles in either direction.
+        if (comparison == 0) return a.$1.compareTo(b.$1);
+        return _sort == _TodoSort.titleAscending ? comparison : -comparison;
+      });
+    }
+    return matches.map((entry) => entry.$2).toList();
   }
 
   Future<void> _addTodo(BuildContext context, WidgetRef ref) async {
@@ -203,7 +219,13 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
           children: [
             const AppIcon.asset(AppIconAssets.task, size: 24),
             const SizedBox(width: 8),
-            Text(l10n.appTitle),
+            Expanded(
+              child: Text(
+                l10n.appTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         actions: [
@@ -238,20 +260,45 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: _onSearchChanged,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(AppIcons.search),
-                      hintText: l10n.searchTodosHint,
-                      suffixIcon: _searchInput.isEmpty
-                          ? null
-                          : IconButton(
-                              tooltip: l10n.clearSearchTooltip,
-                              icon: const Icon(AppIcons.close),
-                              onPressed: _searchController.clear,
-                            ),
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: _onSearchChanged,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(AppIcons.search),
+                            hintText: l10n.searchTodosHint,
+                            suffixIcon: _searchInput.isEmpty
+                                ? null
+                                : IconButton(
+                                    tooltip: l10n.clearSearchTooltip,
+                                    icon: const Icon(AppIcons.close),
+                                    onPressed: () {
+                                      _searchDebouncer.dispose();
+                                      _searchController.clear();
+                                      setState(() {
+                                        _searchInput = '';
+                                        _searchQuery = '';
+                                      });
+                                    },
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      AppSortButton<_TodoSort>(
+                        value: _sort,
+                        options: {
+                          _TodoSort.original: l10n.sortOriginal,
+                          _TodoSort.titleAscending: l10n.sortTitleAscending,
+                          _TodoSort.titleDescending: l10n.sortTitleDescending,
+                        },
+                        tooltip: l10n.sortTodosTooltip,
+                        isActive: _sort != _TodoSort.original,
+                        onChanged: (value) => setState(() => _sort = value),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(

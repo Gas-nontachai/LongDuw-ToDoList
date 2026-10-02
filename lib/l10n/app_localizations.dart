@@ -307,6 +307,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ไทย'**
   String get thai;
+
+  /// No description provided for @sortTodosTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort todos'**
+  String get sortTodosTooltip;
+
+  /// No description provided for @sortOriginal.
+  ///
+  /// In en, this message translates to:
+  /// **'Original order'**
+  String get sortOriginal;
+
+  /// No description provided for @sortTitleAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Title: A → Z'**
+  String get sortTitleAscending;
+
+  /// No description provided for @sortTitleDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Title: Z → A'**
+  String get sortTitleDescending;
 }
 
 class _AppLocalizationsDelegate

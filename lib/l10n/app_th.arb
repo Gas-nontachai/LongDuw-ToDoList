@@ -42,5 +42,9 @@
   "switchToLightMode": "เปลี่ยนเป็นโหมดสว่าง",
   "switchToDarkMode": "เปลี่ยนเป็นโหมดมืด",
   "english": "English",
-  "thai": "ไทย"
+  "thai": "ไทย",
+  "sortTodosTooltip": "เรียงลำดับรายการ",
+  "sortOriginal": "ลำดับเดิม",
+  "sortTitleAscending": "ชื่อ: ก → ฮ / A → Z",
+  "sortTitleDescending": "ชื่อ: ฮ → ก / Z → A"
 }
