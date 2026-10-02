@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_text_field.dart';
 import '../models/todo.dart';
 
 Future<TodoFormData?> showTodoForm(BuildContext context, {Todo? todo}) {
@@ -68,11 +69,11 @@ class _TodoFormDialogState extends State<TodoFormDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
+            AppTextField(
               controller: _controller,
               autofocus: true,
               textInputAction: TextInputAction.done,
-              decoration: InputDecoration(labelText: l10n.title),
+              label: l10n.title,
               validator: (value) => value == null || value.trim().isEmpty
                   ? l10n.enterTitle
                   : null,

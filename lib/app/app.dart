@@ -14,9 +14,14 @@ class TodoApp extends StatefulWidget {
 
 class _TodoAppState extends State<TodoApp> {
   Locale? _locale;
+  ThemeMode _themeMode = ThemeMode.system;
 
   void _changeLocale(Locale locale) {
     setState(() => _locale = locale);
+  }
+
+  void _changeThemeMode(ThemeMode mode) {
+    setState(() => _themeMode = mode);
   }
 
   @override
@@ -24,6 +29,8 @@ class _TodoAppState extends State<TodoApp> {
     locale: _locale,
     onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
     theme: appTheme,
+    darkTheme: appDarkTheme,
+    themeMode: _themeMode,
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -31,6 +38,9 @@ class _TodoAppState extends State<TodoApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    home: TodoScreen(onLocaleChanged: _changeLocale),
+    home: TodoScreen(
+      onLocaleChanged: _changeLocale,
+      onThemeModeChanged: _changeThemeMode,
+    ),
   );
 }

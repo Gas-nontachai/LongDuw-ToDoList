@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/design/app_icons.dart';
 import '../models/todo.dart';
 
 class TodoItem extends StatelessWidget {
@@ -66,12 +67,12 @@ class TodoItem extends StatelessWidget {
                   IconButton(
                     onPressed: onEdit,
                     tooltip: l10n.editTooltip,
-                    icon: const Icon(Icons.edit_outlined),
+                    icon: const Icon(AppIcons.edit),
                   ),
                   IconButton(
                     onPressed: onDelete,
                     tooltip: l10n.deleteTooltip,
-                    icon: const Icon(Icons.delete_outline),
+                    icon: const Icon(AppIcons.delete),
                   ),
                 ],
               ),

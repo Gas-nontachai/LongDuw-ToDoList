@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../design/app_icons.dart';
 
 enum AppToastType { success, error, loading }
 
@@ -224,8 +226,9 @@ class _AppToastOverlayState extends State<_AppToastOverlay>
                                     )
                                   : Icon(
                                       isError
-                                          ? Icons.error_outline_rounded
-                                          : Icons.check_circle_outline_rounded,
+                                          ? CupertinoIcons
+                                                .exclamationmark_circle
+                                          : CupertinoIcons.check_mark_circled,
                                       color: accentColor,
                                     ),
                             ),
@@ -243,7 +246,7 @@ class _AppToastOverlayState extends State<_AppToastOverlay>
                               onPressed: _dismiss,
                               tooltip: AppLocalizations.of(context)!
                                   .dismissTooltip,
-                              icon: const Icon(Icons.close_rounded),
+                              icon: const Icon(AppIcons.close),
                             ),
                           ],
                         ),

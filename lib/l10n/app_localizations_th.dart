@@ -102,6 +102,12 @@ class AppLocalizationsTh extends AppLocalizations {
   String get changeLanguage => 'เปลี่ยนภาษา';
 
   @override
+  String get switchToLightMode => 'เปลี่ยนเป็นโหมดสว่าง';
+
+  @override
+  String get switchToDarkMode => 'เปลี่ยนเป็นโหมดมืด';
+
+  @override
   String get english => 'English';
 
   @override

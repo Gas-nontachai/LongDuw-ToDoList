@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/design/app_icons.dart';
 import '../models/todo.dart';
 import 'todo_list.dart';
 
@@ -34,8 +36,11 @@ class TabBarTodo extends StatelessWidget {
             color: Theme.of(context).colorScheme.surface,
             child: TabBar(
               tabs: [
-                Tab(icon: const Icon(Icons.check), text: l10n.completed),
-                Tab(icon: const Icon(Icons.close), text: l10n.incomplete),
+                Tab(
+                  icon: const Icon(CupertinoIcons.check_mark),
+                  text: l10n.completed,
+                ),
+                Tab(icon: const Icon(AppIcons.close), text: l10n.incomplete),
               ],
             ),
           ),

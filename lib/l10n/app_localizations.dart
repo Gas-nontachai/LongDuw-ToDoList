@@ -278,6 +278,18 @@ abstract class AppLocalizations {
   /// **'Change language'**
   String get changeLanguage;
 
+  /// No description provided for @switchToLightMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to light mode'**
+  String get switchToLightMode;
+
+  /// No description provided for @switchToDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to dark mode'**
+  String get switchToDarkMode;
+
   /// No description provided for @english.
   ///
   /// In en, this message translates to:

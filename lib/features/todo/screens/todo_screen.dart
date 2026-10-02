@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/debouncer.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/design/app_icons.dart';
 import '../../../shared/widgets/app_error.dart';
 import '../../../shared/widgets/app_loading.dart';
 import '../../../shared/widgets/app_toast.dart';
@@ -13,9 +15,14 @@ import '../widgets/todo_detail.dart';
 import '../widgets/tab_todo.dart';
 
 class TodoScreen extends ConsumerStatefulWidget {
-  const TodoScreen({required this.onLocaleChanged, super.key});
+  const TodoScreen({
+    required this.onLocaleChanged,
+    required this.onThemeModeChanged,
+    super.key,
+  });
 
   final ValueChanged<Locale> onLocaleChanged;
+  final ValueChanged<ThemeMode> onThemeModeChanged;
 
   @override
   ConsumerState<TodoScreen> createState() => _TodoScreenState();
@@ -186,13 +193,21 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     final l10n = AppLocalizations.of(context)!;
     final todos = ref.watch(todoProvider);
     final operations = ref.watch(todoOperationProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.appTitle),
         actions: [
+          IconButton(
+            tooltip: isDark ? l10n.switchToLightMode : l10n.switchToDarkMode,
+            icon: Icon(isDark ? CupertinoIcons.sun_max : CupertinoIcons.moon),
+            onPressed: () => widget.onThemeModeChanged(
+              isDark ? ThemeMode.light : ThemeMode.dark,
+            ),
+          ),
           PopupMenuButton<Locale>(
             tooltip: l10n.changeLanguage,
-            icon: const Icon(Icons.language),
+            icon: const Icon(CupertinoIcons.globe),
             onSelected: widget.onLocaleChanged,
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -216,19 +231,18 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                   child: TextField(
                     controller: _searchController,
                     onChanged: _onSearchChanged,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(AppIcons.search),
                       hintText: l10n.searchTodosHint,
                       suffixIcon: _searchInput.isEmpty
                           ? null
                           : IconButton(
                               tooltip: l10n.clearSearchTooltip,
-                              icon: const Icon(Icons.clear),
+                              icon: const Icon(AppIcons.close),
                               onPressed: _searchController.clear,
                             ),
                     ),
@@ -262,7 +276,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                 height: 20,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Icon(Icons.add),
+            : const Icon(AppIcons.add),
       ),
     );
   }

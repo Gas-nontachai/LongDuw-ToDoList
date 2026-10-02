@@ -38,6 +38,8 @@
   "deleteTooltip": "ลบ",
   "dismissTooltip": "ปิด",
   "changeLanguage": "เปลี่ยนภาษา",
+  "switchToLightMode": "เปลี่ยนเป็นโหมดสว่าง",
+  "switchToDarkMode": "เปลี่ยนเป็นโหมดมืด",
   "english": "English",
   "thai": "ไทย"
 }

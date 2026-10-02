@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 class PaginationControls extends StatelessWidget {
@@ -24,7 +25,7 @@ class PaginationControls extends StatelessWidget {
             onPressed: currentPage > 1
                 ? () => onPageChanged(currentPage - 1)
                 : null,
-            icon: const Icon(Icons.chevron_left),
+            icon: const Icon(CupertinoIcons.chevron_left),
           ),
           Text('Page $currentPage of $pageCount'),
           IconButton(
@@ -32,7 +33,7 @@ class PaginationControls extends StatelessWidget {
             onPressed: currentPage < pageCount
                 ? () => onPageChanged(currentPage + 1)
                 : null,
-            icon: const Icon(Icons.chevron_right),
+            icon: const Icon(CupertinoIcons.chevron_right),
           ),
         ],
       ),

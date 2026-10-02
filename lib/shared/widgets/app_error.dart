@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -19,7 +20,7 @@ class AppError extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton.icon(
             onPressed: onRetry,
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(CupertinoIcons.refresh),
             label: Text(AppLocalizations.of(context)!.retry),
           ),
         ],

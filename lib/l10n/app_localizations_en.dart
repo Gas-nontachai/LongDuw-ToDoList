@@ -102,6 +102,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeLanguage => 'Change language';
 
   @override
+  String get switchToLightMode => 'Switch to light mode';
+
+  @override
+  String get switchToDarkMode => 'Switch to dark mode';
+
+  @override
   String get english => 'English';
 
   @override

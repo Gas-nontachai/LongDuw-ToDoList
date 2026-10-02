@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/design/app_icon_assets.dart';
+import '../../../shared/widgets/app_icon.dart';
 import '../models/todo.dart';
 
 Future<void> showTodoDetail(BuildContext context, {required Todo todo}) {
@@ -25,7 +27,13 @@ class TodoDetailDialog extends StatelessWidget {
         : theme.colorScheme.onSurfaceVariant;
 
     return AlertDialog(
-      title: Text(todo.title, style: theme.textTheme.titleLarge),
+      title: Row(
+        children: [
+          const AppIcon.asset(AppIconAssets.task, size: 24),
+          const SizedBox(width: 8),
+          Expanded(child: Text(todo.title, style: theme.textTheme.titleLarge)),
+        ],
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

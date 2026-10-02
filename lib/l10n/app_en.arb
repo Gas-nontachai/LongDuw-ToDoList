@@ -38,6 +38,8 @@
   "deleteTooltip": "Delete",
   "dismissTooltip": "Dismiss",
   "changeLanguage": "Change language",
+  "switchToLightMode": "Switch to light mode",
+  "switchToDarkMode": "Switch to dark mode",
   "english": "English",
   "thai": "ไทย"
 }
