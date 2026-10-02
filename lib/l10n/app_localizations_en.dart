@@ -57,6 +57,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get status => 'Status';
 
   @override
+  String get priority => 'Priority';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityHigh => 'High';
+
+  @override
   String get all => 'All';
 
   @override

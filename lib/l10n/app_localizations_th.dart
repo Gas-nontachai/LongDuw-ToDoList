@@ -57,6 +57,18 @@ class AppLocalizationsTh extends AppLocalizations {
   String get status => 'สถานะ';
 
   @override
+  String get priority => 'ความสำคัญ';
+
+  @override
+  String get priorityLow => 'ต่ำ';
+
+  @override
+  String get priorityMedium => 'ปานกลาง';
+
+  @override
+  String get priorityHigh => 'สูง';
+
+  @override
   String get all => 'ทั้งหมด';
 
   @override
