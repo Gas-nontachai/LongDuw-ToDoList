@@ -52,6 +52,12 @@ void main() {
     expect(rescheduled.createdAt, DateTime.utc(2026, 10, 3));
     expect(rescheduled.dueDate, DateTime.utc(2026, 10, 6));
     expect(rescheduled.priority, 'low');
+
+    final withoutDueDate = todo.copyWith(clearDueDate: true);
+    expect(withoutDueDate.dueDate, isNull);
+    expect(withoutDueDate.toJson()['due_date'], isNull);
+    expect(withoutDueDate.createdAt, todo.createdAt);
+    expect(withoutDueDate.priority, todo.priority);
   });
 
   test('Todo supports missing, null, and invalid dates', () {

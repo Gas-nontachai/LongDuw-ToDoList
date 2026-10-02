@@ -84,7 +84,12 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
       context,
       () => ref
           .read(todoProvider.notifier)
-          .addTodo(formData.title, formData.details),
+          .addTodo(
+            formData.title,
+            formData.details,
+            priority: formData.priority,
+            dueDate: formData.dueDate,
+          ),
       l10n.todoAdded,
     );
   }
@@ -106,7 +111,13 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
       () => ref
           .read(todoProvider.notifier)
           .updateTodo(
-            todo.copyWith(title: formData.title, details: formData.details),
+            todo.copyWith(
+              title: formData.title,
+              details: formData.details,
+              priority: formData.priority,
+              dueDate: formData.dueDate,
+              clearDueDate: formData.dueDate == null,
+            ),
           ),
       l10n.todoUpdated,
     );

@@ -8,4 +8,5 @@ abstract final class AppIcons {
   static const IconData edit = CupertinoIcons.pencil;
   static const IconData delete = CupertinoIcons.trash;
   static const IconData close = CupertinoIcons.xmark;
+  static const IconData priority = CupertinoIcons.flag_fill;
 }

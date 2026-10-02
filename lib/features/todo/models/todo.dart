@@ -44,6 +44,7 @@ class Todo {
     String? details,
     DateTime? createdAt,
     DateTime? dueDate,
+    bool clearDueDate = false,
     String? priority,
   }) => Todo(
     id: id ?? this.id,
@@ -51,7 +52,7 @@ class Todo {
     completed: completed ?? this.completed,
     details: details ?? this.details,
     createdAt: createdAt ?? this.createdAt,
-    dueDate: dueDate ?? this.dueDate,
+    dueDate: clearDueDate ? null : dueDate ?? this.dueDate,
     priority: priority ?? this.priority,
   );
 }

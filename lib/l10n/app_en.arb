@@ -27,6 +27,9 @@
   "priorityLow": "Low",
   "priorityMedium": "Medium",
   "priorityHigh": "High",
+  "dueDate": "Due date",
+  "selectDueDate": "Select a due date",
+  "clearDueDate": "Clear due date",
   "all": "All",
   "completed": "Completed",
   "incomplete": "Incomplete",
@@ -50,5 +53,8 @@
   "sortTodosTooltip": "Sort todos",
   "sortOriginal": "Original order",
   "sortTitleAscending": "Title: A → Z",
-  "sortTitleDescending": "Title: Z → A"
+  "sortTitleDescending": "Title: Z → A",
+  "createdAt": "Created at",
+  "todoId": "ID",
+  "notSpecified": "Not specified"
 }

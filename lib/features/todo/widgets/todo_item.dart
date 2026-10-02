@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/config/priority_config.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icons.dart';
 import '../models/todo.dart';
+import 'todo_priority_badge.dart';
 
 class TodoItem extends StatelessWidget {
   const TodoItem({
@@ -28,54 +30,73 @@ class TodoItem extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      child: ListTile(
-        onTap: onClick,
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 28,
-              child: Text(
-                '#$itemNumber',
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
-            Checkbox(
-              value: todo.completed,
-              onChanged: isBusy ? null : (_) => onToggle(),
-            ),
-          ],
-        ),
-        title: Text(
-          todo.title,
-          style: TextStyle(
-            decoration: todo.completed ? TextDecoration.lineThrough : null,
-            color: todo.completed
-                ? colorScheme.onSurfaceVariant
-                : colorScheme.onSurface,
-          ),
-        ),
-        trailing: isBusy
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: onEdit,
-                    tooltip: l10n.editTooltip,
-                    icon: const Icon(AppIcons.edit),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            onTap: onClick,
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 28,
+                  child: Text(
+                    '#$itemNumber',
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
-                  IconButton(
-                    onPressed: onDelete,
-                    tooltip: l10n.deleteTooltip,
-                    icon: const Icon(AppIcons.delete),
+                ),
+                Checkbox(
+                  value: todo.completed,
+                  onChanged: isBusy ? null : (_) => onToggle(),
+                ),
+              ],
+            ),
+            title: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    todo.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      decoration: todo.completed
+                          ? TextDecoration.lineThrough
+                          : null,
+                      color: todo.completed
+                          ? colorScheme.onSurfaceVariant
+                          : colorScheme.onSurface,
+                    ),
                   ),
+                ),
+                if (PriorityConfig.values.contains(todo.priority)) ...[
+                  const SizedBox(width: 8),
+                  TodoPriorityBadge(priority: todo.priority, compact: true),
                 ],
-              ),
+              ],
+            ),
+            trailing: isBusy
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: onEdit,
+                        tooltip: l10n.editTooltip,
+                        icon: const Icon(AppIcons.edit),
+                      ),
+                      IconButton(
+                        onPressed: onDelete,
+                        tooltip: l10n.deleteTooltip,
+                        icon: const Icon(AppIcons.delete),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
       ),
     );
   }

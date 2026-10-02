@@ -9,9 +9,27 @@ import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
 
 const _todos = [
-  Todo(id: '1', title: 'Zulu', details: 'match', completed: false),
-  Todo(id: '2', title: 'alpha', details: 'match', completed: true),
-  Todo(id: '3', title: 'Bravo', details: 'other', completed: true),
+  Todo(
+    id: '1',
+    title: 'Zulu',
+    details: 'match',
+    completed: false,
+    priority: 'low',
+  ),
+  Todo(
+    id: '2',
+    title: 'alpha',
+    details: 'match',
+    completed: true,
+    priority: 'medium',
+  ),
+  Todo(
+    id: '3',
+    title: 'Bravo',
+    details: 'other',
+    completed: true,
+    priority: 'high',
+  ),
 ];
 
 class _TestTodos extends TodoNotifier {

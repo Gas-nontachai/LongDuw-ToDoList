@@ -27,6 +27,9 @@
   "priorityLow": "ต่ำ",
   "priorityMedium": "ปานกลาง",
   "priorityHigh": "สูง",
+  "dueDate": "วันครบกำหนด",
+  "selectDueDate": "เลือกวันครบกำหนด",
+  "clearDueDate": "ล้างวันครบกำหนด",
   "all": "ทั้งหมด",
   "completed": "เสร็จแล้ว",
   "incomplete": "ยังไม่เสร็จ",
@@ -50,5 +53,8 @@
   "sortTodosTooltip": "เรียงลำดับรายการ",
   "sortOriginal": "ลำดับเดิม",
   "sortTitleAscending": "ชื่อ: ก → ฮ / A → Z",
-  "sortTitleDescending": "ชื่อ: ฮ → ก / Z → A"
+  "sortTitleDescending": "ชื่อ: ฮ → ก / Z → A",
+  "createdAt": "วันที่สร้าง",
+  "todoId": "รหัสรายการ",
+  "notSpecified": "ไม่ได้ระบุ"
 }

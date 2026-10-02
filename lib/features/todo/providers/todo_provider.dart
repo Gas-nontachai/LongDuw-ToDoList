@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
+import '../../../core/config/priority_config.dart';
 import '../models/todo.dart';
 import '../services/todo_service.dart';
 
@@ -49,11 +50,21 @@ class TodoNotifier extends AsyncNotifier<List<Todo>> {
     state = await AsyncValue.guard(_service.getTodos);
   }
 
-  Future<void> addTodo(String title, String details) async {
+  Future<void> addTodo(
+    String title,
+    String details, {
+    String priority = PriorityConfig.medium,
+    DateTime? dueDate,
+  }) async {
     final operations = ref.read(todoOperationProvider.notifier);
     operations.setCreating(true);
     try {
-      final created = await _service.createTodo(title, details);
+      final created = await _service.createTodo(
+        title,
+        details,
+        priority: priority,
+        dueDate: dueDate,
+      );
       state = AsyncData([...state.value ?? [], created]);
     } finally {
       operations.setCreating(false);

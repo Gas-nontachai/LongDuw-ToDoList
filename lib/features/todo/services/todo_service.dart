@@ -1,4 +1,5 @@
 import '../../../core/api/api_client.dart';
+import '../../../core/config/priority_config.dart';
 import '../models/todo.dart';
 
 class TodoService {
@@ -25,10 +26,21 @@ class TodoService {
     return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
   }
 
-  Future<Todo> createTodo(String title, String details) async {
+  Future<Todo> createTodo(
+    String title,
+    String details, {
+    String priority = PriorityConfig.medium,
+    DateTime? dueDate,
+  }) async {
     final response = await _apiClient.post(
       '/todos',
-      data: {'title': title, 'details': details, 'completed': false},
+      data: {
+        'title': title,
+        'details': details,
+        'completed': false,
+        'priority': priority,
+        'due_date': dueDate?.toIso8601String(),
+      },
     );
     return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
   }

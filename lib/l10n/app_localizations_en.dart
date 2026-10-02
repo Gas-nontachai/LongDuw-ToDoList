@@ -69,6 +69,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get priorityHigh => 'High';
 
   @override
+  String get dueDate => 'Due date';
+
+  @override
+  String get selectDueDate => 'Select a due date';
+
+  @override
+  String get clearDueDate => 'Clear due date';
+
+  @override
   String get all => 'All';
 
   @override
@@ -139,4 +148,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sortTitleDescending => 'Title: Z → A';
+
+  @override
+  String get createdAt => 'Created at';
+
+  @override
+  String get todoId => 'ID';
+
+  @override
+  String get notSpecified => 'Not specified';
 }

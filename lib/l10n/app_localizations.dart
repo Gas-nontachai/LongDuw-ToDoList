@@ -212,6 +212,24 @@ abstract class AppLocalizations {
   /// **'High'**
   String get priorityHigh;
 
+  /// No description provided for @dueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get dueDate;
+
+  /// No description provided for @selectDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a due date'**
+  String get selectDueDate;
+
+  /// No description provided for @clearDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear due date'**
+  String get clearDueDate;
+
   /// No description provided for @all.
   ///
   /// In en, this message translates to:
@@ -355,6 +373,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Title: Z → A'**
   String get sortTitleDescending;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created at'**
+  String get createdAt;
+
+  /// No description provided for @todoId.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get todoId;
+
+  /// No description provided for @notSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
 }
 
 class _AppLocalizationsDelegate

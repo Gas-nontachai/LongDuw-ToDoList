@@ -6,6 +6,7 @@ import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_detail.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
 import 'package:my_first_flutter_app/shared/design/app_icon_assets.dart';
+import 'package:my_first_flutter_app/shared/design/app_icons.dart';
 import 'package:my_first_flutter_app/shared/widgets/app_icon.dart';
 
 void main() {
@@ -41,6 +42,7 @@ void main() {
                     title: 'Task title',
                     details: 'Task details',
                     completed: false,
+                    priority: 'high',
                   ),
                 ),
                 child: const Text('Open'),
@@ -56,7 +58,9 @@ void main() {
       final l10n = AppLocalizations.of(iconContext)!;
       expect(find.text('Task title'), findsOneWidget);
       expect(find.text('Task details'), findsOneWidget);
-      expect(find.text('${l10n.status}: ${l10n.incomplete}'), findsOneWidget);
+      expect(find.text(l10n.priorityHigh), findsOneWidget);
+      expect(find.byIcon(AppIcons.priority), findsOneWidget);
+      expect(find.text(l10n.incomplete), findsOneWidget);
       final svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
       expect(
         svg.colorFilter,

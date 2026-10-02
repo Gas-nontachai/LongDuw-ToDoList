@@ -69,6 +69,15 @@ class AppLocalizationsTh extends AppLocalizations {
   String get priorityHigh => 'สูง';
 
   @override
+  String get dueDate => 'วันครบกำหนด';
+
+  @override
+  String get selectDueDate => 'เลือกวันครบกำหนด';
+
+  @override
+  String get clearDueDate => 'ล้างวันครบกำหนด';
+
+  @override
   String get all => 'ทั้งหมด';
 
   @override
@@ -139,4 +148,13 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get sortTitleDescending => 'ชื่อ: ฮ → ก / Z → A';
+
+  @override
+  String get createdAt => 'วันที่สร้าง';
+
+  @override
+  String get todoId => 'รหัสรายการ';
+
+  @override
+  String get notSpecified => 'ไม่ได้ระบุ';
 }

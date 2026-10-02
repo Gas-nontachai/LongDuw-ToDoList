@@ -17,12 +17,25 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 class FakeTodoService extends TodoService {
   FakeTodoService() : super(ApiClient(dio: Dio()));
 
+  Todo? createdTodo;
+
   @override
   Future<List<Todo>> getTodos() async => const [];
 
   @override
-  Future<Todo> createTodo(String title, String details) async =>
-      Todo(id: '1', title: title, details: details, completed: false);
+  Future<Todo> createTodo(
+    String title,
+    String details, {
+    String priority = 'medium',
+    DateTime? dueDate,
+  }) async => createdTodo = Todo(
+    id: '1',
+    title: title,
+    details: details,
+    completed: false,
+    priority: priority,
+    dueDate: dueDate,
+  );
 }
 
 void main() {
@@ -138,11 +151,13 @@ void main() {
                   onPressed: () async {
                     result = await showTodoForm(
                       context,
-                      todo: const Todo(
+                      todo: Todo(
                         id: '1',
                         title: 'Original title',
                         details: ' Original details ',
                         completed: false,
+                        priority: 'low',
+                        dueDate: DateTime.utc(2026, 10, 5, 10, 30),
                       ),
                     );
                   },
@@ -159,6 +174,16 @@ void main() {
         final l10n = AppLocalizations.of(tester.element(fields.first))!;
         expect(find.text('Original title'), findsOneWidget);
         expect(find.text(' Original details '), findsOneWidget);
+        final priority = tester.widget<DropdownButtonFormField<String>>(
+          find.byType(DropdownButtonFormField<String>),
+        );
+        expect(priority.initialValue, 'low');
+        final dueDateField = tester.widget<TextFormField>(fields.last);
+        expect(
+          dueDateField.controller!.text,
+          MaterialLocalizations.of(tester.element(fields.last))
+              .formatMediumDate(DateTime.utc(2026, 10, 5)),
+        );
 
         await tester.enterText(fields.first, '   ');
         await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -167,12 +192,81 @@ void main() {
         expect(find.byType(TodoFormDialog), findsOneWidget);
         expect(result, isNull);
 
+        await tester.tap(find.byType(DropdownButtonFormField<String>));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(l10n.priorityHigh).last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip(l10n.clearDueDate));
+        await tester.pumpAndSettle();
         await tester.enterText(fields.first, ' Updated title ');
         await tester.testTextInput.receiveAction(TextInputAction.done);
         await tester.pumpAndSettle();
         expect(find.byType(TodoFormDialog), findsNothing);
         expect(result?.title, 'Updated title');
         expect(result?.details, 'Original details');
+        expect(result?.priority, 'high');
+        expect(result?.dueDate, isNull);
+      },
+    );
+  }
+
+  for (final width in [320.0, 800.0]) {
+    testWidgets(
+      'form uses 70% of available width without growing for long titles ($width)',
+      (tester) async {
+        await tester.binding.setSurfaceSize(Size(width, 700));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        TodoFormData? result;
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => TextButton(
+                  onPressed: () async {
+                    result = await showTodoForm(
+                      context,
+                      todo: const Todo(
+                        id: '1',
+                        title: 'Short title',
+                        details: 'Details',
+                        completed: false,
+                      ),
+                    );
+                  },
+                  child: const Text('Open'),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
+        final dialog = find
+            .descendant(
+              of: find.byType(Dialog),
+              matching: find.byType(Material),
+            )
+            .first;
+        final initialRect = tester.getRect(dialog);
+        expect(initialRect.width, closeTo(width * 0.7, 1));
+        final titleField = find.byType(TextFormField).first;
+        final initialFieldWidth = tester.getSize(titleField).width;
+        final longTitle = List.filled(100, 'Long title ชื่อยาว').join(' ');
+        await tester.enterText(titleField, longTitle);
+        await tester.pumpAndSettle();
+        expect(tester.getRect(dialog), initialRect);
+        expect(tester.getSize(titleField).width, initialFieldWidth);
+        final editable = tester.widget<EditableText>(
+          find.descendant(of: titleField, matching: find.byType(EditableText)),
+        );
+        expect(editable.maxLines, 1);
+        expect(editable.controller.text, longTitle);
+        expect(tester.takeException(), isNull);
+        await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+        await tester.pumpAndSettle();
+        expect(result?.title, longTitle);
       },
     );
   }
@@ -180,9 +274,10 @@ void main() {
   testWidgets('saving the add dialog keeps the widget tree valid', (
     tester,
   ) async {
+    final service = FakeTodoService();
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
+        overrides: [todoServiceProvider.overrideWithValue(service)],
         child: TodoApp(preferences: await AppPreferences.load()),
       ),
     );
@@ -192,9 +287,31 @@ void main() {
     final fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), 'Test todo');
     await tester.enterText(fields.at(1), 'Test details');
+    expect(
+      tester
+          .widget<DropdownButtonFormField<String>>(
+            find.byType(DropdownButtonFormField<String>),
+          )
+          .initialValue,
+      'medium',
+    );
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('High').last);
+    await tester.pumpAndSettle();
+    await tester.tap(fields.last);
+    await tester.pumpAndSettle();
+    final selectedDate = tester
+        .widget<DatePickerDialog>(find.byType(DatePickerDialog))
+        .initialDate!;
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Add todo'));
     await tester.pumpAndSettle();
 
     expect(find.text('Test todo'), findsOneWidget);
+    expect(service.createdTodo?.priority, 'high');
+    expect(service.createdTodo?.dueDate, selectedDate);
+    expect(tester.takeException(), isNull);
   });
 }
