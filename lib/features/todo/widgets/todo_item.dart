@@ -6,6 +6,7 @@ import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/design/app_icons.dart';
 import '../models/todo.dart';
+import '../models/todo_due_status.dart';
 import 'todo_priority_badge.dart';
 
 class TodoItem extends StatefulWidget {
@@ -17,9 +18,11 @@ class TodoItem extends StatefulWidget {
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
+    this.currentDate,
     super.key,
   });
   final Todo todo;
+  final DateTime? currentDate;
   final int itemNumber;
   final bool isBusy;
   final VoidCallback onToggle;
@@ -40,6 +43,38 @@ class _TodoItemState extends State<TodoItem> {
     final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final muted = colors.onSurfaceVariant;
+    final dueInfo = TodoDueInfo.calculate(
+      dueDate: todo.dueDate,
+      completed: todo.completed,
+      today: widget.currentDate ?? DateTime.now(),
+    );
+    final days = dueInfo.daysRemaining;
+    final dueColor = switch (dueInfo.status) {
+      TodoDueStatus.overdue => colors.error,
+      TodoDueStatus.dueSoon =>
+        days != null && days <= 1
+            ? colors.error
+            : Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFFFFD166)
+            : const Color(0xFF956000),
+      _ => muted,
+    };
+    final remainingLabel = days == null || days > 3
+        ? null
+        : days < 0
+        ? l10n.overdueDays(-days)
+        : days == 0
+        ? l10n.dueToday
+        : l10n.daysRemaining(days);
+    final dateLabel = todo.dueDate == null
+        ? l10n.notSpecified
+        : DateTimeUtils.formatDate(
+            todo.dueDate,
+            localizations: MaterialLocalizations.of(context),
+          );
+    final dueLabel = remainingLabel == null
+        ? dateLabel
+        : '$dateLabel · $remainingLabel';
     return MenuAnchor(
       onOpen: () => setState(() => _menuOpen = true),
       onClose: () => setState(() => _menuOpen = false),
@@ -115,19 +150,12 @@ class _TodoItemState extends State<TodoItem> {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(CupertinoIcons.clock, size: 16, color: muted),
+                          Icon(CupertinoIcons.clock, size: 16, color: dueColor),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              todo.dueDate == null
-                                  ? l10n.notSpecified
-                                  : DateTimeUtils.formatDate(
-                                      todo.dueDate,
-                                      localizations: MaterialLocalizations.of(
-                                        context,
-                                      ),
-                                    ),
-                              style: TextStyle(color: muted, fontSize: 14),
+                              dueLabel,
+                              style: TextStyle(color: dueColor, fontSize: 14),
                             ),
                           ),
                         ],

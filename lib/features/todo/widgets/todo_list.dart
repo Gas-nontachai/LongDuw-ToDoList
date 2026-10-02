@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../models/todo.dart';
 import 'todo_item.dart';
 
-class TodoList extends StatelessWidget {
+class TodoList extends StatefulWidget {
   const TodoList({
     required this.todos,
     required this.showCompleted,
@@ -13,6 +15,7 @@ class TodoList extends StatelessWidget {
     required this.onToggle,
     required this.onEdit,
     required this.onDelete,
+    this.now,
     super.key,
   });
 
@@ -26,9 +29,63 @@ class TodoList extends StatelessWidget {
   final ValueChanged<Todo> onEdit;
   final ValueChanged<Todo> onDelete;
 
+  /// Optional clock for deterministic calendar rollover tests.
+  final DateTime Function()? now;
+
+  @override
+  State<TodoList> createState() => _TodoListState();
+}
+
+class _TodoListState extends State<TodoList> with WidgetsBindingObserver {
+  Timer? _midnightTimer;
+
+  DateTime _now() => (widget.now ?? DateTime.now)();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _scheduleMidnight();
+  }
+
+  void _scheduleMidnight() {
+    _midnightTimer?.cancel();
+    final now = _now();
+    final nextDay = DateTime(now.year, now.month, now.day + 1);
+    _midnightTimer = Timer(nextDay.difference(now), () {
+      if (!mounted) return;
+      setState(() {});
+      _scheduleMidnight();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _midnightTimer?.cancel();
+    if (state == AppLifecycleState.resumed) {
+      setState(() {});
+      _scheduleMidnight();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant TodoList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.now != widget.now) _scheduleMidnight();
+  }
+
+  @override
+  void dispose() {
+    _midnightTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final filteredTodos = todos
+    final today = _now();
+    final showCompleted = widget.showCompleted;
+    final filteredTodos = widget.todos
         .where(
           (todo) => showCompleted == null || todo.completed == showCompleted,
         )
@@ -98,11 +155,12 @@ class TodoList extends StatelessWidget {
                   key: ValueKey(ordered[index].id),
                   todo: ordered[index],
                   itemNumber: index + 1,
-                  isBusy: busyIds.contains(ordered[index].id),
-                  onClick: () => onTodoTap(ordered[index]),
-                  onToggle: () => onToggle(ordered[index]),
-                  onEdit: () => onEdit(ordered[index]),
-                  onDelete: () => onDelete(ordered[index]),
+                  currentDate: today,
+                  isBusy: widget.busyIds.contains(ordered[index].id),
+                  onClick: () => widget.onTodoTap(ordered[index]),
+                  onToggle: () => widget.onToggle(ordered[index]),
+                  onEdit: () => widget.onEdit(ordered[index]),
+                  onDelete: () => widget.onDelete(ordered[index]),
                 ),
               ],
             ],

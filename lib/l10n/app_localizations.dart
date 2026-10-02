@@ -409,6 +409,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 task remaining} other{{count} tasks remaining}}'**
   String taskCount(int count);
+
+  /// No description provided for @dueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get dueToday;
+
+  /// No description provided for @daysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day remaining} other{{count} days remaining}}'**
+  String daysRemaining(int count);
+
+  /// No description provided for @overdueDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day overdue} other{{count} days overdue}}'**
+  String overdueDays(int count);
 }
 
 class _AppLocalizationsDelegate

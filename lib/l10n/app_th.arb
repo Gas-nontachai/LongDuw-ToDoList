@@ -66,5 +66,22 @@
         "type": "int"
       }
     }
+  },
+  "dueToday": "ครบกำหนดวันนี้",
+  "daysRemaining": "เหลืออีก {count} วัน",
+  "overdueDays": "เกินกำหนด {count} วัน",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@overdueDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

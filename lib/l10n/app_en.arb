@@ -66,5 +66,22 @@
         "type": "int"
       }
     }
+  },
+  "dueToday": "Due today",
+  "daysRemaining": "{count, plural, =1{1 day remaining} other{{count} days remaining}}",
+  "overdueDays": "{count, plural, =1{1 day overdue} other{{count} days overdue}}",
+  "@daysRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@overdueDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

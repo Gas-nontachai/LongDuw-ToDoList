@@ -25,6 +25,9 @@ void main() {
     testWidgets('task icon preserves the localized detail dialog ($language)', (
       tester,
     ) async {
+      // Keep the header wide enough for full badges in both languages.
+      await tester.binding.setSurfaceSize(const Size(1024, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       final theme = language == 'en' ? appTheme : appDarkTheme;
       await tester.pumpWidget(
         MaterialApp(

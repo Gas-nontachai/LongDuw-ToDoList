@@ -168,4 +168,17 @@ class AppLocalizationsTh extends AppLocalizations {
   String taskCount(int count) {
     return 'เหลืออีก $count งาน';
   }
+
+  @override
+  String get dueToday => 'ครบกำหนดวันนี้';
+
+  @override
+  String daysRemaining(int count) {
+    return 'เหลืออีก $count วัน';
+  }
+
+  @override
+  String overdueDays(int count) {
+    return 'เกินกำหนด $count วัน';
+  }
 }
