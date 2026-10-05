@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/debouncer.dart';
@@ -40,6 +41,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
   final _searchDebouncer = Debouncer();
   final _searchController = TextEditingController();
   int _navigationIndex = 1;
+  bool _isNavigationCompact = false;
   String _searchInput = '';
   String _searchQuery = '';
   TodoSort _sort = TodoSort.original;
@@ -63,6 +65,23 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
     _searchDebouncer.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _collapseNavigation() {
+    if (!_isNavigationCompact) {
+      setState(() => _isNavigationCompact = true);
+    }
+  }
+
+  bool _onBodyScroll(ScrollNotification notification) {
+    if (notification.metrics.axis == Axis.vertical &&
+        ((notification is ScrollStartNotification &&
+                notification.dragDetails != null) ||
+            (notification is UserScrollNotification &&
+                notification.direction != ScrollDirection.idle))) {
+      _collapseNavigation();
+    }
+    return false;
   }
 
   void _onSearchChanged(String value) {
@@ -298,9 +317,14 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
           ),
         ],
         selectedIndex: _navigationIndex,
+        isCompact: _isNavigationCompact,
+        onTapOutside: _collapseNavigation,
         onSelected: (index) {
           FocusScope.of(context).unfocus();
-          setState(() => _navigationIndex = index);
+          setState(() {
+            _navigationIndex = index;
+            _isNavigationCompact = false;
+          });
         },
       ),
       appBar: AppBar(
@@ -357,176 +381,180 @@ class _TodoScreenState extends ConsumerState<TodoScreen>
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _navigationIndex,
-        children: [
-          ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: _onBodyScroll,
+        child: IndexedStack(
+          index: _navigationIndex,
+          children: [
+            ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          CupertinoIcons.checkmark_circle,
+                          size: 36,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.taskCount(taskCount),
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton.icon(
+                          onPressed: () => setState(() => _navigationIndex = 1),
+                          icon: const Icon(CupertinoIcons.list_bullet),
+                          label: Text(l10n.navTasks),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            todos.when(
+              loading: () => const AppLoading(),
+              error: (error, stackTrace) => AppError(
+                onRetry: () => ref.read(todoProvider.notifier).refreshTodos(),
+              ),
+              data: (items) {
+                return RefreshIndicator(
+                  onRefresh: ref.read(todoProvider.notifier).refreshTodos,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        CupertinoIcons.checkmark_circle,
-                        size: 36,
-                        color: Theme.of(context).colorScheme.primary,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _searchController,
+                                onChanged: _onSearchChanged,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  prefixIcon: Icon(AppIcons.search),
+                                  hintText: l10n.searchTodosHint,
+                                  suffixIcon: _searchInput.isEmpty
+                                      ? null
+                                      : IconButton(
+                                          tooltip: l10n.clearSearchTooltip,
+                                          icon: const Icon(AppIcons.close),
+                                          onPressed: () {
+                                            _searchDebouncer.dispose();
+                                            _searchController.clear();
+                                            setState(() {
+                                              _searchInput = '';
+                                              _searchQuery = '';
+                                            });
+                                          },
+                                        ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            TodoQueryButton(
+                              key: const ValueKey('todo-filter-button'),
+                              icon: Icons.filter_alt_outlined,
+                              tooltip: l10n.filterTodos,
+                              isActive: _filter.isActive,
+                              onPressed: _openFilter,
+                            ),
+                            const SizedBox(width: 8),
+                            TodoQueryButton(
+                              key: const ValueKey('todo-sort-button'),
+                              icon: AppIcons.sort,
+                              tooltip:
+                                  '${l10n.sortTodosTooltip}: ${todoSortLabel(_sort, l10n)}',
+                              isActive: _sort != TodoSort.original,
+                              onPressed: _openSort,
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        l10n.taskCount(taskCount),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 16),
-                      FilledButton.icon(
-                        onPressed: () => setState(() => _navigationIndex = 1),
-                        icon: const Icon(CupertinoIcons.list_bullet),
-                        label: Text(l10n.navTasks),
+                      Expanded(
+                        child: TabBarTodo(
+                          controller: _tabController,
+                          todos: filteredItems,
+                          hasQuery: _filter.isActive || _searchQuery.isNotEmpty,
+                          busyIds: operations.busyIds,
+                          onTodoTap: (todo) => _getTodoById(context, ref, todo),
+                          onToggle: (todo) => _runOperation(
+                            context,
+                            () => ref
+                                .read(todoProvider.notifier)
+                                .toggleTodo(todo),
+                            l10n.todoUpdated,
+                          ),
+                          onEdit: (todo) => _editTodo(context, ref, todo),
+                          onDelete: (todo) => _deleteTodo(context, ref, todo),
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          todos.when(
-            loading: () => const AppLoading(),
-            error: (error, stackTrace) => AppError(
-              onRetry: () => ref.read(todoProvider.notifier).refreshTodos(),
+                );
+              },
             ),
-            data: (items) {
-              return RefreshIndicator(
-                onRefresh: ref.read(todoProvider.notifier).refreshTodos,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: _onSearchChanged,
-                              decoration: InputDecoration(
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide.none,
-                                ),
-                                prefixIcon: Icon(AppIcons.search),
-                                hintText: l10n.searchTodosHint,
-                                suffixIcon: _searchInput.isEmpty
-                                    ? null
-                                    : IconButton(
-                                        tooltip: l10n.clearSearchTooltip,
-                                        icon: const Icon(AppIcons.close),
-                                        onPressed: () {
-                                          _searchDebouncer.dispose();
-                                          _searchController.clear();
-                                          setState(() {
-                                            _searchInput = '';
-                                            _searchQuery = '';
-                                          });
-                                        },
-                                      ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          TodoQueryButton(
-                            key: const ValueKey('todo-filter-button'),
-                            icon: Icons.filter_alt_outlined,
-                            tooltip: l10n.filterTodos,
-                            isActive: _filter.isActive,
-                            onPressed: _openFilter,
-                          ),
-                          const SizedBox(width: 8),
-                          TodoQueryButton(
-                            key: const ValueKey('todo-sort-button'),
-                            icon: AppIcons.sort,
-                            tooltip:
-                                '${l10n.sortTodosTooltip}: ${todoSortLabel(_sort, l10n)}',
-                            isActive: _sort != TodoSort.original,
-                            onPressed: _openSort,
-                          ),
-                        ],
+            ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+              children: [
+                for (final entry in [
+                  MapEntry(l10n.all, todos.value?.length ?? 0),
+                  MapEntry(l10n.incomplete, taskCount),
+                  MapEntry(
+                    l10n.completed,
+                    todos.value?.where((todo) => todo.completed).length ?? 0,
+                  ),
+                ])
+                  Card(
+                    child: ListTile(
+                      title: Text(entry.key),
+                      trailing: Text(
+                        '${entry.value}',
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
-                    Expanded(
-                      child: TabBarTodo(
-                        controller: _tabController,
-                        todos: filteredItems,
-                        hasQuery: _filter.isActive || _searchQuery.isNotEmpty,
-                        busyIds: operations.busyIds,
-                        onTodoTap: (todo) => _getTodoById(context, ref, todo),
-                        onToggle: (todo) => _runOperation(
-                          context,
-                          () =>
-                              ref.read(todoProvider.notifier).toggleTodo(todo),
-                          l10n.todoUpdated,
-                        ),
-                        onEdit: (todo) => _editTodo(context, ref, todo),
-                        onDelete: (todo) => _deleteTodo(context, ref, todo),
-                      ),
+                  ),
+              ],
+            ),
+            ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+              children: [
+                Card(
+                  child: SwitchListTile(
+                    secondary: const Icon(CupertinoIcons.moon),
+                    title: Text(l10n.switchToDarkMode),
+                    value: isDark,
+                    onChanged: (dark) => widget.onThemeModeChanged(
+                      dark ? ThemeMode.dark : ThemeMode.light,
                     ),
-                  ],
+                  ),
                 ),
-              );
-            },
-          ),
-          ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
-            children: [
-              for (final entry in [
-                MapEntry(l10n.all, todos.value?.length ?? 0),
-                MapEntry(l10n.incomplete, taskCount),
-                MapEntry(
-                  l10n.completed,
-                  todos.value?.where((todo) => todo.completed).length ?? 0,
-                ),
-              ])
                 Card(
                   child: ListTile(
-                    title: Text(entry.key),
-                    trailing: Text(
-                      '${entry.value}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    leading: const Icon(CupertinoIcons.globe),
+                    title: Text(l10n.changeLanguage),
+                    trailing: Text(isThai ? l10n.thai : l10n.english),
+                    onTap: () =>
+                        widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
                   ),
                 ),
-            ],
-          ),
-          ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
-            children: [
-              Card(
-                child: SwitchListTile(
-                  secondary: const Icon(CupertinoIcons.moon),
-                  title: Text(l10n.switchToDarkMode),
-                  value: isDark,
-                  onChanged: (dark) => widget.onThemeModeChanged(
-                    dark ? ThemeMode.dark : ThemeMode.light,
-                  ),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: const Icon(CupertinoIcons.globe),
-                  title: Text(l10n.changeLanguage),
-                  trailing: Text(isThai ? l10n.thai : l10n.english),
-                  onTap: () =>
-                      widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: _navigationIndex != 1
           ? null
