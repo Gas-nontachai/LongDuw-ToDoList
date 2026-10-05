@@ -1,29 +1,28 @@
-import '../../../core/api/api_client.dart';
 import '../../../core/config/priority_config.dart';
+import '../../../core/database/app_database.dart';
 import '../models/todo.dart';
 
 class TodoService {
-  TodoService(this._apiClient);
+  TodoService(this._database);
 
-  final ApiClient _apiClient;
+  final AppDatabase _database;
 
   Future<List<Todo>> getTodos() async {
-    final response = await _apiClient.get('/todos');
-    if (response.data is! List) {
-      throw const FormatException('The API returned an invalid todo list.');
-    }
-    return (response.data as List)
-        .whereType<Map>()
-        .map((json) => Todo.fromJson(Map<String, dynamic>.from(json)))
-        .toList();
+    final db = await _database.database;
+    final rows = await db.query('todos', orderBy: 'id ASC');
+    return rows.map(Todo.fromDb).toList();
   }
 
   Future<Todo> getTodoById(String id) async {
-    final response = await _apiClient.get('/todos/$id');
-    if (response.data is! Map) {
-      throw const FormatException('The API returned an invalid todo.');
-    }
-    return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
+    final db = await _database.database;
+    final rows = await db.query(
+      'todos',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (rows.isEmpty) throw StateError('Todo $id does not exist.');
+    return Todo.fromDb(rows.single);
   }
 
   Future<Todo> createTodo(
@@ -32,28 +31,43 @@ class TodoService {
     String priority = PriorityConfig.medium,
     DateTime? dueDate,
   }) async {
-    final response = await _apiClient.post(
-      '/todos',
-      data: {
-        'title': title,
-        'details': details,
-        'completed': false,
-        'priority': priority,
-        'due_date': dueDate?.toIso8601String(),
-      },
+    final db = await _database.database;
+    final createdAt = DateTime.now().toUtc();
+    final id = await db.insert('todos', {
+      'title': title,
+      'details': details,
+      'completed': 0,
+      'priority': priority,
+      'created_at': createdAt.toIso8601String(),
+      'due_date': dueDate?.toIso8601String(),
+    });
+    return Todo(
+      id: id.toString(),
+      title: title,
+      details: details,
+      completed: false,
+      priority: priority,
+      createdAt: createdAt,
+      dueDate: dueDate,
     );
-    return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
   }
 
   Future<Todo> updateTodo(Todo todo) async {
-    final response = await _apiClient.put(
-      '/todos/${todo.id}',
-      data: todo.toJson(),
+    final db = await _database.database;
+    // Keep the original creation time even if the caller omits metadata.
+    final values = todo.toDb()..remove('created_at');
+    final count = await db.update(
+      'todos',
+      values,
+      where: 'id = ?',
+      whereArgs: [todo.id],
     );
-    return Todo.fromJson(Map<String, dynamic>.from(response.data as Map));
+    if (count == 0) throw StateError('Todo ${todo.id} does not exist.');
+    return getTodoById(todo.id);
   }
 
   Future<void> deleteTodo(String id) async {
-    await _apiClient.delete('/todos/$id');
+    final db = await _database.database;
+    await db.delete('todos', where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/api/api_client.dart';
+import '../../../core/database/app_database.dart';
 import '../../../core/config/priority_config.dart';
 import '../models/todo.dart';
 import '../services/todo_service.dart';
 
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  final database = AppDatabase();
+  ref.onDispose(() => unawaited(database.close()));
+  return database;
+});
 final todoServiceProvider = Provider<TodoService>(
-  (ref) => TodoService(ref.watch(apiClientProvider)),
+  (ref) => TodoService(ref.watch(appDatabaseProvider)),
 );
 
 class TodoOperationState {

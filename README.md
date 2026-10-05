@@ -2,29 +2,51 @@
 
 A new Flutter project.
 
-## Run with environment config
+## Run with local SQLite
 
-The API base URL is required and read from the `API_BASE_URL` compile-time
-define. There is no fallback URL in the application code.
-
-คัดลอก `config/dev.example.json` เป็น `config/dev.json` แล้วใส่ค่า environment
-ที่ต้องการก่อนรัน โปรเจกต์จะไม่ commit ไฟล์ `config/*.json` จริงลง Git
+Todo เก็บใน SQLite ในเครื่อง ไม่ต้องตั้ง `API_BASE_URL` หรือเปิด server:
 
 ```bash
-flutter run --dart-define-from-file=config/dev.json
+flutter pub get
+flutter run
 ```
 
-ใน VS Code ให้เปิด Run and Debug แล้วเลือก `Flutter (dev)` หรือ
-`Flutter (dev): Chrome` จากไฟล์ `.vscode/launch.json`
+มือถือและ macOS ใช้ `sqflite`; Windows/Linux ใช้ `sqflite_common_ffi`.
+ฐานข้อมูล `todos.db` อยู่ใน application support directory และสร้างตารางเอง
+เมื่อเปิดครั้งแรก ข้อมูลยังอยู่เมื่อปิดเปิดแอป แต่ไม่ได้ซิงก์ข้ามเครื่อง
+และยังไม่ได้ย้ายข้อมูลเดิมจาก API ฐานข้อมูลใหม่เริ่มจากรายการว่าง
 
-For another environment, create a JSON file with the same key and pass it to
-`--dart-define-from-file`:
+### Chrome
 
-```json
-{
-  "API_BASE_URL": "https://example.com/api/v1"
-}
+ไฟล์ `web/sqlite3.wasm` และ `web/sqflite_sw.js` ใช้สำหรับ SQLite บนเว็บ
+หากอัปเดตแพ็กเกจ SQLite ให้สร้างไฟล์ใหม่:
+
+```bash
+dart run sqflite_common_ffi_web:setup --force
+flutter run -d chrome --web-port=8080
 ```
+
+เว็บเก็บข้อมูลใน IndexedDB ของ browser ให้ใช้ hostname และ port เดิม
+เพื่อเปิดข้อมูลชุดเดิม การล้าง site data จะลบฐานข้อมูลบนเว็บด้วย
+แพ็กเกจ SQLite สำหรับเว็บยังเป็น experimental
+
+ใน VS Code เลือก `Flutter (dev)` หรือ `Flutter (dev): Chrome` ได้โดยตรง
+ไม่ต้องสร้าง `config/dev.json`
+
+### Data flow and tests
+
+`หน้าจอ → TodoNotifier → TodoService → AppDatabase → SQLite`
+
+`TodoService` ยังใช้เมธอดเดิมสำหรับเพิ่ม อ่าน แก้ไข และลบ;
+`Todo.fromDb()` / `toDb()` แปลง completed เป็น 0/1 และวันที่เป็น ISO string.
+SQLite สร้าง ID แบบ integer แล้วแปลงเป็น String ให้โมเดลเดิม
+
+```bash
+flutter analyze
+flutter test
+```
+
+Service tests ใช้ SQLite จริงในไฟล์ชั่วคราว และตรวจว่าข้อมูลยังอยู่หลังปิดเปิดฐานข้อมูล
 
 ## โครงสร้างหน้าและ navigation
 

@@ -27,6 +27,15 @@ class Todo {
   final DateTime? dueDate;
   final String priority;
 
+  factory Todo.fromDb(Map<String, Object?> row) =>
+      Todo.fromJson({...row, 'completed': row['completed'] == 1});
+
+  Map<String, Object?> toDb() => {
+    ...toJson(),
+    'id': int.parse(id),
+    'completed': completed ? 1 : 0,
+  };
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

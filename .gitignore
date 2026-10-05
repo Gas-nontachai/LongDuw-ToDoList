@@ -33,10 +33,6 @@ migrate_working_dir/
 /build/
 /coverage/
 
-# Local environment config
-config/*.json
-!config/*.example.json
-
 # Symbolication related
 app.*.symbols
 

@@ -1,12 +1,11 @@
 import 'package:my_first_flutter_app/app/app_shell.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/app/app.dart';
 import 'package:my_first_flutter_app/app/app_preferences.dart';
 import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/core/api/api_client.dart';
+import 'package:my_first_flutter_app/core/database/app_database.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
 import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
@@ -16,7 +15,7 @@ import 'package:shared_preferences_platform_interface/in_memory_shared_preferenc
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 class FakeTodoService extends TodoService {
-  FakeTodoService() : super(ApiClient(dio: Dio()));
+  FakeTodoService() : super(AppDatabase());
 
   Todo? createdTodo;
 
