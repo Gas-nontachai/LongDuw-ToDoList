@@ -5,7 +5,7 @@ import 'package:my_first_flutter_app/app/theme.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo_query.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/screens/todo_screen.dart';
+import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_query_controls.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
@@ -70,7 +70,7 @@ void main() {
                 locale: Locale(lang),
                 supportedLocales: AppLocalizations.supportedLocales,
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
-                home: TodoScreen(
+                home: AppShell(
                   onLocaleChanged: (_) {},
                   onThemeModeChanged: (_) {},
                 ),
@@ -79,7 +79,7 @@ void main() {
           );
           await tester.pumpAndSettle();
           final l10n = AppLocalizations.of(
-            tester.element(find.byType(TodoScreen)),
+            tester.element(find.byType(AppShell)),
           )!;
           List<String> titles() => tester
               .widgetList<TodoItem>(find.byType(TodoItem))
@@ -145,7 +145,7 @@ void main() {
           await tester.tap(find.text(l10n.all));
           await tester.pumpAndSettle();
           final notifier = ProviderScope.containerOf(
-            tester.element(find.byType(TodoScreen)),
+            tester.element(find.byType(AppShell)),
           ).read(todoProvider.notifier) as _TestTodos;
           final refresh = notifier.refreshTodos();
           await tester.pumpAndSettle();

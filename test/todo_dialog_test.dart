@@ -1,3 +1,4 @@
+import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,7 +61,7 @@ void main() {
     await tester.pumpAndSettle();
 
     Brightness screenBrightness() =>
-        Theme.of(tester.element(find.byType(Scaffold))).brightness;
+        Theme.of(tester.element(find.byType(AppShell))).brightness;
 
     expect(screenBrightness(), Brightness.dark);
     platform.platformBrightnessTestValue = Brightness.light;

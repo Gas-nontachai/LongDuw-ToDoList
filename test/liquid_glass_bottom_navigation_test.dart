@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/app/theme.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/screens/todo_screen.dart';
+import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
 import 'package:my_first_flutter_app/shared/widgets/liquid_glass_bottom_navigation.dart';
 
@@ -157,7 +157,7 @@ void main() {
             theme: appTheme,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: TodoScreen(
+            home: AppShell(
               onLocaleChanged: (_) {},
               onThemeModeChanged: (_) => themeChanges++,
             ),
@@ -192,15 +192,40 @@ void main() {
       await tester.pumpAndSettle();
       expect(themeChanges, 1);
       expect(nav().isCompact, isTrue);
+      await tester.enterText(find.byType(TextField), 'Task 12');
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+      await tester.tap(buttons.at(0));
+      await tester.pumpAndSettle();
+      expect(nav().selectedIndex, 0);
+      expect(find.byType(FloatingActionButton), findsNothing);
+      await tester.tap(find.widgetWithText(FilledButton, 'Tasks'));
+      await tester.pumpAndSettle();
+      expect(nav().selectedIndex, 1);
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        'Task 12',
+      );
+      await tester.tap(buttons.at(2));
+      await tester.pumpAndSettle();
+      expect(nav().selectedIndex, 2);
+      expect(find.widgetWithText(ListTile, 'All'), findsOneWidget);
+      expect(find.widgetWithText(ListTile, '30'), findsNWidgets(2));
       await tester.tap(buttons.at(3));
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 3);
+      expect(find.byType(SwitchListTile), findsOneWidget);
       expect(nav().isCompact, isFalse);
       await tester.tap(buttons.at(1));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TabBarView>(find.byType(TabBarView)).controller!.index,
         1,
+      );
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        'Task 12',
       );
       expect(tester.takeException(), isNull);
       // Dispose with an outside pointer still down: tracking must be cleaned up.

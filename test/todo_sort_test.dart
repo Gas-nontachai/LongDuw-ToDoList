@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/app/theme.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/screens/todo_screen.dart';
+import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
 
@@ -54,17 +54,12 @@ void main() {
             locale: Locale(language),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: TodoScreen(
-              onLocaleChanged: (_) {},
-              onThemeModeChanged: (_) {},
-            ),
+            home: AppShell(onLocaleChanged: (_) {}, onThemeModeChanged: (_) {}),
           ),
         ),
       );
       await tester.pumpAndSettle();
-      final l10n = AppLocalizations.of(
-        tester.element(find.byType(TodoScreen)),
-      )!;
+      final l10n = AppLocalizations.of(tester.element(find.byType(AppShell)))!;
       final sortButton = find.byKey(const ValueKey('todo-sort-button'));
       List<String> visibleTitles() => tester
           .widgetList<TodoItem>(find.byType(TodoItem))
@@ -113,7 +108,7 @@ void main() {
       expect(visibleTitles(), ['Zulu', 'alpha', 'Bravo']);
       expect(_todos.map((todo) => todo.title), ['Zulu', 'alpha', 'Bravo']);
       final container = ProviderScope.containerOf(
-        tester.element(find.byType(TodoScreen)),
+        tester.element(find.byType(AppShell)),
       );
       (container.read(todoProvider.notifier) as _TestTodos).replaceTodos(
         _todos.sublist(1),

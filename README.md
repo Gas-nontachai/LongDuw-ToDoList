@@ -26,6 +26,24 @@ For another environment, create a JSON file with the same key and pass it to
 }
 ```
 
+## โครงสร้างหน้าและ navigation
+
+`main.dart` เริ่มแอป → `app/app.dart` ตั้ง theme และภาษา →
+`app/app_shell.dart` ดูแล AppBar, เมนูล่าง และการสลับหน้า
+
+แต่ละหน้ามีไฟล์ของตัวเองใน `lib/features/`:
+
+- `home/screens/home_screen.dart`: ภาพรวมและปุ่มไปหน้างาน
+- `todo/screens/todo_screen.dart`: รายการงาน ค้นหา กรอง เรียง และเพิ่ม/แก้ไข/ลบ
+- `stats/screens/stats_screen.dart`: จำนวนงานแต่ละสถานะ
+- `settings/screens/settings_screen.dart`: ตั้งค่าภาษาและ theme
+
+Component ที่ใช้ร่วมกันอยู่ใน `lib/shared/widgets/` ส่วน widget เฉพาะงาน
+อยู่ใน `lib/features/todo/widgets/`
+
+ตอนนี้สลับแท็บด้วย `IndexedStack` ซึ่งเก็บ state ของหน้าไว้ เช่น คำค้นหา
+และแท็บรายการงานที่เลือก ยังไม่มี URL routes หรือ `app_router.dart`
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

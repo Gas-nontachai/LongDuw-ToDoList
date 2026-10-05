@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../features/todo/screens/todo_screen.dart';
+import 'app_shell.dart';
 import '../l10n/app_localizations.dart';
 import 'app_preferences.dart';
 import 'theme.dart';
@@ -65,7 +65,7 @@ class _TodoAppState extends State<TodoApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    home: TodoScreen(
+    home: AppShell(
       onLocaleChanged: _changeLocale,
       onThemeModeChanged: _changeThemeMode,
     ),

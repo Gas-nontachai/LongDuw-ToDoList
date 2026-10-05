@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/screens/todo_screen.dart';
+import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_detail.dart';
 import 'package:my_first_flutter_app/features/todo/widgets/todo_form.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
@@ -50,7 +50,7 @@ void main() {
               locale: Locale(language),
               supportedLocales: AppLocalizations.supportedLocales,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
-              home: TodoScreen(
+              home: AppShell(
                 onLocaleChanged: (_) {},
                 onThemeModeChanged: (_) {},
               ),
@@ -59,7 +59,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         final l10n = AppLocalizations.of(
-          tester.element(find.byType(TodoScreen)),
+          tester.element(find.byType(AppShell)),
         )!;
         await tester.tap(find.text('Original task'));
         await tester.pumpAndSettle();
