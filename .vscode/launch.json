@@ -5,7 +5,10 @@
       "name": "Flutter (dev)",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=DEV_TOOLS=true"
+      ]
     },
     {
       "name": "Flutter (dev): Chrome",
@@ -14,6 +17,7 @@
       "program": "lib/main.dart",
       "deviceId": "chrome",
       "toolArgs": [
+        "--dart-define=DEV_TOOLS=true",
         "--web-port=8080"
       ]
     }

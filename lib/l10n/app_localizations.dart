@@ -595,6 +595,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// No description provided for @dailySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Summary'**
+  String get dailySummary;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Time'**
+  String get reminderTime;
+
+  /// No description provided for @dailySummaryCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {today} tasks · Overdue: {overdue}'**
+  String dailySummaryCounts(int today, int overdue);
+
+  /// No description provided for @dailySummaryOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks today · Overdue: {overdue}'**
+  String dailySummaryOverdue(int overdue);
+
+  /// No description provided for @dailySummaryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks today 🎉 Shall we plan what’s next?'**
+  String get dailySummaryEmpty;
+
+  /// No description provided for @dailySummaryUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Available on Android and iOS.'**
+  String get dailySummaryUnsupported;
+
+  /// No description provided for @dailySummaryPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked. Allow notifications in your device settings, then retry.'**
+  String get dailySummaryPermissionDenied;
+
+  /// No description provided for @dailySummaryFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update reminders. Please retry.'**
+  String get dailySummaryFailed;
+
+  /// No description provided for @testNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notification'**
+  String get testNotification;
+
+  /// No description provided for @testNotificationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show a sample notification now (dev only).'**
+  String get testNotificationDescription;
+
+  /// No description provided for @testNotificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notification sent. Check your notification center.'**
+  String get testNotificationSent;
+
+  /// No description provided for @testNotificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not show the test notification. Please try again.'**
+  String get testNotificationFailed;
 }
 
 class _AppLocalizationsDelegate

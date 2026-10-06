@@ -1,4 +1,5 @@
 import 'todo.dart';
+import '../../../core/utils/calendar_day.dart';
 
 enum TodoSort {
   original,
@@ -75,8 +76,7 @@ class TodoFilter {
 }
 
 // Match the calendar components displayed by the task UI, without DST offsets.
-DateTime todoCalendarDay(DateTime date) =>
-    DateTime.utc(date.year, date.month, date.day);
+DateTime todoCalendarDay(DateTime date) => calendarDay(date);
 
 List<Todo> queryTodos(
   List<Todo> todos, {

@@ -1,3 +1,5 @@
+import '../../../core/utils/calendar_day.dart';
+
 enum TodoDueStatus { none, normal, dueSoon, overdue }
 
 class TodoDueInfo {
@@ -16,8 +18,8 @@ class TodoDueInfo {
 
     // UTC here compares calendar components, without time or DST offsets.
     // Keep the same date components that the UI displays for dueDate.
-    final dueDay = DateTime.utc(dueDate.year, dueDate.month, dueDate.day);
-    final currentDay = DateTime.utc(today.year, today.month, today.day);
+    final dueDay = calendarDay(dueDate);
+    final currentDay = calendarDay(today);
     final days = dueDay.difference(currentDay).inDays;
     return TodoDueInfo(
       days < 0

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'app_shell.dart';
+import '../features/notifications/widgets/daily_summary_host.dart';
 import '../l10n/app_localizations.dart';
 import 'app_preferences.dart';
 import 'theme.dart';
@@ -27,8 +27,8 @@ class _TodoAppState extends State<TodoApp> {
   }
 
   Future<void> _changeLocale(Locale locale) async {
-    setState(() => _locale = locale);
     await _savePreference(() => widget.preferences.saveLocale(locale));
+    if (mounted) setState(() => _locale = locale);
   }
 
   Future<void> _changeThemeMode(ThemeMode mode) async {
@@ -65,7 +65,8 @@ class _TodoAppState extends State<TodoApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    home: AppShell(
+    home: DailySummaryHost(
+      preferences: widget.preferences,
       onLocaleChanged: _changeLocale,
       onThemeModeChanged: _changeThemeMode,
     ),

@@ -285,4 +285,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navSettings => 'Settings';
+
+  @override
+  String get dailySummary => 'Daily Summary';
+
+  @override
+  String get reminderTime => 'Reminder Time';
+
+  @override
+  String dailySummaryCounts(int today, int overdue) {
+    return 'Today: $today tasks · Overdue: $overdue';
+  }
+
+  @override
+  String dailySummaryOverdue(int overdue) {
+    return 'No tasks today · Overdue: $overdue';
+  }
+
+  @override
+  String get dailySummaryEmpty =>
+      'No tasks today 🎉 Shall we plan what’s next?';
+
+  @override
+  String get dailySummaryUnsupported => 'Available on Android and iOS.';
+
+  @override
+  String get dailySummaryPermissionDenied =>
+      'Notifications are blocked. Allow notifications in your device settings, then retry.';
+
+  @override
+  String get dailySummaryFailed => 'Could not update reminders. Please retry.';
+
+  @override
+  String get testNotification => 'Test Notification';
+
+  @override
+  String get testNotificationDescription =>
+      'Show a sample notification now (dev only).';
+
+  @override
+  String get testNotificationSent =>
+      'Test notification sent. Check your notification center.';
+
+  @override
+  String get testNotificationFailed =>
+      'Could not show the test notification. Please try again.';
 }

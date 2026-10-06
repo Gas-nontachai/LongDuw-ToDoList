@@ -8,6 +8,7 @@ import '../features/todo/screens/todo_screen.dart';
 import '../features/todo/providers/todo_provider.dart';
 import '../features/stats/screens/stats_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
+import '../features/notifications/providers/daily_summary_controller.dart';
 import '../l10n/app_localizations.dart';
 import '../shared/widgets/liquid_glass_bottom_navigation.dart';
 import '../shared/design/app_icon_assets.dart';
@@ -19,9 +20,11 @@ class AppShell extends ConsumerStatefulWidget {
     super.key,
     required this.onLocaleChanged,
     required this.onThemeModeChanged,
+    this.dailySummaryController,
   });
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
+  final DailySummaryController? dailySummaryController;
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
 }
@@ -157,6 +160,7 @@ class _AppShellState extends ConsumerState<AppShell> {
             const TodoScreen(),
             StatsScreen(todos: todos.value ?? const []),
             SettingsScreen(
+              dailySummaryController: widget.dailySummaryController,
               onLocaleChanged: widget.onLocaleChanged,
               onThemeModeChanged: widget.onThemeModeChanged,
             ),

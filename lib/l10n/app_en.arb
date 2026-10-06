@@ -118,5 +118,34 @@
   "navHome": "Home",
   "navTasks": "Tasks",
   "navStats": "Stats",
-  "navSettings": "Settings"
+  "navSettings": "Settings",
+  "dailySummary": "Daily Summary",
+  "reminderTime": "Reminder Time",
+  "dailySummaryCounts": "Today: {today} tasks · Overdue: {overdue}",
+  "dailySummaryOverdue": "No tasks today · Overdue: {overdue}",
+  "dailySummaryEmpty": "No tasks today 🎉 Shall we plan what’s next?",
+  "dailySummaryUnsupported": "Available on Android and iOS.",
+  "dailySummaryPermissionDenied": "Notifications are blocked. Allow notifications in your device settings, then retry.",
+  "dailySummaryFailed": "Could not update reminders. Please retry.",
+  "@dailySummaryCounts": {
+    "placeholders": {
+      "today": {
+        "type": "int"
+      },
+      "overdue": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailySummaryOverdue": {
+    "placeholders": {
+      "overdue": {
+        "type": "int"
+      }
+    }
+  },
+  "testNotification": "Test Notification",
+  "testNotificationDescription": "Show a sample notification now (dev only).",
+  "testNotificationSent": "Test notification sent. Check your notification center.",
+  "testNotificationFailed": "Could not show the test notification. Please try again."
 }

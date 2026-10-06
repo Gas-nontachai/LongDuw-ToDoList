@@ -86,7 +86,11 @@ void main() {
           final text = tester.widget<Text>(find.text(label));
           final color = offset == null || done || offset > 3
               ? colors.onSurfaceVariant
-              : offset <= 1
+              : offset < 0
+              ? dark
+                    ? const Color(0xFFFF6B6B)
+                    : const Color(0xFFB71C1C)
+              : offset == 0
               ? colors.error
               : dark
               ? const Color(0xFFFFD166)

@@ -118,5 +118,34 @@
   "navHome": "หน้าแรก",
   "navTasks": "งาน",
   "navStats": "สถิติ",
-  "navSettings": "ตั้งค่า"
+  "navSettings": "ตั้งค่า",
+  "dailySummary": "สรุปงานรายวัน",
+  "reminderTime": "เวลาแจ้งเตือน",
+  "dailySummaryCounts": "วันนี้มี {today} งาน · เลยกำหนด {overdue} งาน",
+  "dailySummaryOverdue": "วันนี้ไม่มีงาน · เลยกำหนด {overdue} งาน",
+  "dailySummaryEmpty": "วันนี้ไม่มีงาน 🎉 วางแผนงานถัดไปกันไหม",
+  "dailySummaryUnsupported": "รองรับบน Android และ iOS",
+  "dailySummaryPermissionDenied": "ยังไม่ได้รับสิทธิ์แจ้งเตือน กรุณาอนุญาตในการตั้งค่าอุปกรณ์แล้วลองใหม่",
+  "dailySummaryFailed": "อัปเดตการแจ้งเตือนไม่สำเร็จ กรุณาลองใหม่",
+  "@dailySummaryCounts": {
+    "placeholders": {
+      "today": {
+        "type": "int"
+      },
+      "overdue": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailySummaryOverdue": {
+    "placeholders": {
+      "overdue": {
+        "type": "int"
+      }
+    }
+  },
+  "testNotification": "ทดสอบแจ้งเตือน",
+  "testNotificationDescription": "แสดงข้อความตัวอย่างทันที (เฉพาะโหมด dev)",
+  "testNotificationSent": "ส่งแจ้งเตือนทดสอบแล้ว ดูได้ในแถบแจ้งเตือน",
+  "testNotificationFailed": "แสดงแจ้งเตือนทดสอบไม่สำเร็จ กรุณาลองใหม่"
 }

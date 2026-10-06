@@ -267,4 +267,48 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get navSettings => 'ตั้งค่า';
+
+  @override
+  String get dailySummary => 'สรุปงานรายวัน';
+
+  @override
+  String get reminderTime => 'เวลาแจ้งเตือน';
+
+  @override
+  String dailySummaryCounts(int today, int overdue) {
+    return 'วันนี้มี $today งาน · เลยกำหนด $overdue งาน';
+  }
+
+  @override
+  String dailySummaryOverdue(int overdue) {
+    return 'วันนี้ไม่มีงาน · เลยกำหนด $overdue งาน';
+  }
+
+  @override
+  String get dailySummaryEmpty => 'วันนี้ไม่มีงาน 🎉 วางแผนงานถัดไปกันไหม';
+
+  @override
+  String get dailySummaryUnsupported => 'รองรับบน Android และ iOS';
+
+  @override
+  String get dailySummaryPermissionDenied =>
+      'ยังไม่ได้รับสิทธิ์แจ้งเตือน กรุณาอนุญาตในการตั้งค่าอุปกรณ์แล้วลองใหม่';
+
+  @override
+  String get dailySummaryFailed => 'อัปเดตการแจ้งเตือนไม่สำเร็จ กรุณาลองใหม่';
+
+  @override
+  String get testNotification => 'ทดสอบแจ้งเตือน';
+
+  @override
+  String get testNotificationDescription =>
+      'แสดงข้อความตัวอย่างทันที (เฉพาะโหมด dev)';
+
+  @override
+  String get testNotificationSent =>
+      'ส่งแจ้งเตือนทดสอบแล้ว ดูได้ในแถบแจ้งเตือน';
+
+  @override
+  String get testNotificationFailed =>
+      'แสดงแจ้งเตือนทดสอบไม่สำเร็จ กรุณาลองใหม่';
 }
