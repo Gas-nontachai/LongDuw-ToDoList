@@ -1,16 +1,17 @@
-import 'package:my_first_flutter_app/app/app_shell.dart';
+import 'support/test_preferences.dart';
+
+import 'package:longdow_todo_list/app/app_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/app.dart';
-import 'package:my_first_flutter_app/app/app_preferences.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/core/database/app_database.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_form.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/app/app.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/core/database/app_database.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
+import 'package:longdow_todo_list/features/todo/services/todo_service.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_form.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
@@ -39,7 +40,10 @@ class FakeTodoService extends TodoService {
 }
 
 void main() {
-  setUp(() {
+  late TestPreferences preferencesFixture;
+  tearDown(() => preferencesFixture.close());
+  setUp(() async {
+    preferencesFixture = TestPreferences();
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
   });
@@ -54,7 +58,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(preferences: await AppPreferences.load()),
+        child: TodoApp(preferences: (await preferencesFixture.load())),
       ),
     );
     await tester.pumpAndSettle();
@@ -89,7 +93,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('EN'), findsOneWidget);
     expect(find.byTooltip('Switch to light mode'), findsOneWidget);
-    expect((await AppPreferences.load()).locale, const Locale('en'));
+    expect(((await preferencesFixture.load())).locale, const Locale('en'));
 
     await tester.tap(find.byTooltip('Change language'));
     await tester.pumpAndSettle();
@@ -125,7 +129,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(preferences: await AppPreferences.load()),
+        child: TodoApp(preferences: (await preferencesFixture.load())),
       ),
     );
     final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
@@ -329,7 +333,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(service)],
-        child: TodoApp(preferences: await AppPreferences.load()),
+        child: TodoApp(preferences: (await preferencesFixture.load())),
       ),
     );
     await tester.pumpAndSettle();

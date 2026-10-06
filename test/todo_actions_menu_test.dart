@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_actions_menu.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_actions_menu.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_item.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('taps on rows or checkboxes only dismiss the open menu', (

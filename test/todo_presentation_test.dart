@@ -3,11 +3,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_detail.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_priority_badge.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_detail.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_item.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_priority_badge.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
 
 Widget app(Widget child, String language) => MaterialApp(
   locale: Locale(language),

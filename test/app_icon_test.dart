@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_detail.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
-import 'package:my_first_flutter_app/shared/design/app_icon_assets.dart';
-import 'package:my_first_flutter_app/shared/design/app_icons.dart';
-import 'package:my_first_flutter_app/shared/widgets/app_icon.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_detail.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/shared/design/app_icon_assets.dart';
+import 'package:longdow_todo_list/shared/design/app_icons.dart';
+import 'package:longdow_todo_list/shared/widgets/app_icon.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

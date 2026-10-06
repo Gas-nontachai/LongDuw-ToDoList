@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
 
 void main() {
   test('Todo converts to and from JSON', () {

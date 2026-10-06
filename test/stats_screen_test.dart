@@ -7,14 +7,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/app_shell.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/features/stats/screens/stats_screen.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
-import 'package:my_first_flutter_app/shared/widgets/app_error.dart';
-import 'package:my_first_flutter_app/shared/widgets/app_loading.dart';
+import 'package:longdow_todo_list/app/app_shell.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/features/stats/screens/stats_screen.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/shared/widgets/app_error.dart';
+import 'package:longdow_todo_list/shared/widgets/app_loading.dart';
 
 class _Todos extends TodoNotifier {
   _Todos(this.items);

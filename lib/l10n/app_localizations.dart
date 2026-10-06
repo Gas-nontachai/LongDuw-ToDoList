@@ -757,6 +757,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Later (over 7 days)'**
   String get statsLater;
+
+  /// No description provided for @dataAndBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Data & Backup'**
+  String get dataAndBackup;
+
+  /// No description provided for @backupData.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup data'**
+  String get backupData;
+
+  /// No description provided for @backupDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a copy of all app data'**
+  String get backupDataSubtitle;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore backup'**
+  String get restoreBackup;
+
+  /// No description provided for @restoreBackupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace current data with a backup'**
+  String get restoreBackupSubtitle;
+
+  /// No description provided for @backupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a backup of everything stored in this app.'**
+  String get backupDescription;
+
+  /// No description provided for @backupIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Included'**
+  String get backupIncluded;
+
+  /// No description provided for @backupAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'App settings'**
+  String get backupAppSettings;
+
+  /// No description provided for @backupNotificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification settings'**
+  String get backupNotificationSettings;
+
+  /// No description provided for @backupFileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file'**
+  String get backupFileName;
+
+  /// No description provided for @createBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Create backup'**
+  String get createBackup;
+
+  /// No description provided for @creatingBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating backup…'**
+  String get creatingBackup;
+
+  /// No description provided for @preparingBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your data'**
+  String get preparingBackup;
+
+  /// No description provided for @savingBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Save backup'**
+  String get savingBackup;
+
+  /// No description provided for @selectBackupFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a backup file'**
+  String get selectBackupFile;
+
+  /// No description provided for @checkingBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking backup…'**
+  String get checkingBackup;
+
+  /// No description provided for @backupCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup created'**
+  String get backupCreated;
+
+  /// No description provided for @backupCreatedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data has been backed up successfully.'**
+  String get backupCreatedDescription;
+
+  /// No description provided for @backupDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get backupDone;
+
+  /// No description provided for @backupCreatedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get backupCreatedDate;
+
+  /// No description provided for @backupContains.
+  ///
+  /// In en, this message translates to:
+  /// **'Contains'**
+  String get backupContains;
+
+  /// No description provided for @restoreReplaceWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This will replace all current data on this device.'**
+  String get restoreReplaceWarning;
+
+  /// No description provided for @backupContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get backupContinue;
+
+  /// No description provided for @replaceCurrentData.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace current data?'**
+  String get replaceCurrentData;
+
+  /// No description provided for @replaceCurrentDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring this backup will delete all current tasks and settings and replace them with this backup.'**
+  String get replaceCurrentDataDescription;
+
+  /// No description provided for @restoreCannotUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get restoreCannotUndo;
+
+  /// No description provided for @replaceAndRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace & restore'**
+  String get replaceAndRestore;
+
+  /// No description provided for @restoringBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring backup…'**
+  String get restoringBackup;
+
+  /// No description provided for @restoreKeepOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Please keep the app open.'**
+  String get restoreKeepOpen;
+
+  /// No description provided for @restoreTasksStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Replacing tasks'**
+  String get restoreTasksStage;
+
+  /// No description provided for @restoreSettingsStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Replacing settings'**
+  String get restoreSettingsStage;
+
+  /// No description provided for @restoreComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore complete'**
+  String get restoreComplete;
+
+  /// No description provided for @restoreCompleteDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data has been restored successfully.'**
+  String get restoreCompleteDescription;
+
+  /// No description provided for @restoreAppSettingsComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'App settings restored'**
+  String get restoreAppSettingsComplete;
+
+  /// No description provided for @restoreNotificationsComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification settings restored'**
+  String get restoreNotificationsComplete;
+
+  /// No description provided for @backupGoHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Home'**
+  String get backupGoHome;
+
+  /// No description provided for @invalidBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to restore backup'**
+  String get invalidBackupTitle;
+
+  /// No description provided for @invalidBackupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup file is invalid or corrupted. Your current data has not been changed.'**
+  String get invalidBackupDescription;
+
+  /// No description provided for @unsupportedBackupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup not supported'**
+  String get unsupportedBackupTitle;
+
+  /// No description provided for @unsupportedBackupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup was created using an unsupported version of the app. Your current data has not been changed.'**
+  String get unsupportedBackupDescription;
+
+  /// No description provided for @restoreFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore failed'**
+  String get restoreFailedTitle;
+
+  /// No description provided for @restoreFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t restore this backup. Your previous data has been kept.'**
+  String get restoreFailedDescription;
+
+  /// No description provided for @chooseAnotherBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another file'**
+  String get chooseAnotherBackup;
+
+  /// No description provided for @backupFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create backup'**
+  String get backupFailedTitle;
+
+  /// No description provided for @backupFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t create or save your backup. Please try again.'**
+  String get backupFailedDescription;
+
+  /// No description provided for @restoreRefreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data was restored, but the app could not reload it. Please retry.'**
+  String get restoreRefreshFailed;
+
+  /// No description provided for @backupTaskCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task} other{{count} tasks}}'**
+  String backupTaskCount(int count);
+
+  /// No description provided for @restoreTaskCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task restored} other{{count} tasks restored}}'**
+  String restoreTaskCount(int count);
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsAppVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App version'**
+  String get settingsAppVersion;
 }
 
 class _AppLocalizationsDelegate

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:my_first_flutter_app/features/notifications/models/daily_summary.dart';
-import 'package:my_first_flutter_app/features/notifications/services/notification_service.dart';
+import 'package:longdow_todo_list/features/notifications/models/daily_summary.dart';
+import 'package:longdow_todo_list/features/notifications/services/notification_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class FakeNotifications implements NotificationService {

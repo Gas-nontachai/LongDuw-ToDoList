@@ -182,5 +182,69 @@
   "statsByDueDate": "Tasks by due date",
   "statsIncompleteOnly": "Remaining tasks only",
   "statsDueSoon": "Due soon (1–7 days)",
-  "statsLater": "Later (over 7 days)"
+  "statsLater": "Later (over 7 days)",
+  "dataAndBackup": "Data & Backup",
+  "backupData": "Backup data",
+  "backupDataSubtitle": "Create a copy of all app data",
+  "restoreBackup": "Restore backup",
+  "restoreBackupSubtitle": "Replace current data with a backup",
+  "backupDescription": "Create a backup of everything stored in this app.",
+  "backupIncluded": "Included",
+  "backupAppSettings": "App settings",
+  "backupNotificationSettings": "Notification settings",
+  "backupFileName": "Backup file",
+  "createBackup": "Create backup",
+  "creatingBackup": "Creating backup…",
+  "preparingBackup": "Preparing your data",
+  "savingBackup": "Save backup",
+  "selectBackupFile": "Select a backup file",
+  "checkingBackup": "Checking backup…",
+  "backupCreated": "Backup created",
+  "backupCreatedDescription": "Your data has been backed up successfully.",
+  "backupDone": "Done",
+  "backupCreatedDate": "Created",
+  "backupContains": "Contains",
+  "restoreReplaceWarning": "This will replace all current data on this device.",
+  "backupContinue": "Continue",
+  "replaceCurrentData": "Replace current data?",
+  "replaceCurrentDataDescription": "Restoring this backup will delete all current tasks and settings and replace them with this backup.",
+  "restoreCannotUndo": "This action cannot be undone.",
+  "replaceAndRestore": "Replace & restore",
+  "restoringBackup": "Restoring backup…",
+  "restoreKeepOpen": "Please keep the app open.",
+  "restoreTasksStage": "Replacing tasks",
+  "restoreSettingsStage": "Replacing settings",
+  "restoreComplete": "Restore complete",
+  "restoreCompleteDescription": "Your data has been restored successfully.",
+  "restoreAppSettingsComplete": "App settings restored",
+  "restoreNotificationsComplete": "Notification settings restored",
+  "backupGoHome": "Go to Home",
+  "invalidBackupTitle": "Unable to restore backup",
+  "invalidBackupDescription": "This backup file is invalid or corrupted. Your current data has not been changed.",
+  "unsupportedBackupTitle": "Backup not supported",
+  "unsupportedBackupDescription": "This backup was created using an unsupported version of the app. Your current data has not been changed.",
+  "restoreFailedTitle": "Restore failed",
+  "restoreFailedDescription": "We couldn’t restore this backup. Your previous data has been kept.",
+  "chooseAnotherBackup": "Choose another file",
+  "backupFailedTitle": "Unable to create backup",
+  "backupFailedDescription": "We couldn’t create or save your backup. Please try again.",
+  "restoreRefreshFailed": "Your data was restored, but the app could not reload it. Please retry.",
+  "backupTaskCount": "{count, plural, =1{1 task} other{{count} tasks}}",
+  "@backupTaskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreTaskCount": "{count, plural, =1{1 task restored} other{{count} tasks restored}}",
+  "@restoreTaskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAbout": "About",
+  "settingsAppVersion": "App version"
 }

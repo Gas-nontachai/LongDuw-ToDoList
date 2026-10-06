@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_preferences.dart';
+
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../../l10n/app_localizations.dart';
+import '../../backup/providers/backup_controller.dart';
+import '../../backup/services/backup_service.dart';
+import '../../backup/services/backup_file_gateway.dart';
 import '../../../app/app_shell.dart';
 import '../../todo/providers/todo_provider.dart';
 import '../providers/daily_summary_controller.dart';
@@ -78,6 +85,24 @@ class _DailySummaryHostState extends ConsumerState<DailySummaryHost>
       onLocaleChanged: widget.onLocaleChanged,
       onThemeModeChanged: widget.onThemeModeChanged,
       dailySummaryController: _controller,
+      createBackupController: ref.watch(backupFileGatewayProvider).supported
+          ? (reloadApp) => BackupController(
+              service: BackupService(preferences: widget.preferences),
+              files: ref.read(backupFileGatewayProvider),
+              appVersion: () async =>
+                  (await PackageInfo.fromPlatform()).version,
+              notifications: _controller,
+              reloadApp: () async {
+                _controller.resolvedLocale =
+                    widget.preferences.locale ??
+                    basicLocaleListResolution(
+                      WidgetsBinding.instance.platformDispatcher.locales,
+                      AppLocalizations.supportedLocales,
+                    );
+                await reloadApp();
+              },
+            )
+          : null,
     );
   }
 }

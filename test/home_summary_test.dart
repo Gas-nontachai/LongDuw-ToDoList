@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/home/models/home_summary.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/home/models/home_summary.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
 
 Todo task(String id, {DateTime? due, bool completed = false}) =>
     Todo(id: id, title: id, details: '', completed: completed, dueDate: due);

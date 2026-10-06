@@ -7,13 +7,13 @@ class TodoService {
 
   final AppDatabase _database;
 
-  Future<List<Todo>> getTodos() async {
+  Future<List<Todo>> getTodos() => _database.gate.run(() async {
     final db = await _database.database;
     final rows = await db.query('todos', orderBy: 'id ASC');
     return rows.map(Todo.fromDb).toList();
-  }
+  });
 
-  Future<Todo> getTodoById(String id) async {
+  Future<Todo> getTodoById(String id) => _database.gate.run(() async {
     final db = await _database.database;
     final rows = await db.query(
       'todos',
@@ -23,14 +23,14 @@ class TodoService {
     );
     if (rows.isEmpty) throw StateError('Todo $id does not exist.');
     return Todo.fromDb(rows.single);
-  }
+  });
 
   Future<Todo> createTodo(
     String title,
     String details, {
     String priority = PriorityConfig.medium,
     DateTime? dueDate,
-  }) async {
+  }) => _database.gate.run(() async {
     final db = await _database.database;
     final createdAt = DateTime.now().toUtc();
     final id = await db.insert('todos', {
@@ -50,9 +50,9 @@ class TodoService {
       createdAt: createdAt,
       dueDate: dueDate,
     );
-  }
+  });
 
-  Future<Todo> updateTodo(Todo todo) async {
+  Future<Todo> updateTodo(Todo todo) => _database.gate.run(() async {
     final db = await _database.database;
     // Keep the original creation time even if the caller omits metadata.
     final values = todo.toDb()..remove('created_at');
@@ -64,10 +64,10 @@ class TodoService {
     );
     if (count == 0) throw StateError('Todo ${todo.id} does not exist.');
     return getTodoById(todo.id);
-  }
+  });
 
-  Future<void> deleteTodo(String id) async {
+  Future<void> deleteTodo(String id) => _database.gate.run(() async {
     final db = await _database.database;
     await db.delete('todos', where: 'id = ?', whereArgs: [id]);
-  }
+  });
 }

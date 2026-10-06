@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/core/database/app_database.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
+import 'package:longdow_todo_list/core/database/app_database.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
+import 'package:longdow_todo_list/features/todo/services/todo_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -34,7 +34,7 @@ void main() {
       database.database,
     ]);
     expect(identical(connections[0], connections[1]), isTrue);
-    expect(await connections.first.getVersion(), 1);
+    expect(await connections.first.getVersion(), AppDatabase.schemaVersion);
     expect(await service.getTodos(), isEmpty);
   });
 

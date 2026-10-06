@@ -1,4 +1,4 @@
-# my_first_flutter_app
+# longdow_todo_list
 
 A new Flutter project.
 
@@ -13,7 +13,7 @@ flutter run
 
 มือถือและ macOS ใช้ `sqflite`; Windows/Linux ใช้ `sqflite_common_ffi`.
 ฐานข้อมูล `todos.db` อยู่ใน application support directory และสร้างตารางเอง
-เมื่อเปิดครั้งแรก ข้อมูลยังอยู่เมื่อปิดเปิดแอป แต่ไม่ได้ซิงก์ข้ามเครื่อง
+เมื่อเปิดครั้งแรก ข้อมูลยังอยู่เมื่อปิดเปิดแอป แต่ไม่ได้ซิงก์ข้ามเครื่องอัตโนมัติ
 และยังไม่ได้ย้ายข้อมูลเดิมจาก API ฐานข้อมูลใหม่เริ่มจากรายการว่าง
 
 ### Chrome
@@ -105,6 +105,52 @@ Settings มี **Daily Summary** (เริ่มต้น OFF) และ **Rem
 เปิดฟีเจอร์ ตั้งเวลาถัดไป สร้างงานวันนี้/เลยกำหนด/ไม่มีวันที่
 ตรวจจำนวนหลังแก้ไขและทำเสร็จ จากนั้น background/ปัดแอปออกและรอแจ้งเตือน
 ตรวจปิดฟีเจอร์ เปลี่ยนเวลาหลังรอบเดิม และ reboot แยกกัน
+
+## Backup & Restore (Android / iOS)
+
+Settings → **Data & Backup** สร้างไฟล์ `todo_backup_YYYY-MM-DD.todo`
+ผ่าน native Save dialog หรือเลือก `.todo` กลับมา Restore แบบ **Replace All**
+ต้องผ่าน preview และยืนยันอีกครั้งก่อนแทนที่ข้อมูล ไม่มี Merge
+เว็บและ desktop ซ่อน section นี้ใน MVP
+
+ไฟล์เก็บ Todo ทุกฟิลด์, Theme/Language (รวมค่าตามระบบ), Daily Summary
+และ Reminder Time เป็น JSON package version 1 พร้อม database version,
+app version, UTC creation time และ SHA-256 checksum ของ metadata/payload
+ไฟล์ไม่ได้เข้ารหัส และ checksum ใช้ตรวจความเสียหาย ไม่ใช่ลายเซ็นยืนยันผู้สร้าง
+ไฟล์จาก version ที่ไม่มี decoder จะถูกปฏิเสธก่อนเปลี่ยนข้อมูลใด ๆ
+
+SQLite schema version 2 เก็บ settings และ notification runtime เพิ่มจาก Todos
+เมื่อเปิดแอพจะย้าย Shared Preferences เดิมครั้งเดียวใน transaction
+แล้วใช้ SQLite เป็นแหล่งข้อมูลหลัก ไม่ดึงค่าที่ค้างอยู่ใน storage เดิมกลับมาทับ
+Backup/Restore, Todo writes, settings writes และ scheduling ใช้ operation gate
+ร่วมกัน Restore เปลี่ยน Todo/settings ใน SQLite transaction เดียว
+หากแอพปิดก่อน commit ข้อมูลเดิมยังอยู่ หลัง commit เปิดใหม่จะใช้ข้อมูลชุดใหม่
+
+ไม่ย้าย permission หรือตารางแจ้งเตือนของเครื่องเดิม หลัง Restore จะตั้ง Daily Summary
+ใหม่ตามภาษา เวลาและ timezone ของเครื่องปลายทาง หากสิทธิ์ถูกปฏิเสธหรือ OS scheduling
+ล้มเหลว Todo/settings ที่กู้คืนจะยังอยู่ พร้อมข้อความและ Retry
+marker ใน SQLite ทำให้ลองตั้งตารางต่อเมื่อกลับเข้าแอพหรือเปิดใหม่ได้
+หลังสำเร็จ Theme/Language และ providers อัปเดตทันที พร้อมล้าง search/filter ของหน้ารายการ
+
+```bash
+flutter analyze
+flutter test
+flutter test --dart-define=DEV_TOOLS=true test/daily_summary_controller_test.dart test/daily_summary_settings_test.dart
+```
+
+Native file-dialog smoke test ใช้ฐานข้อมูลชั่วคราวแยกจากข้อมูลปกติของแอพ:
+
+```bash
+flutter test integration_test/backup_native_test.dart -d <device-id>
+```
+
+ระหว่างทดสอบให้ควบคุม native dialogs บนอุปกรณ์: Cancel save ครั้งแรก →
+Save `todo_native_smoke.todo` ลง Files/Downloads ครั้งที่สอง → เลือกไฟล์นั้นกลับมา
+test จะตรวจ round trip และเปิดฐานข้อมูลใหม่ แล้วลบเฉพาะฐานข้อมูลทดสอบชั่วคราว
+ไฟล์ `.todo` ที่บันทึกไว้ยังอยู่สำหรับทดสอบข้าม Android/iOS
+ต้องทดสอบ cloud providers ที่ติดตั้งบนเครื่องจริงแยกเพิ่มเติม
+บน Android OS อาจไม่รู้จัก MIME ของ `.todo` ทำให้ picker แสดงไฟล์ชนิดอื่นด้วย
+แอพจึงตรวจนามสกุลและเนื้อหาซ้ำก่อนอนุญาต Restore
 
 ## Dev: Test Notification
 

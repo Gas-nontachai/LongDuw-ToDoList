@@ -379,4 +379,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statsLater => 'Later (over 7 days)';
+
+  @override
+  String get dataAndBackup => 'Data & Backup';
+
+  @override
+  String get backupData => 'Backup data';
+
+  @override
+  String get backupDataSubtitle => 'Create a copy of all app data';
+
+  @override
+  String get restoreBackup => 'Restore backup';
+
+  @override
+  String get restoreBackupSubtitle => 'Replace current data with a backup';
+
+  @override
+  String get backupDescription =>
+      'Create a backup of everything stored in this app.';
+
+  @override
+  String get backupIncluded => 'Included';
+
+  @override
+  String get backupAppSettings => 'App settings';
+
+  @override
+  String get backupNotificationSettings => 'Notification settings';
+
+  @override
+  String get backupFileName => 'Backup file';
+
+  @override
+  String get createBackup => 'Create backup';
+
+  @override
+  String get creatingBackup => 'Creating backup…';
+
+  @override
+  String get preparingBackup => 'Preparing your data';
+
+  @override
+  String get savingBackup => 'Save backup';
+
+  @override
+  String get selectBackupFile => 'Select a backup file';
+
+  @override
+  String get checkingBackup => 'Checking backup…';
+
+  @override
+  String get backupCreated => 'Backup created';
+
+  @override
+  String get backupCreatedDescription =>
+      'Your data has been backed up successfully.';
+
+  @override
+  String get backupDone => 'Done';
+
+  @override
+  String get backupCreatedDate => 'Created';
+
+  @override
+  String get backupContains => 'Contains';
+
+  @override
+  String get restoreReplaceWarning =>
+      'This will replace all current data on this device.';
+
+  @override
+  String get backupContinue => 'Continue';
+
+  @override
+  String get replaceCurrentData => 'Replace current data?';
+
+  @override
+  String get replaceCurrentDataDescription =>
+      'Restoring this backup will delete all current tasks and settings and replace them with this backup.';
+
+  @override
+  String get restoreCannotUndo => 'This action cannot be undone.';
+
+  @override
+  String get replaceAndRestore => 'Replace & restore';
+
+  @override
+  String get restoringBackup => 'Restoring backup…';
+
+  @override
+  String get restoreKeepOpen => 'Please keep the app open.';
+
+  @override
+  String get restoreTasksStage => 'Replacing tasks';
+
+  @override
+  String get restoreSettingsStage => 'Replacing settings';
+
+  @override
+  String get restoreComplete => 'Restore complete';
+
+  @override
+  String get restoreCompleteDescription =>
+      'Your data has been restored successfully.';
+
+  @override
+  String get restoreAppSettingsComplete => 'App settings restored';
+
+  @override
+  String get restoreNotificationsComplete => 'Notification settings restored';
+
+  @override
+  String get backupGoHome => 'Go to Home';
+
+  @override
+  String get invalidBackupTitle => 'Unable to restore backup';
+
+  @override
+  String get invalidBackupDescription =>
+      'This backup file is invalid or corrupted. Your current data has not been changed.';
+
+  @override
+  String get unsupportedBackupTitle => 'Backup not supported';
+
+  @override
+  String get unsupportedBackupDescription =>
+      'This backup was created using an unsupported version of the app. Your current data has not been changed.';
+
+  @override
+  String get restoreFailedTitle => 'Restore failed';
+
+  @override
+  String get restoreFailedDescription =>
+      'We couldn’t restore this backup. Your previous data has been kept.';
+
+  @override
+  String get chooseAnotherBackup => 'Choose another file';
+
+  @override
+  String get backupFailedTitle => 'Unable to create backup';
+
+  @override
+  String get backupFailedDescription =>
+      'We couldn’t create or save your backup. Please try again.';
+
+  @override
+  String get restoreRefreshFailed =>
+      'Your data was restored, but the app could not reload it. Please retry.';
+
+  @override
+  String backupTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String restoreTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks restored',
+      one: '1 task restored',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsAppVersion => 'App version';
 }

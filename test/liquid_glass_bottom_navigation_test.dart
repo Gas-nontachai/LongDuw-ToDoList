@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_form.dart';
-import 'package:my_first_flutter_app/app/app_shell.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
-import 'package:my_first_flutter_app/shared/widgets/liquid_glass_bottom_navigation.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_form.dart';
+import 'package:longdow_todo_list/app/app_shell.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/shared/widgets/liquid_glass_bottom_navigation.dart';
 
 const items = [
   LiquidGlassNavigationItem(icon: Icons.home_outlined, label: 'Home'),

@@ -1,11 +1,13 @@
+import 'support/test_preferences.dart';
+
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
-import 'package:my_first_flutter_app/app/app_preferences.dart';
-import 'package:my_first_flutter_app/core/config/dev_config.dart';
-import 'package:my_first_flutter_app/features/notifications/providers/daily_summary_controller.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/app/app_preferences.dart';
+import 'package:longdow_todo_list/core/config/dev_config.dart';
+import 'package:longdow_todo_list/features/notifications/providers/daily_summary_controller.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -14,6 +16,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'support/fake_notifications.dart';
 
 void main() {
+  late TestPreferences preferencesFixture;
+  tearDown(() => preferencesFixture.close());
   TestWidgetsFlutterBinding.ensureInitialized();
   late AppPreferences prefs;
   late FakeNotifications notifications;
@@ -23,10 +27,11 @@ void main() {
   var loads = 0;
 
   setUp(() async {
+    preferencesFixture = TestPreferences();
     tz_data.initializeTimeZones();
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
-    prefs = await AppPreferences.load();
+    prefs = await preferencesFixture.load();
     notifications = FakeNotifications();
     now = tz.TZDateTime(tz.getLocation('Asia/Bangkok'), 2026, 10, 5, 8);
     todos = [];
@@ -112,7 +117,7 @@ void main() {
     await controller.setEnabled(true);
     now = tz.TZDateTime(tz.getLocation('Asia/Bangkok'), 2026, 10, 5, 10);
     controller.dispose();
-    prefs = await AppPreferences.load();
+    prefs = await preferencesFixture.load();
     controller = DailySummaryController(
       preferences: prefs,
       notifications: notifications,
@@ -137,7 +142,7 @@ void main() {
       expect(notifications.scheduled, isEmpty);
       expect(notifications.cancelled, hasLength(30));
       expect(notifications.cancelled, isNot(contains(42)));
-      final restored = await AppPreferences.load();
+      final restored = await preferencesFixture.load();
       expect(restored.dailySummaryEnabled, isFalse);
       expect(restored.reminderMinutes, 615);
       expect(restored.summaryLedger, isEmpty);
@@ -183,6 +188,38 @@ void main() {
     expect(notifications.scheduled, isEmpty);
     expect(controller.busy, isFalse);
   });
+
+  test('restored OFF state cancels old owned notifications even with an empty ledger', () async {
+    notifications.extraIds.add(120261006);
+    await prefs.saveReconciliationPending(true);
+    await controller.refresh();
+    expect(notifications.cancelled, contains(120261006));
+    expect(notifications.cancelled, isNot(contains(42)));
+    expect(prefs.reconciliationPending, isFalse);
+    expect(notifications.permissionRequests, 0);
+  });
+
+  test(
+    'pause drains an active schedule and suppresses lifecycle reconciliation',
+    () async {
+      notifications.schedulingGate = Completer();
+      final enabling = controller.setEnabled(true);
+      await Future<void>.delayed(Duration.zero);
+      var paused = false;
+      final pausing = controller.pause().then((_) => paused = true);
+      await controller.refresh();
+      expect(paused, isFalse);
+      notifications.schedulingGate!.complete();
+      await enabling;
+      await pausing;
+      final initializations = notifications.initializations;
+      await controller.refresh();
+      expect(notifications.initializations, initializations);
+      controller.resume();
+      await controller.refresh();
+      expect(notifications.initializations, greaterThan(initializations));
+    },
+  );
 
   test('unsupported platforms cannot enable or request permission', () async {
     notifications.supported = false;

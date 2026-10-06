@@ -1,24 +1,30 @@
 import 'package:sqflite/sqflite.dart';
 
 import 'database_platform.dart';
+import 'operation_gate.dart';
 
 class AppDatabase {
   AppDatabase({this.factory, this.path});
 
+  static const schemaVersion = 2;
+  final gate = OperationGate();
+
   final DatabaseFactory? factory;
   final String? path;
   Future<Database>? _opening;
+  Database? _connection;
 
-  Future<Database> get database => _opening ??= _open();
+  Future<Database> get database =>
+      _connection != null ? Future.value(_connection) : (_opening ??= _open());
 
   Future<Database> _open() async {
     try {
       final selectedFactory = factory ?? appDatabaseFactory;
       final selectedPath = path ?? await getAppDatabasePath();
-      return await selectedFactory.openDatabase(
+      final db = await selectedFactory.openDatabase(
         selectedPath,
         options: OpenDatabaseOptions(
-          version: 1,
+          version: schemaVersion,
           onCreate: (db, version) async {
             await db.execute('''
               CREATE TABLE todos (
@@ -32,9 +38,15 @@ class AppDatabase {
                 due_date TEXT
               )
             ''');
+            await _createSettings(db);
+          },
+          onUpgrade: (db, oldVersion, newVersion) async {
+            if (oldVersion < 2) await _createSettings(db);
           },
         ),
       );
+      _connection = db;
+      return db;
     } catch (_) {
       // A failed open must not prevent the UI's retry action from working.
       _opening = null;
@@ -42,13 +54,26 @@ class AppDatabase {
     }
   }
 
+  static Future<void> _createSettings(DatabaseExecutor db) async {
+    await db.execute(
+      'CREATE TABLE app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+    );
+    await db.execute(
+      'CREATE TABLE notification_runtime (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+    );
+    await db.execute(
+      'CREATE TABLE app_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+    );
+  }
+
   Future<void> close() async {
     final opening = _opening;
     if (opening == null) return;
     try {
-      final db = await opening;
+      final db = _connection ?? await opening;
       await db.close();
     } finally {
+      _connection = null;
       _opening = null;
     }
   }

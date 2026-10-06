@@ -360,4 +360,166 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get statsLater => 'เกิน 7 วัน';
+
+  @override
+  String get dataAndBackup => 'ข้อมูลและการสำรองข้อมูล';
+
+  @override
+  String get backupData => 'สำรองข้อมูล';
+
+  @override
+  String get backupDataSubtitle => 'สร้างสำเนาข้อมูลทั้งหมดของแอพ';
+
+  @override
+  String get restoreBackup => 'กู้คืนข้อมูลสำรอง';
+
+  @override
+  String get restoreBackupSubtitle => 'แทนที่ข้อมูลปัจจุบันด้วยข้อมูลสำรอง';
+
+  @override
+  String get backupDescription =>
+      'สร้างข้อมูลสำรองของทุกอย่างที่เก็บไว้ในแอพนี้';
+
+  @override
+  String get backupIncluded => 'ข้อมูลที่รวมอยู่';
+
+  @override
+  String get backupAppSettings => 'การตั้งค่าแอพ';
+
+  @override
+  String get backupNotificationSettings => 'การตั้งค่าการแจ้งเตือน';
+
+  @override
+  String get backupFileName => 'ไฟล์สำรองข้อมูล';
+
+  @override
+  String get createBackup => 'สร้างข้อมูลสำรอง';
+
+  @override
+  String get creatingBackup => 'กำลังสร้างข้อมูลสำรอง…';
+
+  @override
+  String get preparingBackup => 'กำลังเตรียมข้อมูลของคุณ';
+
+  @override
+  String get savingBackup => 'บันทึกข้อมูลสำรอง';
+
+  @override
+  String get selectBackupFile => 'เลือกไฟล์สำรองข้อมูล';
+
+  @override
+  String get checkingBackup => 'กำลังตรวจสอบข้อมูลสำรอง…';
+
+  @override
+  String get backupCreated => 'สร้างข้อมูลสำรองแล้ว';
+
+  @override
+  String get backupCreatedDescription => 'สำรองข้อมูลของคุณเรียบร้อยแล้ว';
+
+  @override
+  String get backupDone => 'เสร็จสิ้น';
+
+  @override
+  String get backupCreatedDate => 'สร้างเมื่อ';
+
+  @override
+  String get backupContains => 'ข้อมูลในไฟล์';
+
+  @override
+  String get restoreReplaceWarning =>
+      'การกู้คืนจะแทนที่ข้อมูลปัจจุบันทั้งหมดบนอุปกรณ์นี้';
+
+  @override
+  String get backupContinue => 'ดำเนินการต่อ';
+
+  @override
+  String get replaceCurrentData => 'แทนที่ข้อมูลปัจจุบันหรือไม่?';
+
+  @override
+  String get replaceCurrentDataDescription =>
+      'การกู้คืนจะลบงานและการตั้งค่าปัจจุบันทั้งหมด แล้วแทนที่ด้วยข้อมูลสำรองนี้';
+
+  @override
+  String get restoreCannotUndo => 'การดำเนินการนี้ไม่สามารถย้อนกลับได้';
+
+  @override
+  String get replaceAndRestore => 'แทนที่และกู้คืน';
+
+  @override
+  String get restoringBackup => 'กำลังกู้คืนข้อมูลสำรอง…';
+
+  @override
+  String get restoreKeepOpen => 'โปรดเปิดแอพไว้จนกว่าจะเสร็จสิ้น';
+
+  @override
+  String get restoreTasksStage => 'กำลังแทนที่งาน';
+
+  @override
+  String get restoreSettingsStage => 'กำลังแทนที่การตั้งค่า';
+
+  @override
+  String get restoreComplete => 'กู้คืนข้อมูลสำเร็จ';
+
+  @override
+  String get restoreCompleteDescription => 'กู้คืนข้อมูลของคุณเรียบร้อยแล้ว';
+
+  @override
+  String get restoreAppSettingsComplete => 'กู้คืนการตั้งค่าแอพแล้ว';
+
+  @override
+  String get restoreNotificationsComplete => 'กู้คืนการตั้งค่าการแจ้งเตือนแล้ว';
+
+  @override
+  String get backupGoHome => 'ไปหน้าหลัก';
+
+  @override
+  String get invalidBackupTitle => 'ไม่สามารถกู้คืนข้อมูลสำรองได้';
+
+  @override
+  String get invalidBackupDescription =>
+      'ไฟล์สำรองข้อมูลนี้ไม่ถูกต้องหรือเสียหาย ข้อมูลปัจจุบันของคุณไม่ได้ถูกเปลี่ยนแปลง';
+
+  @override
+  String get unsupportedBackupTitle => 'ไม่รองรับข้อมูลสำรองนี้';
+
+  @override
+  String get unsupportedBackupDescription =>
+      'ข้อมูลสำรองนี้สร้างด้วยเวอร์ชันที่แอพไม่รองรับ ข้อมูลปัจจุบันของคุณไม่ได้ถูกเปลี่ยนแปลง';
+
+  @override
+  String get restoreFailedTitle => 'กู้คืนข้อมูลไม่สำเร็จ';
+
+  @override
+  String get restoreFailedDescription =>
+      'ไม่สามารถกู้คืนข้อมูลสำรองนี้ได้ ข้อมูลเดิมของคุณยังอยู่ครบ';
+
+  @override
+  String get chooseAnotherBackup => 'เลือกไฟล์อื่น';
+
+  @override
+  String get backupFailedTitle => 'ไม่สามารถสร้างข้อมูลสำรองได้';
+
+  @override
+  String get backupFailedDescription =>
+      'ไม่สามารถสร้างหรือบันทึกข้อมูลสำรองได้ โปรดลองอีกครั้ง';
+
+  @override
+  String get restoreRefreshFailed =>
+      'กู้คืนข้อมูลแล้ว แต่แอพโหลดข้อมูลใหม่ไม่สำเร็จ โปรดลองอีกครั้ง';
+
+  @override
+  String backupTaskCount(int count) {
+    return '$count งาน';
+  }
+
+  @override
+  String restoreTaskCount(int count) {
+    return 'กู้คืน $count งานแล้ว';
+  }
+
+  @override
+  String get settingsAbout => 'เกี่ยวกับแอพ';
+
+  @override
+  String get settingsAppVersion => 'เวอร์ชันแอพ';
 }

@@ -16,25 +16,36 @@ class TodoApp extends StatefulWidget {
 }
 
 class _TodoAppState extends State<TodoApp> {
-  late Locale? _locale;
-  late ThemeMode _themeMode;
-
   @override
   void initState() {
     super.initState();
-    _locale = widget.preferences.locale;
-    _themeMode = widget.preferences.themeMode;
+    widget.preferences.addListener(_preferencesChanged);
   }
 
-  Future<void> _changeLocale(Locale locale) async {
-    await _savePreference(() => widget.preferences.saveLocale(locale));
-    if (mounted) setState(() => _locale = locale);
+  @override
+  void didUpdateWidget(covariant TodoApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.preferences != widget.preferences) {
+      oldWidget.preferences.removeListener(_preferencesChanged);
+      widget.preferences.addListener(_preferencesChanged);
+    }
   }
 
-  Future<void> _changeThemeMode(ThemeMode mode) async {
-    setState(() => _themeMode = mode);
-    await _savePreference(() => widget.preferences.saveThemeMode(mode));
+  void _preferencesChanged() {
+    if (mounted) setState(() {});
   }
+
+  @override
+  void dispose() {
+    widget.preferences.removeListener(_preferencesChanged);
+    super.dispose();
+  }
+
+  Future<void> _changeLocale(Locale locale) =>
+      _savePreference(() => widget.preferences.saveLocale(locale));
+
+  Future<void> _changeThemeMode(ThemeMode mode) =>
+      _savePreference(() => widget.preferences.saveThemeMode(mode));
 
   Future<void> _savePreference(Future<void> Function() save) async {
     try {
@@ -53,11 +64,11 @@ class _TodoAppState extends State<TodoApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    locale: _locale,
+    locale: widget.preferences.locale,
     onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
     theme: appTheme,
     darkTheme: appDarkTheme,
-    themeMode: _themeMode,
+    themeMode: widget.preferences.themeMode,
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,

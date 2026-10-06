@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/stats/models/stats_summary.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/stats/models/stats_summary.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
 
 Todo task({
   bool completed = false,

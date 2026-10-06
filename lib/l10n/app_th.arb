@@ -182,5 +182,69 @@
   "statsByDueDate": "งานตามวันครบกำหนด",
   "statsIncompleteOnly": "เฉพาะงานที่ยังไม่เสร็จ",
   "statsDueSoon": "ครบกำหนดใน 1–7 วัน",
-  "statsLater": "เกิน 7 วัน"
+  "statsLater": "เกิน 7 วัน",
+  "dataAndBackup": "ข้อมูลและการสำรองข้อมูล",
+  "backupData": "สำรองข้อมูล",
+  "backupDataSubtitle": "สร้างสำเนาข้อมูลทั้งหมดของแอพ",
+  "restoreBackup": "กู้คืนข้อมูลสำรอง",
+  "restoreBackupSubtitle": "แทนที่ข้อมูลปัจจุบันด้วยข้อมูลสำรอง",
+  "backupDescription": "สร้างข้อมูลสำรองของทุกอย่างที่เก็บไว้ในแอพนี้",
+  "backupIncluded": "ข้อมูลที่รวมอยู่",
+  "backupAppSettings": "การตั้งค่าแอพ",
+  "backupNotificationSettings": "การตั้งค่าการแจ้งเตือน",
+  "backupFileName": "ไฟล์สำรองข้อมูล",
+  "createBackup": "สร้างข้อมูลสำรอง",
+  "creatingBackup": "กำลังสร้างข้อมูลสำรอง…",
+  "preparingBackup": "กำลังเตรียมข้อมูลของคุณ",
+  "savingBackup": "บันทึกข้อมูลสำรอง",
+  "selectBackupFile": "เลือกไฟล์สำรองข้อมูล",
+  "checkingBackup": "กำลังตรวจสอบข้อมูลสำรอง…",
+  "backupCreated": "สร้างข้อมูลสำรองแล้ว",
+  "backupCreatedDescription": "สำรองข้อมูลของคุณเรียบร้อยแล้ว",
+  "backupDone": "เสร็จสิ้น",
+  "backupCreatedDate": "สร้างเมื่อ",
+  "backupContains": "ข้อมูลในไฟล์",
+  "restoreReplaceWarning": "การกู้คืนจะแทนที่ข้อมูลปัจจุบันทั้งหมดบนอุปกรณ์นี้",
+  "backupContinue": "ดำเนินการต่อ",
+  "replaceCurrentData": "แทนที่ข้อมูลปัจจุบันหรือไม่?",
+  "replaceCurrentDataDescription": "การกู้คืนจะลบงานและการตั้งค่าปัจจุบันทั้งหมด แล้วแทนที่ด้วยข้อมูลสำรองนี้",
+  "restoreCannotUndo": "การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+  "replaceAndRestore": "แทนที่และกู้คืน",
+  "restoringBackup": "กำลังกู้คืนข้อมูลสำรอง…",
+  "restoreKeepOpen": "โปรดเปิดแอพไว้จนกว่าจะเสร็จสิ้น",
+  "restoreTasksStage": "กำลังแทนที่งาน",
+  "restoreSettingsStage": "กำลังแทนที่การตั้งค่า",
+  "restoreComplete": "กู้คืนข้อมูลสำเร็จ",
+  "restoreCompleteDescription": "กู้คืนข้อมูลของคุณเรียบร้อยแล้ว",
+  "restoreAppSettingsComplete": "กู้คืนการตั้งค่าแอพแล้ว",
+  "restoreNotificationsComplete": "กู้คืนการตั้งค่าการแจ้งเตือนแล้ว",
+  "backupGoHome": "ไปหน้าหลัก",
+  "invalidBackupTitle": "ไม่สามารถกู้คืนข้อมูลสำรองได้",
+  "invalidBackupDescription": "ไฟล์สำรองข้อมูลนี้ไม่ถูกต้องหรือเสียหาย ข้อมูลปัจจุบันของคุณไม่ได้ถูกเปลี่ยนแปลง",
+  "unsupportedBackupTitle": "ไม่รองรับข้อมูลสำรองนี้",
+  "unsupportedBackupDescription": "ข้อมูลสำรองนี้สร้างด้วยเวอร์ชันที่แอพไม่รองรับ ข้อมูลปัจจุบันของคุณไม่ได้ถูกเปลี่ยนแปลง",
+  "restoreFailedTitle": "กู้คืนข้อมูลไม่สำเร็จ",
+  "restoreFailedDescription": "ไม่สามารถกู้คืนข้อมูลสำรองนี้ได้ ข้อมูลเดิมของคุณยังอยู่ครบ",
+  "chooseAnotherBackup": "เลือกไฟล์อื่น",
+  "backupFailedTitle": "ไม่สามารถสร้างข้อมูลสำรองได้",
+  "backupFailedDescription": "ไม่สามารถสร้างหรือบันทึกข้อมูลสำรองได้ โปรดลองอีกครั้ง",
+  "restoreRefreshFailed": "กู้คืนข้อมูลแล้ว แต่แอพโหลดข้อมูลใหม่ไม่สำเร็จ โปรดลองอีกครั้ง",
+  "backupTaskCount": "{count} งาน",
+  "@backupTaskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreTaskCount": "กู้คืน {count} งานแล้ว",
+  "@restoreTaskCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAbout": "เกี่ยวกับแอพ",
+  "settingsAppVersion": "เวอร์ชันแอพ"
 }

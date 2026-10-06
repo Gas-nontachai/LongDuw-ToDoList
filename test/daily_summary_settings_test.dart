@@ -1,15 +1,16 @@
+import 'support/test_preferences.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/app.dart';
-import 'package:my_first_flutter_app/app/app_preferences.dart';
-import 'package:my_first_flutter_app/core/config/dev_config.dart';
-import 'package:my_first_flutter_app/core/database/app_database.dart';
-import 'package:my_first_flutter_app/features/notifications/widgets/daily_summary_host.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
-import 'package:my_first_flutter_app/features/todo/services/todo_service.dart';
-import 'package:my_first_flutter_app/shared/widgets/liquid_glass_bottom_navigation.dart';
+import 'package:longdow_todo_list/app/app.dart';
+import 'package:longdow_todo_list/core/config/dev_config.dart';
+import 'package:longdow_todo_list/core/database/app_database.dart';
+import 'package:longdow_todo_list/features/notifications/widgets/daily_summary_host.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
+import 'package:longdow_todo_list/features/todo/services/todo_service.dart';
+import 'package:longdow_todo_list/shared/widgets/liquid_glass_bottom_navigation.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -39,7 +40,10 @@ class MemoryTodos extends TodoService {
 }
 
 void main() {
-  setUp(() {
+  late TestPreferences preferencesFixture;
+  tearDown(() => preferencesFixture.close());
+  setUp(() async {
+    preferencesFixture = TestPreferences();
     tz_data.initializeTimeZones();
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
@@ -49,7 +53,7 @@ void main() {
     'test notification is gated by dev flag and works while Daily Summary is OFF',
     (tester) async {
       final notifications = FakeNotifications();
-      final prefs = await AppPreferences.load();
+      final prefs = (await preferencesFixture.load());
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -92,7 +96,7 @@ void main() {
     'denied test notification permission leaves switch OFF without an enable retry',
     (tester) async {
       final notifications = FakeNotifications()..allowed = false;
-      final prefs = await AppPreferences.load();
+      final prefs = (await preferencesFixture.load());
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -135,7 +139,7 @@ void main() {
           notificationServiceProvider.overrideWithValue(notifications),
           todoServiceProvider.overrideWithValue(MemoryTodos()),
         ],
-        child: TodoApp(preferences: await AppPreferences.load()),
+        child: TodoApp(preferences: (await preferencesFixture.load())),
       ),
     );
     await tester.pumpAndSettle();
@@ -154,7 +158,7 @@ void main() {
   testWidgets(
     'settings persist time, request permission on enable, update after Todo changes',
     (tester) async {
-      final prefs = await AppPreferences.load();
+      final prefs = (await preferencesFixture.load());
       final notifications = FakeNotifications();
       final todos = MemoryTodos();
       await tester.pumpWidget(
@@ -193,7 +197,7 @@ void main() {
       // Save the default time through the real picker path.
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
-      expect((await AppPreferences.load()).reminderMinutes, 540);
+      expect(((await preferencesFixture.load())).reminderMinutes, 540);
 
       await tester.tap(find.text('Daily Summary'));
       await tester.pumpAndSettle();
@@ -221,7 +225,7 @@ void main() {
       await tester.tap(find.text('สรุปงานรายวัน'));
       await tester.pumpAndSettle();
       expect(notifications.scheduled, isEmpty);
-      expect((await AppPreferences.load()).dailySummaryEnabled, isFalse);
+      expect(((await preferencesFixture.load())).dailySummaryEnabled, isFalse);
       await tester.pumpWidget(const SizedBox());
     },
   );
@@ -236,7 +240,7 @@ void main() {
           notificationServiceProvider.overrideWithValue(notifications),
           todoServiceProvider.overrideWithValue(MemoryTodos()),
         ],
-        child: TodoApp(preferences: await AppPreferences.load()),
+        child: TodoApp(preferences: (await preferencesFixture.load())),
       ),
     );
     await tester.pumpAndSettle();

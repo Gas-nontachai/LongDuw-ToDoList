@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/tab_todo.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
-import 'package:my_first_flutter_app/shared/widgets/app_tab_bar.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/widgets/tab_todo.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/shared/widgets/app_tab_bar.dart';
 
 void main() {
   testWidgets('selection is controlled by the caller and tabs expand evenly', (

@@ -1,4 +1,4 @@
-package com.example.my_first_flutter_app
+package com.example.longdow_todo_list
 
 import io.flutter.embedding.android.FlutterActivity
 

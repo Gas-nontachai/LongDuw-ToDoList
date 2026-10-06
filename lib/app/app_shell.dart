@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/home/screens/home_screen.dart';
+import '../features/backup/providers/backup_controller.dart';
+import '../features/backup/widgets/backup_flow.dart';
 import '../features/todo/screens/todo_screen.dart';
 import '../features/todo/providers/todo_provider.dart';
 import '../features/todo/services/todo_actions.dart';
@@ -23,10 +25,13 @@ class AppShell extends ConsumerStatefulWidget {
     required this.onLocaleChanged,
     required this.onThemeModeChanged,
     this.dailySummaryController,
+    this.createBackupController,
   });
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
   final DailySummaryController? dailySummaryController;
+  final BackupController Function(Future<void> Function())?
+  createBackupController;
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
 }
@@ -34,6 +39,35 @@ class AppShell extends ConsumerStatefulWidget {
 class _AppShellState extends ConsumerState<AppShell> {
   final _todoActions = const TodoActions();
   int _navigationIndex = 0;
+  int _restoreGeneration = 0;
+  bool _backupOpen = false;
+
+  Future<void> _openBackup(bool restore) async {
+    if (_backupOpen || widget.createBackupController == null) return;
+    _backupOpen = true;
+    final controller = widget.createBackupController!(() async {
+      await ref.read(todoProvider.notifier).refreshTodos();
+      final todos = ref.read(todoProvider);
+      if (todos.hasError) throw todos.error!;
+      if (mounted) setState(() => _restoreGeneration++);
+    });
+    try {
+      await showBackupFlow(
+        context,
+        controller,
+        restore: restore,
+        onGoHome: () {
+          setState(() {
+            _navigationIndex = 0;
+            _isNavigationCompact = false;
+          });
+        },
+      );
+    } finally {
+      _backupOpen = false;
+    }
+  }
+
   bool _isNavigationCompact = false;
   void _collapseNavigation() {
     if (!_isNavigationCompact) {
@@ -200,9 +234,15 @@ class _AppShellState extends ConsumerState<AppShell> {
                 });
               },
             ),
-            const TodoScreen(),
+            TodoScreen(key: ValueKey(_restoreGeneration)),
             const StatsScreen(),
             SettingsScreen(
+              onBackup: widget.createBackupController == null
+                  ? null
+                  : () => _openBackup(false),
+              onRestore: widget.createBackupController == null
+                  ? null
+                  : () => _openBackup(true),
               dailySummaryController: widget.dailySummaryController,
               onLocaleChanged: widget.onLocaleChanged,
               onThemeModeChanged: widget.onThemeModeChanged,

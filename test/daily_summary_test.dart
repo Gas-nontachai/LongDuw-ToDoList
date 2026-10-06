@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/notifications/models/daily_summary.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/notifications/models/daily_summary.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo_due_status.dart';
+import 'package:longdow_todo_list/features/todo/models/todo_due_status.dart';
 
 void main() {
   final today = DateTime(2026, 10, 2, 23, 59);

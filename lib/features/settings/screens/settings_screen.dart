@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../core/config/dev_config.dart';
@@ -11,10 +12,14 @@ class SettingsScreen extends StatelessWidget {
     required this.onLocaleChanged,
     required this.onThemeModeChanged,
     this.dailySummaryController,
+    this.onBackup,
+    this.onRestore,
   });
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
   final DailySummaryController? dailySummaryController;
+  final VoidCallback? onBackup;
+  final VoidCallback? onRestore;
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -42,9 +47,78 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => onLocaleChanged(Locale(isThai ? 'en' : 'th')),
           ),
         ),
+        if (onBackup != null && onRestore != null) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+            child: Text(
+              l10n.dataAndBackup,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.upload_outlined),
+                  title: Text(l10n.backupData),
+                  subtitle: Text(l10n.backupDataSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: onBackup,
+                ),
+                const Divider(height: 1, indent: 56),
+                ListTile(
+                  leading: const Icon(Icons.download_outlined),
+                  title: Text(l10n.restoreBackup),
+                  subtitle: Text(l10n.restoreBackupSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: onRestore,
+                ),
+              ],
+            ),
+          ),
+        ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+          child: Text(
+            l10n.settingsAbout,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        const _AppVersionSettings(),
       ],
     );
   }
+}
+
+class _AppVersionSettings extends StatefulWidget {
+  const _AppVersionSettings();
+
+  @override
+  State<_AppVersionSettings> createState() => _AppVersionSettingsState();
+}
+
+class _AppVersionSettingsState extends State<_AppVersionSettings> {
+  late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<PackageInfo>(
+    future: _packageInfo,
+    builder: (context, snapshot) {
+      final info = snapshot.data;
+      final version = info == null
+          ? '—'
+          : info.buildNumber.isEmpty
+          ? info.version
+          : '${info.version}+${info.buildNumber}';
+      return Card(
+        child: ListTile(
+          leading: const Icon(CupertinoIcons.info),
+          title: Text(AppLocalizations.of(context)!.settingsAppVersion),
+          subtitle: Text(version),
+        ),
+      );
+    },
+  );
 }
 
 class _DailySummarySettings extends StatelessWidget {
@@ -106,8 +180,7 @@ class _DailySummarySettings extends StatelessWidget {
                       ? null
                       : () =>
                             controller.issue ==
-                                    DailySummaryIssue.permissionDenied &&
-                                !controller.enabled
+                                DailySummaryIssue.permissionDenied
                             ? controller.setEnabled(true)
                             : controller.refresh(),
                   child: Text(l10n.retry),

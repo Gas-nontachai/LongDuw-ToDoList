@@ -28,6 +28,19 @@ class DailySummaryController extends ChangeNotifier {
   Future<void> _tail = Future.value();
   int _pending = 0;
   bool _disposed = false;
+  bool _paused = false;
+
+  /// Stop new lifecycle/provider reconciliations and drain existing work before
+  /// restore acquires the shared database gate.
+  Future<void> pause() async {
+    _paused = true;
+    await _tail;
+  }
+
+  void resume() {
+    _paused = false;
+  }
+
   DailySummaryIssue? issue;
 
   /// Resolved MaterialApp locale; may differ from the device's primary locale.
@@ -46,13 +59,14 @@ class DailySummaryController extends ChangeNotifier {
     Future<void> Function() action, {
     bool reportIssue = true,
   }) {
+    if (_paused || _disposed) return Future.value();
     _pending++;
     _notify();
     return _tail = _tail.then((_) async {
-      if (_disposed) return;
       if (reportIssue) issue = null;
       try {
-        await action();
+        if (_disposed) return;
+        await preferences.database.gate.run(action);
       } catch (error, stackTrace) {
         if (reportIssue) issue = DailySummaryIssue.failed;
         debugPrint('Daily Summary update failed: $error\n$stackTrace');
@@ -120,9 +134,11 @@ class DailySummaryController extends ChangeNotifier {
 
   Future<void> _synchronize() async {
     if (!supported) return;
+    final wasPending = preferences.reconciliationPending;
     final ledger = preferences.summaryLedger;
     // First launch with the feature OFF neither initializes plugins nor prompts.
-    if (!enabled && ledger.isEmpty) return;
+    if (!enabled && ledger.isEmpty && !wasPending) return;
+    await preferences.saveReconciliationPending(true);
     await notifications.initialize();
     final now = _now();
     var consumedDay = preferences.summaryConsumedDay;
@@ -137,6 +153,15 @@ class DailySummaryController extends ChangeNotifier {
     await preferences.saveSummaryConsumedDay(consumedDay);
 
     final allowed = !enabled || await notifications.hasPermission();
+    for (final id in await notifications.pendingIds()) {
+      if (DailySummaryRequest.ownsId(id)) await notifications.cancel(id);
+    }
+    await preferences.saveSummaryLedger({});
+    if (!allowed) {
+      issue = DailySummaryIssue.permissionDenied;
+      return;
+    }
+
     List<DailySummaryRequest> requests = [];
     AppLocalizations? l10n;
     if (enabled && allowed) {
@@ -152,14 +177,6 @@ class DailySummaryController extends ChangeNotifier {
       l10n = await _loadLocalizations();
     }
 
-    for (final id in await notifications.pendingIds()) {
-      if (DailySummaryRequest.ownsId(id)) await notifications.cancel(id);
-    }
-    await preferences.saveSummaryLedger({});
-    if (!allowed) {
-      issue = DailySummaryIssue.permissionDenied;
-      return;
-    }
     final scheduled = <int, int>{};
     // Persist each success so a partial platform failure can be retried safely.
     for (final request in requests) {
@@ -173,6 +190,7 @@ class DailySummaryController extends ChangeNotifier {
       scheduled[request.day] = request.date.millisecondsSinceEpoch;
       await preferences.saveSummaryLedger(scheduled);
     }
+    await preferences.saveReconciliationPending(false);
   }
 
   @override

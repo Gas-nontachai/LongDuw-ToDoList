@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:my_first_flutter_app/app/theme.dart';
-import 'package:my_first_flutter_app/core/utils/date_time_utils.dart';
-import 'package:my_first_flutter_app/features/todo/models/todo.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_item.dart';
-import 'package:my_first_flutter_app/features/todo/widgets/todo_list.dart';
-import 'package:my_first_flutter_app/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/app/theme.dart';
+import 'package:longdow_todo_list/core/utils/date_time_utils.dart';
+import 'package:longdow_todo_list/features/todo/models/todo.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_item.dart';
+import 'package:longdow_todo_list/features/todo/widgets/todo_list.dart';
+import 'package:longdow_todo_list/l10n/app_localizations.dart';
 
 Widget app(Widget child, {String language = 'en', bool dark = false}) =>
     MaterialApp(
