@@ -333,4 +333,31 @@ class AppLocalizationsTh extends AppLocalizations {
   String homeCompletedProgress(int completed, int total) {
     return 'เสร็จแล้ว $completed จาก $total งาน';
   }
+
+  @override
+  String get statsSubtitle => 'ภาพรวมการทำงานของคุณ';
+
+  @override
+  String get statsTotalTasks => 'งานทั้งหมด';
+
+  @override
+  String get statsRemaining => 'งานคงเหลือ';
+
+  @override
+  String get statsCompletionRate => 'อัตรางานสำเร็จ';
+
+  @override
+  String get statsByPriority => 'งานตามความสำคัญ';
+
+  @override
+  String get statsByDueDate => 'งานตามวันครบกำหนด';
+
+  @override
+  String get statsIncompleteOnly => 'เฉพาะงานที่ยังไม่เสร็จ';
+
+  @override
+  String get statsDueSoon => 'ครบกำหนดใน 1–7 วัน';
+
+  @override
+  String get statsLater => 'เกิน 7 วัน';
 }

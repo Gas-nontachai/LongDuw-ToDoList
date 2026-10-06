@@ -173,5 +173,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "statsSubtitle": "Your productivity overview",
+  "statsTotalTasks": "Total tasks",
+  "statsRemaining": "Remaining",
+  "statsCompletionRate": "Completion rate",
+  "statsByPriority": "Tasks by priority",
+  "statsByDueDate": "Tasks by due date",
+  "statsIncompleteOnly": "Remaining tasks only",
+  "statsDueSoon": "Due soon (1–7 days)",
+  "statsLater": "Later (over 7 days)"
 }

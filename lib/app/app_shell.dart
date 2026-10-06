@@ -121,7 +121,12 @@ class _AppShellState extends ConsumerState<AppShell> {
         },
       ),
       appBar: AppBar(
-        toolbarHeight: 96,
+        toolbarHeight: _navigationIndex == 2
+            ? (96 * MediaQuery.textScalerOf(context).scale(15) / 15).clamp(
+                96.0,
+                double.infinity,
+              )
+            : 96,
         titleSpacing: 24,
         title: Row(
           children: [
@@ -139,10 +144,17 @@ class _AppShellState extends ConsumerState<AppShell> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (todos.hasValue && _navigationIndex != 3) ...[
+                  if (_navigationIndex == 2 ||
+                      (todos.hasValue && _navigationIndex != 3)) ...[
                     const SizedBox(height: 4),
                     Text(
-                      l10n.taskCount(taskCount),
+                      _navigationIndex == 2
+                          ? l10n.statsSubtitle
+                          : l10n.taskCount(taskCount),
+                      maxLines: _navigationIndex == 2 ? 1 : null,
+                      overflow: _navigationIndex == 2
+                          ? TextOverflow.ellipsis
+                          : null,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
@@ -189,7 +201,7 @@ class _AppShellState extends ConsumerState<AppShell> {
               },
             ),
             const TodoScreen(),
-            StatsScreen(todos: todos.value ?? const []),
+            const StatsScreen(),
             SettingsScreen(
               dailySummaryController: widget.dailySummaryController,
               onLocaleChanged: widget.onLocaleChanged,

@@ -352,4 +352,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String homeCompletedProgress(int completed, int total) {
     return '$completed of $total completed';
   }
+
+  @override
+  String get statsSubtitle => 'Your productivity overview';
+
+  @override
+  String get statsTotalTasks => 'Total tasks';
+
+  @override
+  String get statsRemaining => 'Remaining';
+
+  @override
+  String get statsCompletionRate => 'Completion rate';
+
+  @override
+  String get statsByPriority => 'Tasks by priority';
+
+  @override
+  String get statsByDueDate => 'Tasks by due date';
+
+  @override
+  String get statsIncompleteOnly => 'Remaining tasks only';
+
+  @override
+  String get statsDueSoon => 'Due soon (1–7 days)';
+
+  @override
+  String get statsLater => 'Later (over 7 days)';
 }

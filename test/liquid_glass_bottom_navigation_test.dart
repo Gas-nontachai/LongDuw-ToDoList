@@ -291,8 +291,17 @@ void main() {
       await tester.tap(buttons.at(2));
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 2);
-      expect(find.widgetWithText(ListTile, 'All'), findsOneWidget);
-      expect(find.widgetWithText(ListTile, '30'), findsNWidgets(2));
+      expect(find.text('Total tasks'), findsOneWidget);
+      for (final metric in ['stats-total', 'stats-remaining']) {
+        expect(
+          find.descendant(
+            of: find.byKey(ValueKey(metric)),
+            matching: find.text('30'),
+          ),
+          findsOneWidget,
+        );
+      }
+      expect(find.text('0 of 30 completed'), findsOneWidget);
       await tester.tap(buttons.at(3));
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 3);

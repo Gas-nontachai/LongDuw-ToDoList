@@ -703,6 +703,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{completed} of {total} completed'**
   String homeCompletedProgress(int completed, int total);
+
+  /// No description provided for @statsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your productivity overview'**
+  String get statsSubtitle;
+
+  /// No description provided for @statsTotalTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Total tasks'**
+  String get statsTotalTasks;
+
+  /// No description provided for @statsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get statsRemaining;
+
+  /// No description provided for @statsCompletionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion rate'**
+  String get statsCompletionRate;
+
+  /// No description provided for @statsByPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks by priority'**
+  String get statsByPriority;
+
+  /// No description provided for @statsByDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks by due date'**
+  String get statsByDueDate;
+
+  /// No description provided for @statsIncompleteOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining tasks only'**
+  String get statsIncompleteOnly;
+
+  /// No description provided for @statsDueSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Due soon (1–7 days)'**
+  String get statsDueSoon;
+
+  /// No description provided for @statsLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later (over 7 days)'**
+  String get statsLater;
 }
 
 class _AppLocalizationsDelegate

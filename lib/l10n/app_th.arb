@@ -173,5 +173,14 @@
         "type": "int"
       }
     }
-  }
+  },
+  "statsSubtitle": "ภาพรวมการทำงานของคุณ",
+  "statsTotalTasks": "งานทั้งหมด",
+  "statsRemaining": "งานคงเหลือ",
+  "statsCompletionRate": "อัตรางานสำเร็จ",
+  "statsByPriority": "งานตามความสำคัญ",
+  "statsByDueDate": "งานตามวันครบกำหนด",
+  "statsIncompleteOnly": "เฉพาะงานที่ยังไม่เสร็จ",
+  "statsDueSoon": "ครบกำหนดใน 1–7 วัน",
+  "statsLater": "เกิน 7 วัน"
 }

@@ -113,7 +113,8 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'เพิ่มรายการ'));
     await tester.pumpAndSettle();
     expect(find.text('กรุณาใส่ชื่อรายการ'), findsOneWidget);
-    expect(find.text('กรุณาใส่รายละเอียด'), findsOneWidget);
+    // Details are optional; only an empty title produces a validation error.
+    expect(find.text('กรุณาใส่รายละเอียด'), findsNothing);
     await tester.tap(find.text('ยกเลิก'));
     await tester.pumpAndSettle();
     expect(find.text('draft'), findsOneWidget);
