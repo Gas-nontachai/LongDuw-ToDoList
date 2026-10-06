@@ -164,7 +164,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         titleSpacing: 24,
         title: Row(
           children: [
-            const AppIcon.asset(AppIconAssets.task, size: 28),
+            const AppIcon.asset(AppIconAssets.logo, size: 28),
             const SizedBox(width: 14),
             Expanded(
               child: Column(

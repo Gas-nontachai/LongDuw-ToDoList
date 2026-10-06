@@ -1,6 +1,27 @@
-# longdow_todo_list
+# ลองดูว - To Do List
 
 A new Flutter project.
+
+## App icon
+
+หัวแอปและหน้ารายละเอียดงานใช้โลโก้ `no-text` แบบ WebP โปร่งใส
+ใน `assets/icons/longduw_logo/` ส่วน PNG เป็นต้นฉบับสำหรับไอคอนที่ build
+ทั้งสองไฟล์ตัดพื้นที่ว่างรอบโลโก้แล้วเพื่อให้แสดงชัดที่ขนาดเล็ก
+โลโก้ใช้โทน teal ตามสีหลักของธีม `#007F78` ร่วมกับกระดาษสีขาว
+และสีเขียวหม่นอ่อนด้านหลัง พื้นด้านนอกโลโก้ยังโปร่งใส
+
+สร้างไอคอน Android (รวม adaptive icon), iOS, macOS, Windows และเว็บใหม่ด้วย:
+
+```bash
+flutter pub get
+dart run tool/generate_app_icons.dart
+```
+
+ตั้งค่าอยู่ใน `flutter_launcher_icons.yaml` สคริปต์เพิ่มระยะขอบให้ไอคอนเว็บ
+แบบ maskable เพื่อรองรับการตัดเป็นวงกลม และไฟล์ไอคอนที่สร้างแล้วเก็บใน Git
+จึง build ได้โดยไม่ต้องรัน generator ทุกครั้ง หากเปลี่ยนโลโก้ ให้อัปเดต PNG
+และ WebP แล้วรันคำสั่งข้างต้นอีกครั้ง iOS ใช้พื้นหลังทึบตามข้อกำหนดแพลตฟอร์ม
+Linux ใช้ PNG ใน Flutter asset bundle เป็นไอคอนหน้าต่าง
 
 ## Run with local SQLite
 

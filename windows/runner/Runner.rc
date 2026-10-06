@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "longdow_todo_list" "\0"
+            VALUE "FileDescription", "ลองดูว - To Do List" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "longdow_todo_list" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "longdow_todo_list.exe" "\0"
-            VALUE "ProductName", "longdow_todo_list" "\0"
+            VALUE "ProductName", "ลองดูว - To Do List" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

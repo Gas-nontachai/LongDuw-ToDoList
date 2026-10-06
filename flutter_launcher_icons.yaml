@@ -1,0 +1,18 @@
+# Regenerate with: dart run tool/generate_app_icons.dart
+flutter_launcher_icons:
+  image_path: assets/icons/longduw_logo/longduw-logo-no-text.png
+  android: true
+  ios: true
+  adaptive_icon_background: '#FCFDFE'
+  adaptive_icon_foreground: assets/icons/longduw_logo/longduw-logo-no-text.png
+  adaptive_icon_foreground_inset: 16
+  remove_alpha_ios: true
+  background_color_ios: '#FCFDFE'
+  web:
+    generate: true
+    image_path: assets/icons/longduw_logo/longduw-logo-no-text.png
+  windows:
+    generate: true
+    icon_size: 256
+  macos:
+    generate: true

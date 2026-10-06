@@ -10,7 +10,7 @@ class AppLocalizationsTh extends AppLocalizations {
   AppLocalizationsTh([String locale = 'th']) : super(locale);
 
   @override
-  String get appTitle => 'รายการสิ่งที่ต้องทำ';
+  String get appTitle => 'ลองดูว - To Do List';
 
   @override
   String get addTodo => 'เพิ่มรายการ';

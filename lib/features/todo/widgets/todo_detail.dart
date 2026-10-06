@@ -217,7 +217,7 @@ class TodoDetailSheet extends StatelessWidget {
                     final heading = Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const AppIcon.asset(AppIconAssets.task, size: 28),
+                        const AppIcon.asset(AppIconAssets.logo, size: 28),
                         const SizedBox(width: 10),
                         Flexible(
                           child: Text(l10n.details, style: headingStyle),

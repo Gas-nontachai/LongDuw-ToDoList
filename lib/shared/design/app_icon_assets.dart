@@ -1,4 +1,5 @@
-/// Original vector assets rendered by AppIcon.
+/// Brand assets rendered by AppIcon.
 abstract final class AppIconAssets {
-  static const String task = 'assets/icons/app_task.svg';
+  static const String logo =
+      'assets/icons/longduw_logo/longduw-logo-no-text.webp';
 }

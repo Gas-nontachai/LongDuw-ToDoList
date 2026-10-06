@@ -1,6 +1,6 @@
 {
   "@@locale": "th",
-  "appTitle": "รายการสิ่งที่ต้องทำ",
+  "appTitle": "ลองดูว - To Do List",
   "addTodo": "เพิ่มรายการ",
   "editTodo": "แก้ไขรายการ",
   "deleteTodoQuestion": "ลบรายการนี้หรือไม่?",
