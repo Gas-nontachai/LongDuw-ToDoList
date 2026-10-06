@@ -59,6 +59,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    await tester.tap(find.byKey(const ValueKey('home-view-all')));
+    await tester.pumpAndSettle();
+
     Brightness screenBrightness() =>
         Theme.of(tester.element(find.byType(AppShell))).brightness;
 
@@ -328,7 +331,9 @@ void main() {
         child: TodoApp(preferences: await AppPreferences.load()),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('home-view-all')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Add todo'));
     await tester.pumpAndSettle();
     final fields = find.byType(TextFormField);

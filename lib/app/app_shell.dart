@@ -6,12 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/home/screens/home_screen.dart';
 import '../features/todo/screens/todo_screen.dart';
 import '../features/todo/providers/todo_provider.dart';
+import '../features/todo/services/todo_actions.dart';
 import '../features/stats/screens/stats_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
 import '../features/notifications/providers/daily_summary_controller.dart';
 import '../l10n/app_localizations.dart';
 import '../shared/widgets/liquid_glass_bottom_navigation.dart';
 import '../shared/design/app_icon_assets.dart';
+import '../shared/design/app_icons.dart';
 import '../shared/widgets/app_icon.dart';
 
 /// Shared app layout. Each destination owns its own screen content.
@@ -30,7 +32,8 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
-  int _navigationIndex = 1;
+  final _todoActions = const TodoActions();
+  int _navigationIndex = 0;
   bool _isNavigationCompact = false;
   void _collapseNavigation() {
     if (!_isNavigationCompact) {
@@ -53,6 +56,7 @@ class _AppShellState extends ConsumerState<AppShell> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final todos = ref.watch(todoProvider);
+    final operations = ref.watch(todoOperationProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isThai = Localizations.localeOf(context).languageCode == 'th';
     final taskCount = todos.value?.where((todo) => !todo.completed).length ?? 0;
@@ -64,6 +68,28 @@ class _AppShellState extends ConsumerState<AppShell> {
     ];
     return Scaffold(
       extendBody: true,
+      // Own the FAB alongside the navigation so Scaffold positions it above
+      // the bar's actual height, including its animation and bottom safe area.
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: _navigationIndex == 1
+          ? SizedBox(
+              width: 64,
+              height: 64,
+              child: FloatingActionButton(
+                onPressed: operations.isCreating
+                    ? null
+                    : () => _todoActions.add(context, ref),
+                tooltip: l10n.addTodoTooltip,
+                child: operations.isCreating
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(AppIcons.add, size: 34),
+              ),
+            )
+          : null,
       bottomNavigationBar: LiquidGlassBottomNavigation(
         items: [
           LiquidGlassNavigationItem(
@@ -154,8 +180,13 @@ class _AppShellState extends ConsumerState<AppShell> {
           index: _navigationIndex,
           children: [
             HomeScreen(
-              taskCount: taskCount,
-              onOpenTasks: () => setState(() => _navigationIndex = 1),
+              onOpenTasks: () {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  _navigationIndex = 1;
+                  _isNavigationCompact = false;
+                });
+              },
             ),
             const TodoScreen(),
             StatsScreen(todos: todos.value ?? const []),

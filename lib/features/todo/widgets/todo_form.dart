@@ -145,9 +145,6 @@ class _TodoFormSheetState extends State<TodoFormSheet> {
                 textInputAction: TextInputAction.done,
                 maxLines: 3,
                 decoration: InputDecoration(labelText: l10n.details),
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? l10n.enterDetails
-                    : null,
                 onFieldSubmitted: (_) => _save(),
               ),
               const SizedBox(height: 16),

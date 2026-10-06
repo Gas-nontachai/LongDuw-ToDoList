@@ -147,5 +147,31 @@
   "testNotification": "ทดสอบแจ้งเตือน",
   "testNotificationDescription": "แสดงข้อความตัวอย่างทันที (เฉพาะโหมด dev)",
   "testNotificationSent": "ส่งแจ้งเตือนทดสอบแล้ว ดูได้ในแถบแจ้งเตือน",
-  "testNotificationFailed": "แสดงแจ้งเตือนทดสอบไม่สำเร็จ กรุณาลองใหม่"
+  "testNotificationFailed": "แสดงแจ้งเตือนทดสอบไม่สำเร็จ กรุณาลองใหม่",
+  "homeToday": "วันนี้",
+  "homeViewAll": "ดูทั้งหมด",
+  "homeOverview": "ภาพรวม",
+  "homeNoTasksToday": "ไม่มีงานครบกำหนดวันนี้",
+  "homeDueSummary": "ครบกำหนดวันนี้ {today} · เกินกำหนด {overdue}",
+  "homeCompletedProgress": "เสร็จแล้ว {completed} จาก {total} งาน",
+  "@homeDueSummary": {
+    "placeholders": {
+      "today": {
+        "type": "int"
+      },
+      "overdue": {
+        "type": "int"
+      }
+    }
+  },
+  "@homeCompletedProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

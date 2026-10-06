@@ -330,4 +330,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get testNotificationFailed =>
       'Could not show the test notification. Please try again.';
+
+  @override
+  String get homeToday => 'Today';
+
+  @override
+  String get homeViewAll => 'View all';
+
+  @override
+  String get homeOverview => 'Overview';
+
+  @override
+  String get homeNoTasksToday => 'No tasks due today';
+
+  @override
+  String homeDueSummary(int today, int overdue) {
+    return '$today due today · $overdue overdue';
+  }
+
+  @override
+  String homeCompletedProgress(int completed, int total) {
+    return '$completed of $total completed';
+  }
 }

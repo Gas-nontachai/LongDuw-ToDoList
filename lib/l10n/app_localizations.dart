@@ -667,6 +667,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not show the test notification. Please try again.'**
   String get testNotificationFailed;
+
+  /// No description provided for @homeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get homeToday;
+
+  /// No description provided for @homeViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get homeViewAll;
+
+  /// No description provided for @homeOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get homeOverview;
+
+  /// No description provided for @homeNoTasksToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks due today'**
+  String get homeNoTasksToday;
+
+  /// No description provided for @homeDueSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{today} due today · {overdue} overdue'**
+  String homeDueSummary(int today, int overdue);
+
+  /// No description provided for @homeCompletedProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed} of {total} completed'**
+  String homeCompletedProgress(int completed, int total);
 }
 
 class _AppLocalizationsDelegate

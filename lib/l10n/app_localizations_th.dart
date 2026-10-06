@@ -311,4 +311,26 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get testNotificationFailed =>
       'แสดงแจ้งเตือนทดสอบไม่สำเร็จ กรุณาลองใหม่';
+
+  @override
+  String get homeToday => 'วันนี้';
+
+  @override
+  String get homeViewAll => 'ดูทั้งหมด';
+
+  @override
+  String get homeOverview => 'ภาพรวม';
+
+  @override
+  String get homeNoTasksToday => 'ไม่มีงานครบกำหนดวันนี้';
+
+  @override
+  String homeDueSummary(int today, int overdue) {
+    return 'ครบกำหนดวันนี้ $today · เกินกำหนด $overdue';
+  }
+
+  @override
+  String homeCompletedProgress(int completed, int total) {
+    return 'เสร็จแล้ว $completed จาก $total งาน';
+  }
 }

@@ -59,6 +59,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('home-view-all')));
+      await tester.pumpAndSettle();
       final l10n = AppLocalizations.of(tester.element(find.byType(AppShell)))!;
       final sortButton = find.byKey(const ValueKey('todo-sort-button'));
       List<String> visibleTitles() => tester

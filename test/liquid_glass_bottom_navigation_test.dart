@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:my_first_flutter_app/app/theme.dart';
 import 'package:my_first_flutter_app/features/todo/models/todo.dart';
 import 'package:my_first_flutter_app/features/todo/providers/todo_provider.dart';
+import 'package:my_first_flutter_app/features/todo/widgets/todo_form.dart';
 import 'package:my_first_flutter_app/app/app_shell.dart';
 import 'package:my_first_flutter_app/l10n/app_localizations.dart';
 import 'package:my_first_flutter_app/shared/widgets/liquid_glass_bottom_navigation.dart';
@@ -24,6 +25,84 @@ class _TestTodos extends TodoNotifier {
 }
 
 void main() {
+  for (final size in [const Size(320, 640), const Size(390, 844)]) {
+    testWidgets(
+      'Tasks FAB stays above navigation and remains tappable ($size)',
+      (tester) async {
+        await tester.binding.setSurfaceSize(size);
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [todoProvider.overrideWith(_TestTodos.new)],
+            child: MaterialApp(
+              theme: appTheme,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  padding: const EdgeInsets.only(bottom: 34),
+                  viewPadding: const EdgeInsets.only(bottom: 34),
+                  textScaler: const TextScaler.linear(1.4),
+                ),
+                child: child!,
+              ),
+              home: AppShell(
+                onLocaleChanged: (_) {},
+                onThemeModeChanged: (_) {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byType(FloatingActionButton), findsNothing);
+        await tester.tap(find.byKey(const ValueKey('home-view-all')));
+        await tester.pumpAndSettle();
+        LiquidGlassBottomNavigation nav() =>
+            tester.widget(find.byType(LiquidGlassBottomNavigation));
+        void expectClearance() {
+          final fab = tester.getRect(find.byType(FloatingActionButton));
+          final bar = tester.getRect(find.byType(LiquidGlassBottomNavigation));
+          expect(fab.size, const Size(64, 64));
+          expect(fab.bottom, lessThanOrEqualTo(bar.top - 15.9));
+          expect(fab.right, lessThanOrEqualTo(size.width - 15.9));
+        }
+
+        nav().onSelected(1);
+        await tester.pumpAndSettle();
+        expect(nav().isCompact, isFalse);
+        expectClearance();
+        nav().onTapOutside!();
+        for (var frame = 0; frame < 6; frame++) {
+          await tester.pump(const Duration(milliseconds: 50));
+          expectClearance();
+        }
+        await tester.pumpAndSettle();
+        expect(nav().isCompact, isTrue);
+        expectClearance();
+        nav().onSelected(1);
+        for (var frame = 0; frame < 6; frame++) {
+          await tester.pump(const Duration(milliseconds: 50));
+          expectClearance();
+        }
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(FloatingActionButton));
+        await tester.pumpAndSettle();
+        expect(find.byType(TodoFormSheet), findsOneWidget);
+        final l10n = AppLocalizations.of(
+          tester.element(find.byType(AppShell)),
+        )!;
+        await tester.tap(find.text(l10n.cancel));
+        await tester.pumpAndSettle();
+        expect(find.byType(TodoFormSheet), findsNothing);
+        expectClearance();
+        nav().onSelected(0);
+        await tester.pumpAndSettle();
+        expect(find.byType(FloatingActionButton), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets(
     'outside taps collapse without consuming taps; same tab expands',
     (tester) async {
@@ -165,6 +244,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('home-view-all')));
+      await tester.pumpAndSettle();
       LiquidGlassBottomNavigation nav() =>
           tester.widget(find.byType(LiquidGlassBottomNavigation));
       final buttons = find.descendant(
@@ -200,7 +281,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 0);
       expect(find.byType(FloatingActionButton), findsNothing);
-      await tester.tap(find.widgetWithText(FilledButton, 'Tasks'));
+      await tester.tap(find.byKey(const ValueKey('home-view-all')));
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 1);
       expect(
