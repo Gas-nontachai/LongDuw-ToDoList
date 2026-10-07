@@ -245,7 +245,7 @@ void main() {
     'settings persist time, request permission on enable, update after Todo changes',
     (tester) async {
       final prefs = (await preferencesFixture.load());
-      final notifications = FakeNotifications();
+      final notifications = FakeNotifications()..permissionGranted = false;
       final todos = MemoryTodos();
       await tester.pumpWidget(
         ProviderScope(
@@ -303,11 +303,19 @@ void main() {
       });
 
       // Changing the app language also rewrites notification text.
-      await tester.tap(find.text('Change language'));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('settings-language')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('settings-language')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('settings-language-th')));
       await tester.pumpAndSettle();
       expect(notifications.bodies.values.toSet(), {
         'วันนี้ไม่มีงาน 🎉 วางแผนงานถัดไปกันไหม',
       });
+      await tester.ensureVisible(find.text('สรุปงานรายวัน'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('สรุปงานรายวัน'));
       await tester.pumpAndSettle();
       expect(notifications.scheduled, isEmpty);

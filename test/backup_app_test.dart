@@ -68,9 +68,11 @@ void main() {
       select(3);
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Data & Backup'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Data & Backup'));
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Restore backup'));
+      await tester.pumpAndSettle();
       // Exercise the actual compute-based validator in its real async zone.
       await tester.tap(find.text('Restore backup'));
       await tester.pump();

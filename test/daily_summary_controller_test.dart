@@ -32,7 +32,7 @@ void main() {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     prefs = await preferencesFixture.load();
-    notifications = FakeNotifications();
+    notifications = FakeNotifications()..permissionGranted = false;
     now = tz.TZDateTime(tz.getLocation('Asia/Bangkok'), 2026, 10, 5, 8);
     todos = [];
     loads = 0;
@@ -239,6 +239,7 @@ void main() {
 
   test('preview uses sample counts without enabling, scheduling, or consuming a day', () async {
     await prefs.saveLocale(const Locale('th'));
+    notifications.permissionGranted = true;
     final ledger = {20261005: now.millisecondsSinceEpoch + 60000};
     await prefs.saveSummaryLedger(ledger);
     await prefs.saveSummaryConsumedDay(20261004);

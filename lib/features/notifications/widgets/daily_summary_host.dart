@@ -14,6 +14,7 @@ import '../../backup/services/backup_file_gateway.dart';
 import '../../../app/app_shell.dart';
 import '../../todo/providers/todo_provider.dart';
 import '../providers/daily_summary_controller.dart';
+import '../../onboarding/screens/onboarding_screen.dart';
 import '../services/notification_service.dart';
 
 final notificationServiceProvider = Provider<NotificationService>(
@@ -39,10 +40,13 @@ class DailySummaryHost extends ConsumerStatefulWidget {
 class _DailySummaryHostState extends ConsumerState<DailySummaryHost>
     with WidgetsBindingObserver {
   late final DailySummaryController _controller;
+  late bool _showOnboarding;
+  int _onboardingGeneration = 0;
 
   @override
   void initState() {
     super.initState();
+    _showOnboarding = !widget.preferences.onboardingCompleted;
     _controller = DailySummaryController(
       preferences: widget.preferences,
       notifications: ref.read(notificationServiceProvider),
@@ -74,6 +78,33 @@ class _DailySummaryHostState extends ConsumerState<DailySummaryHost>
     super.dispose();
   }
 
+  Future<void> _replayOnboarding() async {
+    try {
+      await widget.preferences.restartOnboarding();
+      if (mounted) {
+        setState(() {
+          _onboardingGeneration++;
+          _showOnboarding = true;
+        });
+      }
+    } catch (error, stack) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stack,
+          library: 'onboarding',
+        ),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.somethingWentWrong),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(todoProvider, (previous, next) {
@@ -81,7 +112,17 @@ class _DailySummaryHostState extends ConsumerState<DailySummaryHost>
         unawaited(_controller.refresh());
       }
     });
+    if (_showOnboarding) {
+      return OnboardingScreen(
+        key: ValueKey(_onboardingGeneration),
+        preferences: widget.preferences,
+        notifications: _controller,
+        onFinished: () => setState(() => _showOnboarding = false),
+      );
+    }
     return AppShell(
+      themeMode: widget.preferences.themeMode,
+      onReplayOnboarding: _replayOnboarding,
       onLocaleChanged: widget.onLocaleChanged,
       onThemeModeChanged: widget.onThemeModeChanged,
       dailySummaryController: _controller,

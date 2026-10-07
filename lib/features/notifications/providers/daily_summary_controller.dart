@@ -118,7 +118,8 @@ class DailySummaryController extends ChangeNotifier {
     if (!supported) return;
     if (value) {
       await notifications.initialize();
-      if (!await notifications.requestPermission()) {
+      if (!await notifications.hasPermission() &&
+          !await notifications.requestPermission()) {
         issue = DailySummaryIssue.permissionDenied;
         return;
       }
