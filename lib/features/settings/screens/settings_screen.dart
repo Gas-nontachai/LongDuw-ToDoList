@@ -164,19 +164,18 @@ class SettingsScreen extends StatelessWidget {
           child: Column(
             children: [
               if (onReplayOnboarding != null) ...[
-                ListTile(
-                  leading: const Icon(Icons.help_outline),
-                  title: Text(l10n.onboardingReplay),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: onReplayOnboarding,
+                _AboutSettingsTile(
+                  icon: Icons.help_outline,
+                  title: l10n.onboardingReplay,
+                  onTap: onReplayOnboarding!,
                 ),
-                const Divider(height: 1, indent: 56, endIndent: 16),
+                const Divider(height: 1, indent: 54, endIndent: 16),
               ],
-              ListTile(
+              _AboutSettingsTile(
                 key: const ValueKey('settings-licenses'),
-                leading: const Icon(Icons.description_outlined),
-                title: Text(l10n.softwareLicenses),
-                trailing: const Icon(Icons.chevron_right),
+                icon: Icons.description_outlined,
+                title: l10n.softwareLicenses,
+                secondary: true,
                 onTap: () => Navigator.of(context).push<void>(
                   MaterialPageRoute(
                     builder: (_) => const SoftwareLicensesScreen(),
@@ -187,6 +186,44 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AboutSettingsTile extends StatelessWidget {
+  const _AboutSettingsTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.secondary = false,
+  });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+  final bool secondary;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      minTileHeight: 56,
+      minLeadingWidth: 22,
+      horizontalTitleGap: 16,
+      leading: Icon(icon, size: 22, color: muted),
+      title: Text(
+        title,
+        style: secondary
+            ? theme.textTheme.bodyMedium?.copyWith(color: muted)
+            : theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+      ),
+      trailing: Icon(Icons.chevron_right, size: 20, color: muted),
+      onTap: onTap,
     );
   }
 }
