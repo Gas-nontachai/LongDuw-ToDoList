@@ -253,5 +253,49 @@
   "backupOverviewDescription": "Save a backup file to restore your tasks and settings later.",
   "backupTasksDescription": "All completed and remaining tasks",
   "backupAppSettingsDescription": "Theme and language",
-  "backupNotificationSettingsDescription": "Daily summary and reminder time"
+  "backupNotificationSettingsDescription": "Daily summary and reminder time",
+  "onboardingWelcome": "Organize your tasks,\nkeep things simple,\nand see the whole picture.",
+  "onboardingBenefitOrganize": "Organize tasks easily",
+  "onboardingBenefitOverview": "See what needs doing",
+  "onboardingBenefitHabit": "Build a daily habit",
+  "onboardingStart": "Get started",
+  "onboardingSkipAll": "Skip introduction",
+  "onboardingPersonalize": "Make it yours",
+  "onboardingPersonalizeDescription": "Choose your language and a comfortable theme.",
+  "onboardingChangeLater": "You can change these later in Settings.",
+  "onboardingLanguage": "Language",
+  "appTheme": "Theme",
+  "appThemeSystem": "System",
+  "appThemeLight": "Light",
+  "appThemeDark": "Dark",
+  "onboardingNext": "Next",
+  "onboardingLater": "Not now",
+  "onboardingSkip": "Skip",
+  "onboardingSummaryTitle": "Daily summary",
+  "onboardingSummaryDescription": "Get a daily overview of today’s and overdue tasks at your chosen time.",
+  "onboardingSummaryScope": "A daily overview, rather than individual task reminders.",
+  "onboardingSummaryEnable": "Enable daily summary",
+  "onboardingSummaryEnabled": "Daily summary is enabled",
+  "onboardingSummaryEnabledDescription": "You can change the reminder time later in Settings.",
+  "onboardingSummaryDenied": "Notifications are not enabled",
+  "onboardingFirstTask": "Create your first task",
+  "onboardingFirstTaskDescription": "Add something you want to do today. Start with something small.",
+  "onboardingTaskHint": "For example, read a book",
+  "onboardingAddTask": "Add first task",
+  "onboardingTaskAdded": "Your first task is added!",
+  "onboardingTaskAddedDescription": "A great start 🎉\nLet’s take it one task at a time.",
+  "onboardingEnterApp": "Start using the app",
+  "onboardingReplay": "View introduction again",
+  "onboardingProgress": "Step {step} of {total}",
+  "@onboardingProgress": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingSummaryWorking": "Preparing notifications…"
 }

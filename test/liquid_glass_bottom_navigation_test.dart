@@ -269,9 +269,10 @@ void main() {
         tester.widget<TabBarView>(find.byType(TabBarView)).controller!.index,
         1,
       );
-      await tester.tap(find.byTooltip('Switch to dark mode'));
+      expect(tester.widget<AppBar>(find.byType(AppBar)).actions, isNull);
+      await tester.tap(find.byType(AppBar));
       await tester.pumpAndSettle();
-      expect(themeChanges, 1);
+      expect(themeChanges, 0);
       expect(nav().isCompact, isTrue);
       await tester.enterText(find.byType(TextField), 'Task 12');
       await tester.pumpAndSettle();
@@ -305,7 +306,8 @@ void main() {
       await tester.tap(buttons.at(3));
       await tester.pumpAndSettle();
       expect(nav().selectedIndex, 3);
-      expect(find.byType(SwitchListTile), findsOneWidget);
+      expect(find.widgetWithText(ListTile, 'System'), findsOneWidget);
+      expect(find.byType(ChoiceChip), findsNothing);
       expect(nav().isCompact, isFalse);
       await tester.tap(buttons.at(1));
       await tester.pumpAndSettle();

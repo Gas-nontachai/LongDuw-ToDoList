@@ -4,9 +4,8 @@ import '../../../core/config/priority_config.dart';
 import '../../../shared/widgets/app_expandable_sheet.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../shared/widgets/app_text_field.dart';
 import '../models/todo.dart';
-import 'todo_priority_badge.dart';
+import 'todo_form_fields.dart';
 
 Future<TodoFormData?> showTodoForm(BuildContext context, {Todo? todo}) {
   return showModalBottomSheet<TodoFormData>(
@@ -126,64 +125,19 @@ class _TodoFormSheetState extends State<TodoFormSheet> {
         width: double.maxFinite,
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AppTextField(
-                controller: _controller,
-                autofocus: false,
-                textInputAction: TextInputAction.done,
-                label: l10n.title,
-                validator: (value) => value == null || value.trim().isEmpty
-                    ? l10n.enterTitle
-                    : null,
-                onFieldSubmitted: (_) => _save(),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _detailsController,
-                textInputAction: TextInputAction.done,
-                maxLines: 3,
-                decoration: InputDecoration(labelText: l10n.details),
-                onFieldSubmitted: (_) => _save(),
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: _priority,
-                isExpanded: true,
-                decoration: InputDecoration(labelText: l10n.priority),
-                items: [
-                  for (final priority in PriorityConfig.values)
-                    DropdownMenuItem(
-                      value: priority,
-                      child: TodoPriorityBadge(priority: priority),
-                    ),
-                ],
-                onChanged: (value) {
-                  if (value != null) setState(() => _priority = value);
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _dueDateController,
-                readOnly: true,
-                onTap: _pickDueDate,
-                decoration: InputDecoration(
-                  labelText: l10n.dueDate,
-                  hintText: l10n.selectDueDate,
-                  suffixIcon: _dueDate == null
-                      ? const Icon(Icons.calendar_today_outlined)
-                      : IconButton(
-                          tooltip: l10n.clearDueDate,
-                          icon: const Icon(Icons.clear),
-                          onPressed: () => setState(() {
-                            _dueDate = null;
-                            _updateDueDateText();
-                          }),
-                        ),
-                ),
-              ),
-            ],
+          child: TodoFormFields(
+            titleController: _controller,
+            detailsController: _detailsController,
+            dueDateController: _dueDateController,
+            priority: _priority,
+            dueDate: _dueDate,
+            onPriorityChanged: (value) => setState(() => _priority = value),
+            onPickDueDate: _pickDueDate,
+            onClearDueDate: () => setState(() {
+              _dueDate = null;
+              _updateDueDateText();
+            }),
+            onSubmit: _save,
           ),
         ),
       ),

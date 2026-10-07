@@ -11,6 +11,13 @@ class AppPreferences extends ChangeNotifier {
   AppPreferences._(this.database);
   final AppDatabase database;
   Map<String, Object?> _values = {};
+  int _onboardingStep = 0;
+  bool _onboardingCompleted = false;
+
+  static const onboardingStepKey = 'onboarding_step';
+  static const onboardingCompletedKey = 'onboarding_completed';
+  int get onboardingStep => _onboardingStep;
+  bool get onboardingCompleted => _onboardingCompleted;
 
   static const themeModeKey = 'theme_mode';
   static const languageCodeKey = 'language_code';
@@ -35,19 +42,29 @@ class AppPreferences extends ChangeNotifier {
     final result = AppPreferences._(database ?? AppDatabase());
     final db = await result.database.database;
     await result.database.gate.run(() async {
-      if ((await db.query(
+      final migrated = (await db.query(
         'app_metadata',
         where: 'key = ?',
         whereArgs: ['preferences_migrated'],
-      )).isEmpty) {
-        final legacy = await SharedPreferencesWithCache.create(
-          cacheOptions: SharedPreferencesWithCacheOptions(
-            allowList: {...portableKeys, ...runtimeKeys},
-          ),
-        );
-        await db.transaction((txn) async {
+      )).isNotEmpty;
+      final legacy = !migrated
+          ? await SharedPreferencesWithCache.create(
+              cacheOptions: SharedPreferencesWithCacheOptions(
+                allowList: {...portableKeys, ...runtimeKeys},
+              ),
+            )
+          : null;
+      final hasLegacy =
+          legacy != null &&
+          {
+            ...portableKeys,
+            ...runtimeKeys,
+          }.any((key) => legacy.get(key) != null);
+      final existing = migrated || !result.database.wasCreated || hasLegacy;
+      await db.transaction((txn) async {
+        if (!migrated) {
           for (final key in {...portableKeys, ...runtimeKeys}) {
-            final value = legacy.get(key);
+            final value = legacy!.get(key);
             if (value != null) {
               await txn.insert(
                 runtimeKeys.contains(key)
@@ -62,8 +79,28 @@ class AppPreferences extends ChangeNotifier {
             'key': 'preferences_migrated',
             'value': 'true',
           });
-        });
-      }
+        }
+        if ((await txn.query(
+          'app_metadata',
+          where: 'key = ?',
+          whereArgs: [onboardingCompletedKey],
+        )).isEmpty) {
+          await txn.insert('app_metadata', {
+            'key': onboardingCompletedKey,
+            'value': jsonEncode(existing),
+          });
+          await txn.insert('app_metadata', {
+            'key': onboardingStepKey,
+            'value': '0',
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+          if (!existing) {
+            await txn.insert('app_settings', {
+              'key': themeModeKey,
+              'value': jsonEncode(ThemeMode.system.name),
+            }, conflictAlgorithm: ConflictAlgorithm.ignore);
+          }
+        }
+      });
       await result.reload();
     });
     return result;
@@ -77,8 +114,51 @@ class AppPreferences extends ChangeNotifier {
         values[row['key'] as String] = jsonDecode(row['value'] as String);
       }
     }
+    final metadata = await db.query('app_metadata');
+    final state = {for (final row in metadata) row['key']: row['value']};
+    _onboardingCompleted = state[onboardingCompletedKey] == 'true';
+    _onboardingStep = (int.tryParse('${state[onboardingStepKey]}') ?? 0).clamp(
+      0,
+      3,
+    );
     _values = values;
     notifyListeners();
+  });
+
+  Future<void> saveOnboardingStep(int step) => database.gate.run(() async {
+    if (step < 0 || step > 3) throw ArgumentError.value(step, 'step');
+    final db = await database.database;
+    await db.insert('app_metadata', {
+      'key': onboardingStepKey,
+      'value': '$step',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    _onboardingStep = step;
+  });
+
+  Future<void> completeOnboarding() => database.gate.run(() async {
+    final db = await database.database;
+    await db.insert('app_metadata', {
+      'key': onboardingCompletedKey,
+      'value': 'true',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    _onboardingCompleted = true;
+  });
+
+  Future<void> restartOnboarding() => database.gate.run(() async {
+    final db = await database.database;
+    await db.transaction((txn) async {
+      for (final entry in {
+        onboardingCompletedKey: 'false',
+        onboardingStepKey: '0',
+      }.entries) {
+        await txn.insert('app_metadata', {
+          'key': entry.key,
+          'value': entry.value,
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+    });
+    _onboardingStep = 0;
+    _onboardingCompleted = false;
   });
 
   Future<void> _save(String key, Object value) => database.gate.run(() async {

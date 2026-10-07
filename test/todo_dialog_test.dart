@@ -12,6 +12,7 @@ import 'package:longdow_todo_list/features/todo/providers/todo_provider.dart';
 import 'package:longdow_todo_list/features/todo/services/todo_service.dart';
 import 'package:longdow_todo_list/features/todo/widgets/todo_form.dart';
 import 'package:longdow_todo_list/l10n/app_localizations.dart';
+import 'package:longdow_todo_list/shared/widgets/liquid_glass_bottom_navigation.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
@@ -48,101 +49,125 @@ void main() {
         InMemorySharedPreferencesAsync.empty();
   });
 
-  testWidgets('theme defaults to light and can switch beside language', (
-    tester,
-  ) async {
-    final platform = tester.binding.platformDispatcher;
-    platform.platformBrightnessTestValue = Brightness.dark;
-    addTearDown(platform.clearPlatformBrightnessTestValue);
-    final preferences = await preferencesFixture.load();
-    await preferences.saveLocale(const Locale('en'));
+  testWidgets(
+    'system theme follows device and explicit modes survive language changes',
+    (tester) async {
+      final platform = tester.binding.platformDispatcher;
+      platform.platformBrightnessTestValue = Brightness.dark;
+      addTearDown(platform.clearPlatformBrightnessTestValue);
+      final preferences = await preferencesFixture.load();
+      await preferences.saveLocale(const Locale('en'));
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(preferences: preferences),
-      ),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
+          child: TodoApp(preferences: preferences),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('home-view-all')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('home-view-all')));
+      await tester.pumpAndSettle();
 
-    Brightness screenBrightness() =>
-        Theme.of(tester.element(find.byType(AppShell))).brightness;
+      Brightness screenBrightness() =>
+          Theme.of(tester.element(find.byType(AppShell))).brightness;
 
-    expect(screenBrightness(), Brightness.light);
-    platform.platformBrightnessTestValue = Brightness.light;
-    await tester.pumpAndSettle();
-    expect(screenBrightness(), Brightness.light);
+      expect(screenBrightness(), Brightness.dark);
+      platform.platformBrightnessTestValue = Brightness.light;
+      await tester.pumpAndSettle();
+      expect(screenBrightness(), Brightness.light);
 
-    await tester.enterText(find.byType(TextField), 'draft');
-    await tester.pump(const Duration(milliseconds: 350));
-    await tester.tap(find.byTooltip('Switch to dark mode'));
-    await tester.pumpAndSettle();
-    expect(screenBrightness(), Brightness.dark);
-    expect(find.text('draft'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), 'draft');
+      await tester.pump(const Duration(milliseconds: 350));
+      Future<void> openTab(int index) async {
+        tester
+            .widget<LiquidGlassBottomNavigation>(
+              find.byType(LiquidGlassBottomNavigation),
+            )
+            .onSelected(index);
+        await tester.pumpAndSettle();
+      }
 
-    expect(find.text('EN'), findsOneWidget);
-    await tester.tap(find.byTooltip('Change language'));
-    await tester.pumpAndSettle();
-    expect(find.text('TH'), findsOneWidget);
-    expect(screenBrightness(), Brightness.dark);
-    expect(find.text('draft'), findsOneWidget);
-    expect(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'), findsOneWidget);
+      Future<void> selectTheme(String label) async {
+        final row = find.byKey(const ValueKey('settings-theme'));
+        await tester.ensureVisible(row);
+        await tester.pumpAndSettle();
+        await tester.tap(row);
+        await tester.pumpAndSettle();
+        final option = find.widgetWithText(ChoiceChip, label);
+        await tester.ensureVisible(option);
+        await tester.pumpAndSettle();
+        await tester.tap(option);
+        await tester.pumpAndSettle();
+      }
 
-    await tester.tap(find.byTooltip('เปลี่ยนภาษา'));
-    await tester.pumpAndSettle();
-    expect(find.text('EN'), findsOneWidget);
-    expect(find.byTooltip('Switch to light mode'), findsOneWidget);
-    expect(((await preferencesFixture.load())).locale, const Locale('en'));
+      Future<void> switchLanguage(String code) async {
+        final row = find.byKey(const ValueKey('settings-language'));
+        await tester.ensureVisible(row);
+        await tester.pumpAndSettle();
+        await tester.tap(row);
+        await tester.pumpAndSettle();
+        final option = find.byKey(ValueKey('settings-language-$code'));
+        await tester.ensureVisible(option);
+        await tester.pumpAndSettle();
+        await tester.tap(option);
+        await tester.pumpAndSettle();
+      }
 
-    await tester.tap(find.byTooltip('Change language'));
-    await tester.pumpAndSettle();
-    expect(find.text('TH'), findsOneWidget);
+      expect(tester.widget<AppBar>(find.byType(AppBar)).actions, isNull);
+      expect(find.byTooltip('Change language'), findsNothing);
+      await openTab(3);
+      await selectTheme('Dark');
+      expect(screenBrightness(), Brightness.dark);
+      await switchLanguage('th');
+      expect(preferences.locale, const Locale('th'));
+      expect(screenBrightness(), Brightness.dark);
+      await switchLanguage('en');
+      expect(preferences.locale, const Locale('en'));
+      expect((await preferencesFixture.load()).locale, const Locale('en'));
+      await switchLanguage('th');
+      await selectTheme('สว่าง');
+      expect(screenBrightness(), Brightness.light);
+      platform.platformBrightnessTestValue = Brightness.dark;
+      await tester.pumpAndSettle();
+      expect(screenBrightness(), Brightness.light);
+      await selectTheme('มืด');
+      await openTab(1);
+      expect(find.text('draft'), findsOneWidget);
+      await tester.tap(find.byTooltip('เพิ่มรายการ'));
+      await tester.pumpAndSettle();
+      expect(
+        Theme.of(tester.element(find.byType(TodoFormSheet))).brightness,
+        Brightness.dark,
+      );
+      await tester.tap(find.widgetWithText(FilledButton, 'เพิ่มรายการ'));
+      await tester.pumpAndSettle();
+      expect(find.text('กรุณาใส่ชื่อรายการ'), findsOneWidget);
+      // Details are optional; only an empty title produces a validation error.
+      expect(find.text('กรุณาใส่รายละเอียด'), findsNothing);
+      await tester.tap(find.text('ยกเลิก'));
+      await tester.pumpAndSettle();
+      expect(find.text('draft'), findsOneWidget);
+      expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'));
-    await tester.pumpAndSettle();
-    expect(screenBrightness(), Brightness.light);
-    platform.platformBrightnessTestValue = Brightness.dark;
-    await tester.pumpAndSettle();
-    expect(screenBrightness(), Brightness.light);
-
-    await tester.tap(find.byTooltip('เปลี่ยนเป็นโหมดมืด'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('เพิ่มรายการ'));
-    await tester.pumpAndSettle();
-    expect(
-      Theme.of(tester.element(find.byType(TodoFormSheet))).brightness,
-      Brightness.dark,
-    );
-    await tester.tap(find.widgetWithText(FilledButton, 'เพิ่มรายการ'));
-    await tester.pumpAndSettle();
-    expect(find.text('กรุณาใส่ชื่อรายการ'), findsOneWidget);
-    // Details are optional; only an empty title produces a validation error.
-    expect(find.text('กรุณาใส่รายละเอียด'), findsNothing);
-    await tester.tap(find.text('ยกเลิก'));
-    await tester.pumpAndSettle();
-    expect(find.text('draft'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-
-    // Recreate the app and its preferences cache to simulate a fresh launch.
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(preferences: (await preferencesFixture.load())),
-      ),
-    );
-    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
-    expect(app.themeMode, ThemeMode.dark);
-    expect(app.locale, const Locale('th'));
-    await tester.pumpAndSettle();
-    expect(screenBrightness(), Brightness.dark);
-    expect(find.byTooltip('เปลี่ยนเป็นโหมดสว่าง'), findsOneWidget);
-    expect(find.text('TH'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      // Recreate the app and its preferences cache to simulate a fresh launch.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
+          child: TodoApp(preferences: (await preferencesFixture.load())),
+        ),
+      );
+      final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+      expect(app.themeMode, ThemeMode.dark);
+      expect(app.locale, const Locale('th'));
+      await tester.pumpAndSettle();
+      expect(screenBrightness(), Brightness.dark);
+      expect(tester.widget<AppBar>(find.byType(AppBar)).actions, isNull);
+      expect(find.text('TH'), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   for (final language in ['en', 'th']) {
     testWidgets(

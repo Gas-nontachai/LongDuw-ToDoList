@@ -578,4 +578,115 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get backupNotificationSettingsDescription =>
       'Daily summary and reminder time';
+
+  @override
+  String get onboardingWelcome =>
+      'Organize your tasks,\nkeep things simple,\nand see the whole picture.';
+
+  @override
+  String get onboardingBenefitOrganize => 'Organize tasks easily';
+
+  @override
+  String get onboardingBenefitOverview => 'See what needs doing';
+
+  @override
+  String get onboardingBenefitHabit => 'Build a daily habit';
+
+  @override
+  String get onboardingStart => 'Get started';
+
+  @override
+  String get onboardingSkipAll => 'Skip introduction';
+
+  @override
+  String get onboardingPersonalize => 'Make it yours';
+
+  @override
+  String get onboardingPersonalizeDescription =>
+      'Choose your language and a comfortable theme.';
+
+  @override
+  String get onboardingChangeLater => 'You can change these later in Settings.';
+
+  @override
+  String get onboardingLanguage => 'Language';
+
+  @override
+  String get appTheme => 'Theme';
+
+  @override
+  String get appThemeSystem => 'System';
+
+  @override
+  String get appThemeLight => 'Light';
+
+  @override
+  String get appThemeDark => 'Dark';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingLater => 'Not now';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingSummaryTitle => 'Daily summary';
+
+  @override
+  String get onboardingSummaryDescription =>
+      'Get a daily overview of today’s and overdue tasks at your chosen time.';
+
+  @override
+  String get onboardingSummaryScope =>
+      'A daily overview, rather than individual task reminders.';
+
+  @override
+  String get onboardingSummaryEnable => 'Enable daily summary';
+
+  @override
+  String get onboardingSummaryEnabled => 'Daily summary is enabled';
+
+  @override
+  String get onboardingSummaryEnabledDescription =>
+      'You can change the reminder time later in Settings.';
+
+  @override
+  String get onboardingSummaryDenied => 'Notifications are not enabled';
+
+  @override
+  String get onboardingFirstTask => 'Create your first task';
+
+  @override
+  String get onboardingFirstTaskDescription =>
+      'Add something you want to do today. Start with something small.';
+
+  @override
+  String get onboardingTaskHint => 'For example, read a book';
+
+  @override
+  String get onboardingAddTask => 'Add first task';
+
+  @override
+  String get onboardingTaskAdded => 'Your first task is added!';
+
+  @override
+  String get onboardingTaskAddedDescription =>
+      'A great start 🎉\nLet’s take it one task at a time.';
+
+  @override
+  String get onboardingEnterApp => 'Start using the app';
+
+  @override
+  String get onboardingReplay => 'View introduction again';
+
+  @override
+  String onboardingProgress(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboardingSummaryWorking => 'Preparing notifications…';
 }

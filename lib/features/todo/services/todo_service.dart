@@ -1,3 +1,6 @@
+import 'package:sqflite/sqflite.dart';
+
+import '../../../app/app_preferences.dart';
 import '../../../core/config/priority_config.dart';
 import '../../../core/database/app_database.dart';
 import '../models/todo.dart';
@@ -32,9 +35,62 @@ class TodoService {
     DateTime? dueDate,
   }) => _database.gate.run(() async {
     final db = await _database.database;
+    return _insertTodo(
+      db,
+      title,
+      details,
+      priority: priority,
+      dueDate: dueDate,
+    );
+  });
+
+  /// Commits the first task and onboarding completion together.
+  Future<Todo> createOnboardingTodo(
+    String title, {
+    String details = '',
+    String priority = PriorityConfig.medium,
+    DateTime? dueDate,
+  }) => _database.gate.run(() async {
+    final db = await _database.database;
+    return db.transaction((txn) async {
+      final state = await txn.query(
+        'app_metadata',
+        where: 'key = ?',
+        whereArgs: [AppPreferences.onboardingCompletedKey],
+      );
+      if (state.any((row) => row['value'] == 'true')) {
+        throw StateError('Onboarding has already completed.');
+      }
+      final todo = await _insertTodo(
+        txn,
+        title,
+        details,
+        priority: priority,
+        dueDate: dueDate,
+      );
+      await txn.insert('app_metadata', {
+        'key': AppPreferences.onboardingCompletedKey,
+        'value': 'true',
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+      return todo;
+    });
+  });
+
+  Future<Todo> _insertTodo(
+    DatabaseExecutor db,
+    String title,
+    String details, {
+    required String priority,
+    DateTime? dueDate,
+  }) async {
+    final trimmedTitle = title.trim();
+    if (trimmedTitle.isEmpty) throw ArgumentError.value(title, 'title');
+    if (!PriorityConfig.values.contains(priority)) {
+      throw ArgumentError.value(priority, 'priority');
+    }
     final createdAt = DateTime.now().toUtc();
     final id = await db.insert('todos', {
-      'title': title,
+      'title': trimmedTitle,
       'details': details,
       'completed': 0,
       'priority': priority,
@@ -42,15 +98,15 @@ class TodoService {
       'due_date': dueDate?.toIso8601String(),
     });
     return Todo(
-      id: id.toString(),
-      title: title,
+      id: '$id',
+      title: trimmedTitle,
       details: details,
       completed: false,
       priority: priority,
       createdAt: createdAt,
       dueDate: dueDate,
     );
-  });
+  }
 
   Future<Todo> updateTodo(Todo todo) => _database.gate.run(() async {
     final db = await _database.database;

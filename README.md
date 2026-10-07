@@ -2,6 +2,37 @@
 
 A new Flutter project.
 
+## Onboarding และธีม
+
+การติดตั้งใหม่เริ่มด้วยภาษาไทยและธีมตามระบบ มี 4 ขั้น: Welcome → ภาษา/ธีม
+→ สรุปงานประจำวัน → เพิ่มงานแรก ข้ามได้โดยไม่ขอสิทธิ์แจ้งเตือน
+เมื่อเปิด Daily Summary จึงตรวจสิทธิ์เดิมหรือเรียก dialog ของระบบ
+หากปฏิเสธหรือตั้งแจ้งเตือนไม่สำเร็จยังเข้าแอปต่อได้
+
+สถานะและขั้นปัจจุบันเก็บใน `app_metadata` ของเครื่อง เปิดใหม่แล้วกลับมาต่อได้
+งานแรกและสถานะจบบันทึกใน transaction เดียว สถานะนี้ไม่รวมใน backup
+และไม่ถูกล้างเมื่อ restore ผู้ใช้เดิมเข้า Home และคงค่าที่เคยเลือกไว้
+Settings → ดูคำแนะนำอีกครั้ง เปิด flow ใหม่ด้วยค่าปัจจุบัน
+และข้ามขั้นงานแรกหากมีงานอยู่แล้ว
+
+Onboarding และ Settings เลือกธีมได้ครบ ตามระบบ/สว่าง/มืด
+เปลี่ยนภาษาจากสองจุดนี้ได้เช่นกัน แถบด้านบนแสดงเฉพาะชื่อหน้าและภาพรวมงาน
+โหมดตามระบบใช้ `ThemeMode.system` และตอบสนองต่อธีมเครื่องอัตโนมัติ
+
+```bash
+flutter analyze
+flutter test
+flutter test integration_test/onboarding_native_test.dart -d <device-id>
+```
+
+Native smoke test ใช้ฐานข้อมูลชั่วคราวและ notification ID/channel แยก
+ตรวจการตั้งตารางจริง เพิ่มงานแรก และเปิดแอปใหม่ โดยไม่ทับข้อมูลปกติ
+หากยังไม่มีสิทธิ์ให้อนุญาตผ่าน dialog ระบบระหว่างทดสอบ
+ภาพตรวจหน้าจอเก็บใน `onboarding_previews` ภายใต้ cache ของแอป
+CI ที่เตรียมสิทธิ์ผ่าน test runner ใช้ `--dart-define=PREGRANTED_NOTIFICATIONS=true`
+แล้ว grant `android.permission.POST_NOTIFICATIONS` หลัง log `READY_FOR_NOTIFICATION_GRANT`
+กรณีปฏิเสธสิทธิ์และ scheduling failure ตรวจด้วย widget/controller tests
+
 ## Android CI and APK releases
 
 PR และ push เข้า `main` จะตรวจ analyze และ test ด้วย GitHub Actions

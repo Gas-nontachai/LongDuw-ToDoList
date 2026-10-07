@@ -253,5 +253,49 @@
   "backupOverviewDescription": "เก็บไฟล์สำรองไว้ เพื่อกู้คืนงานและการตั้งค่าของคุณภายหลัง",
   "backupTasksDescription": "งานทั้งหมด ทั้งที่เสร็จแล้วและยังไม่เสร็จ",
   "backupAppSettingsDescription": "ธีมและภาษา",
-  "backupNotificationSettingsDescription": "สรุปงานรายวันและเวลาแจ้งเตือน"
+  "backupNotificationSettingsDescription": "สรุปงานรายวันและเวลาแจ้งเตือน",
+  "onboardingWelcome": "จัดงานของคุณ\nให้เป็นเรื่องง่าย\nและเห็นภาพรวมได้ในที่เดียว",
+  "onboardingBenefitOrganize": "จัดการงานได้ง่าย",
+  "onboardingBenefitOverview": "เห็นสิ่งที่ต้องทำชัดเจน",
+  "onboardingBenefitHabit": "ช่วยให้คุณมีวินัยขึ้น",
+  "onboardingStart": "เริ่มต้นใช้งาน",
+  "onboardingSkipAll": "ข้ามการแนะนำ",
+  "onboardingPersonalize": "ปรับแอปให้เป็นของคุณ",
+  "onboardingPersonalizeDescription": "เลือกภาษาและธีมที่สบายตา\nเพื่อประสบการณ์ที่ดีขึ้น",
+  "onboardingChangeLater": "เปลี่ยนภายหลังได้จากการตั้งค่า",
+  "onboardingLanguage": "ภาษา",
+  "appTheme": "ธีม",
+  "appThemeSystem": "ตามระบบ",
+  "appThemeLight": "สว่าง",
+  "appThemeDark": "มืด",
+  "onboardingNext": "ถัดไป",
+  "onboardingLater": "ไว้ทีหลัง",
+  "onboardingSkip": "ข้าม",
+  "onboardingSummaryTitle": "สรุปงานประจำวัน",
+  "onboardingSummaryDescription": "รับสรุปงานวันนี้และงานที่เลยกำหนด\nทุกวันในเวลาที่คุณเลือก",
+  "onboardingSummaryScope": "เป็นสรุปรายวัน ไม่ใช่การเตือนแยกแต่ละงาน",
+  "onboardingSummaryEnable": "เปิดสรุปงานประจำวัน",
+  "onboardingSummaryEnabled": "เปิดสรุปงานประจำวันแล้ว",
+  "onboardingSummaryEnabledDescription": "เปลี่ยนเวลาแจ้งเตือนภายหลังได้จากการตั้งค่า",
+  "onboardingSummaryDenied": "ยังไม่ได้เปิดการแจ้งเตือน",
+  "onboardingFirstTask": "สร้างงานแรกกันเถอะ",
+  "onboardingFirstTaskDescription": "ลองเพิ่มสิ่งที่คุณอยากทำวันนี้\nเริ่มจากสิ่งเล็ก ๆ ก็ได้",
+  "onboardingTaskHint": "เช่น อ่านหนังสือ",
+  "onboardingAddTask": "เพิ่มงานแรก",
+  "onboardingTaskAdded": "เพิ่มงานแรกแล้ว!",
+  "onboardingTaskAddedDescription": "เริ่มต้นได้ดีมาก 🎉\nค่อย ๆ ทำทีละงานไปด้วยกัน",
+  "onboardingEnterApp": "เริ่มใช้งานแอป",
+  "onboardingReplay": "ดูคำแนะนำอีกครั้ง",
+  "onboardingProgress": "ขั้นตอนที่ {step} จาก {total}",
+  "@onboardingProgress": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingSummaryWorking": "กำลังเตรียมการแจ้งเตือน…"
 }

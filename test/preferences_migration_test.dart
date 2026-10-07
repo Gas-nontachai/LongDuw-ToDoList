@@ -94,7 +94,8 @@ void main() {
       final preferences = await AppPreferences.load(database: database);
       expect(preferences.themeMode, ThemeMode.dark);
       expect(preferences.dailySummaryEnabled, isTrue);
-      expect(await db.query('app_metadata'), hasLength(1));
+      expect(await db.query('app_metadata'), hasLength(3));
+      expect(preferences.onboardingCompleted, isTrue);
       preferences.dispose();
     },
   );

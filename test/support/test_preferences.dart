@@ -12,9 +12,10 @@ class TestPreferences {
     path: inMemoryDatabasePath,
   );
   final _instances = <AppPreferences>[];
-  Future<AppPreferences> load() async {
+  Future<AppPreferences> load({bool completeOnboarding = true}) async {
     await database.database;
     final preferences = await AppPreferences.load(database: database);
+    if (completeOnboarding) await preferences.completeOnboarding();
     _instances.add(preferences);
     return preferences;
   }
