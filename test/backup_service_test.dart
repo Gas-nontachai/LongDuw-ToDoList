@@ -119,24 +119,21 @@ void main() {
     reopened.dispose();
   });
 
-  test(
-    'empty backup preserves light and Thai defaults and replaces existing rows',
-    () async {
-      final empty = await backups.create(appVersion: '1.0.0');
-      expect(empty.backup.appSettings, {
-        'themeMode': 'light',
-        'languageCode': 'th',
-      });
-      await sample();
-      await backups.restore(empty.backup);
-      await preferences.reload();
-      expect(await todos.getTodos(), isEmpty);
-      expect(preferences.themeMode, ThemeMode.light);
-      expect(preferences.locale, const Locale('th'));
-      expect(preferences.dailySummaryEnabled, isFalse);
-      expect(preferences.reminderMinutes, 540);
-    },
-  );
+  test('empty backup preserves system and Thai defaults and replaces existing rows', () async {
+    final empty = await backups.create(appVersion: '1.0.0');
+    expect(empty.backup.appSettings, {
+      'themeMode': 'system',
+      'languageCode': 'th',
+    });
+    await sample();
+    await backups.restore(empty.backup);
+    await preferences.reload();
+    expect(await todos.getTodos(), isEmpty);
+    expect(preferences.themeMode, ThemeMode.system);
+    expect(preferences.locale, const Locale('th'));
+    expect(preferences.dailySummaryEnabled, isFalse);
+    expect(preferences.reminderMinutes, 540);
+  });
 
   for (final failureStage in RestoreStage.values) {
     test(

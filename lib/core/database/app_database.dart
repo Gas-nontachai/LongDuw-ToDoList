@@ -9,6 +9,9 @@ class AppDatabase {
   static const schemaVersion = 2;
   final gate = OperationGate();
 
+  /// True only when this connection created a new database.
+  bool wasCreated = false;
+
   final DatabaseFactory? factory;
   final String? path;
   Future<Database>? _opening;
@@ -19,6 +22,7 @@ class AppDatabase {
 
   Future<Database> _open() async {
     try {
+      wasCreated = false;
       final selectedFactory = factory ?? appDatabaseFactory;
       final selectedPath = path ?? await getAppDatabasePath();
       final db = await selectedFactory.openDatabase(
@@ -26,6 +30,7 @@ class AppDatabase {
         options: OpenDatabaseOptions(
           version: schemaVersion,
           onCreate: (db, version) async {
+            wasCreated = true;
             await db.execute('''
               CREATE TABLE todos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

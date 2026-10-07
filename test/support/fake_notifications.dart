@@ -8,10 +8,12 @@ class FakeNotifications implements NotificationService {
   @override
   bool supported = true;
   bool allowed = true;
+  bool permissionGranted = true;
   int permissionRequests = 0;
   int initializations = 0;
   int? failAfter;
   Completer<void>? schedulingGate;
+  Completer<bool>? permissionGate;
   final scheduled = <int, DailySummaryRequest>{};
   final bodies = <int, String>{};
   final titles = <int, String>{};
@@ -36,11 +38,15 @@ class FakeNotifications implements NotificationService {
   @override
   Future<bool> requestPermission() async {
     permissionRequests++;
-    return allowed;
+    final granted = permissionGate == null
+        ? allowed
+        : await permissionGate!.future;
+    permissionGranted = granted;
+    return granted;
   }
 
   @override
-  Future<bool> hasPermission() async => allowed;
+  Future<bool> hasPermission() async => allowed && permissionGranted;
   @override
   Future<List<int>> pendingIds() async => [...extraIds, ...scheduled.keys];
   @override

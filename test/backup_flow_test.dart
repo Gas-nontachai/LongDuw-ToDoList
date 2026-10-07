@@ -236,7 +236,7 @@ void main() {
       os.allowed = true;
       await tester.tap(find.text('Retry'));
       await tester.pumpAndSettle();
-      expect(os.permissionRequests, 1);
+      expect(os.permissionRequests, 0);
       expect(os.scheduled, hasLength(30));
       await tester.tap(find.text('Go to Home'));
       await tester.pumpAndSettle();

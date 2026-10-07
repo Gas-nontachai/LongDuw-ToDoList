@@ -27,7 +27,11 @@ class AppShell extends ConsumerStatefulWidget {
     required this.onThemeModeChanged,
     this.dailySummaryController,
     this.createBackupController,
+    this.themeMode = ThemeMode.system,
+    this.onReplayOnboarding,
   });
+  final ThemeMode themeMode;
+  final VoidCallback? onReplayOnboarding;
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
   final DailySummaryController? dailySummaryController;
@@ -98,8 +102,6 @@ class _AppShellState extends ConsumerState<AppShell> {
     final l10n = AppLocalizations.of(context)!;
     final todos = ref.watch(todoProvider);
     final operations = ref.watch(todoOperationProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isThai = Localizations.localeOf(context).languageCode == 'th';
     final taskCount = todos.value?.where((todo) => !todo.completed).length ?? 0;
     final destinations = [
       l10n.navHome,
@@ -221,33 +223,6 @@ class _AppShellState extends ConsumerState<AppShell> {
                     ),
                   ],
                 ),
-          actions: _backupSettingsOpen
-              ? []
-              : [
-                  IconButton(
-                    tooltip: isDark
-                        ? l10n.switchToLightMode
-                        : l10n.switchToDarkMode,
-                    icon: Icon(
-                      isDark ? CupertinoIcons.sun_max : CupertinoIcons.moon,
-                    ),
-                    onPressed: () => widget.onThemeModeChanged(
-                      isDark ? ThemeMode.light : ThemeMode.dark,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: l10n.changeLanguage,
-                    icon: Text(
-                      isThai ? 'TH' : 'EN',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    onPressed: () =>
-                        widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
-                  ),
-                ],
         ),
         body: NotificationListener<ScrollNotification>(
           onNotification: _onBodyScroll,
@@ -269,6 +244,8 @@ class _AppShellState extends ConsumerState<AppShell> {
                 index: _backupSettingsOpen ? 1 : 0,
                 children: [
                   SettingsScreen(
+                    themeMode: widget.themeMode,
+                    onReplayOnboarding: widget.onReplayOnboarding,
                     onDataAndBackup: widget.createBackupController == null
                         ? null
                         : () => setState(() {

@@ -1099,6 +1099,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily summary and reminder time'**
   String get backupNotificationSettingsDescription;
+
+  /// No description provided for @onboardingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize your tasks,\nkeep things simple,\nand see the whole picture.'**
+  String get onboardingWelcome;
+
+  /// No description provided for @onboardingBenefitOrganize.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize tasks easily'**
+  String get onboardingBenefitOrganize;
+
+  /// No description provided for @onboardingBenefitOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'See what needs doing'**
+  String get onboardingBenefitOverview;
+
+  /// No description provided for @onboardingBenefitHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Build a daily habit'**
+  String get onboardingBenefitHabit;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Get started'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingSkipAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip introduction'**
+  String get onboardingSkipAll;
+
+  /// No description provided for @onboardingPersonalize.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it yours'**
+  String get onboardingPersonalize;
+
+  /// No description provided for @onboardingPersonalizeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language and a comfortable theme.'**
+  String get onboardingPersonalizeDescription;
+
+  /// No description provided for @onboardingChangeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change these later in Settings.'**
+  String get onboardingChangeLater;
+
+  /// No description provided for @onboardingLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get onboardingLanguage;
+
+  /// No description provided for @appTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get appTheme;
+
+  /// No description provided for @appThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get appThemeSystem;
+
+  /// No description provided for @appThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get appThemeLight;
+
+  /// No description provided for @appThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get appThemeDark;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get onboardingLater;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary'**
+  String get onboardingSummaryTitle;
+
+  /// No description provided for @onboardingSummaryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a daily overview of today’s and overdue tasks at your chosen time.'**
+  String get onboardingSummaryDescription;
+
+  /// No description provided for @onboardingSummaryScope.
+  ///
+  /// In en, this message translates to:
+  /// **'A daily overview, rather than individual task reminders.'**
+  String get onboardingSummaryScope;
+
+  /// No description provided for @onboardingSummaryEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable daily summary'**
+  String get onboardingSummaryEnable;
+
+  /// No description provided for @onboardingSummaryEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary is enabled'**
+  String get onboardingSummaryEnabled;
+
+  /// No description provided for @onboardingSummaryEnabledDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change the reminder time later in Settings.'**
+  String get onboardingSummaryEnabledDescription;
+
+  /// No description provided for @onboardingSummaryDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are not enabled'**
+  String get onboardingSummaryDenied;
+
+  /// No description provided for @onboardingFirstTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first task'**
+  String get onboardingFirstTask;
+
+  /// No description provided for @onboardingFirstTaskDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something you want to do today. Start with something small.'**
+  String get onboardingFirstTaskDescription;
+
+  /// No description provided for @onboardingTaskHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For example, read a book'**
+  String get onboardingTaskHint;
+
+  /// No description provided for @onboardingAddTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add first task'**
+  String get onboardingAddTask;
+
+  /// No description provided for @onboardingTaskAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first task is added!'**
+  String get onboardingTaskAdded;
+
+  /// No description provided for @onboardingTaskAddedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A great start 🎉\nLet’s take it one task at a time.'**
+  String get onboardingTaskAddedDescription;
+
+  /// No description provided for @onboardingEnterApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Start using the app'**
+  String get onboardingEnterApp;
+
+  /// No description provided for @onboardingReplay.
+  ///
+  /// In en, this message translates to:
+  /// **'View introduction again'**
+  String get onboardingReplay;
+
+  /// No description provided for @onboardingProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingProgress(int step, int total);
+
+  /// No description provided for @onboardingSummaryWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing notifications…'**
+  String get onboardingSummaryWorking;
 }
 
 class _AppLocalizationsDelegate

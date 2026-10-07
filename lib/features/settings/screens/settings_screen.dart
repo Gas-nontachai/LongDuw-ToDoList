@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../shared/widgets/app_theme_selector.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/config/dev_config.dart';
 import '../../notifications/providers/daily_summary_controller.dart';
@@ -13,15 +15,89 @@ class SettingsScreen extends StatelessWidget {
     required this.onThemeModeChanged,
     this.dailySummaryController,
     this.onDataAndBackup,
+    this.themeMode = ThemeMode.system,
+    this.onReplayOnboarding,
   });
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
   final DailySummaryController? dailySummaryController;
   final VoidCallback? onDataAndBackup;
+  final ThemeMode themeMode;
+  final VoidCallback? onReplayOnboarding;
+  Future<T?> _showPicker<T>(
+    BuildContext context, {
+    required String title,
+    required WidgetBuilder builder,
+  }) => showModalBottomSheet<T>(
+    context: context,
+    showDragHandle: true,
+    useSafeArea: true,
+    isScrollControlled: true,
+    builder: (sheetContext) => SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title, style: Theme.of(sheetContext).textTheme.titleLarge),
+              const SizedBox(height: 16),
+              builder(sheetContext),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Future<void> _chooseTheme(BuildContext context) async {
+    final selected = await _showPicker<ThemeMode>(
+      context,
+      title: AppLocalizations.of(context)!.appTheme,
+      builder: (sheetContext) => AppThemeSelector(
+        value: themeMode,
+        onChanged: (mode) => Navigator.of(sheetContext).pop(mode),
+      ),
+    );
+    if (selected != null && context.mounted) onThemeModeChanged(selected);
+  }
+
+  Future<void> _chooseLanguage(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final language = Localizations.localeOf(context).languageCode;
+    final selected = await _showPicker<Locale>(
+      context,
+      title: l10n.onboardingLanguage,
+      builder: (sheetContext) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final code in ['th', 'en'])
+            Card(
+              child: ListTile(
+                key: ValueKey('settings-language-$code'),
+                leading: const Icon(CupertinoIcons.globe),
+                title: Text(code == 'th' ? l10n.thai : l10n.english),
+                selected: language == code,
+                selectedTileColor: Theme.of(sheetContext)
+                    .colorScheme
+                    .primaryContainer,
+                trailing: Icon(
+                  language == code ? Icons.check_circle : Icons.circle_outlined,
+                ),
+                onTap: () => Navigator.of(sheetContext).pop(Locale(code)),
+              ),
+            ),
+        ],
+      ),
+    );
+    if (selected != null && context.mounted) onLocaleChanged(selected);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isThai = Localizations.localeOf(context).languageCode == 'th';
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 112),
@@ -30,22 +106,33 @@ class SettingsScreen extends StatelessWidget {
         if (dailySummaryController != null)
           _DailySummarySettings(controller: dailySummaryController!),
         Card(
-          child: SwitchListTile(
-            secondary: const Icon(CupertinoIcons.moon),
-            title: Text(l10n.switchToDarkMode),
-            value: isDark,
-            onChanged: (dark) =>
-                onThemeModeChanged(dark ? ThemeMode.dark : ThemeMode.light),
+          child: ListTile(
+            key: const ValueKey('settings-theme'),
+            leading: Icon(themeModeIcon(themeMode)),
+            title: Text(l10n.appTheme),
+            subtitle: Text(themeModeLabel(l10n, themeMode)),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _chooseTheme(context),
           ),
         ),
         Card(
           child: ListTile(
+            key: const ValueKey('settings-language'),
             leading: const Icon(CupertinoIcons.globe),
-            title: Text(l10n.changeLanguage),
-            trailing: Text(isThai ? l10n.thai : l10n.english),
-            onTap: () => onLocaleChanged(Locale(isThai ? 'en' : 'th')),
+            title: Text(l10n.onboardingLanguage),
+            subtitle: Text(isThai ? l10n.thai : l10n.english),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _chooseLanguage(context),
           ),
         ),
+        if (onReplayOnboarding != null)
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.help_outline),
+              title: Text(l10n.onboardingReplay),
+              onTap: onReplayOnboarding,
+            ),
+          ),
         if (onDataAndBackup != null) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -93,9 +180,10 @@ class _AppVersionSettingsState extends State<_AppVersionSettings> {
     future: _packageInfo,
     builder: (context, snapshot) {
       final info = snapshot.data;
+      const showBuildNumber = kDebugMode || bool.fromEnvironment('DEV_TOOLS');
       final version = info == null
           ? '—'
-          : info.buildNumber.isEmpty
+          : !showBuildNumber || info.buildNumber.isEmpty
           ? info.version
           : '${info.version}+${info.buildNumber}';
       return Padding(

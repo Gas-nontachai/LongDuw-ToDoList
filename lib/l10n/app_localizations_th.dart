@@ -546,4 +546,115 @@ class AppLocalizationsTh extends AppLocalizations {
   @override
   String get backupNotificationSettingsDescription =>
       'สรุปงานรายวันและเวลาแจ้งเตือน';
+
+  @override
+  String get onboardingWelcome =>
+      'จัดงานของคุณ\nให้เป็นเรื่องง่าย\nและเห็นภาพรวมได้ในที่เดียว';
+
+  @override
+  String get onboardingBenefitOrganize => 'จัดการงานได้ง่าย';
+
+  @override
+  String get onboardingBenefitOverview => 'เห็นสิ่งที่ต้องทำชัดเจน';
+
+  @override
+  String get onboardingBenefitHabit => 'ช่วยให้คุณมีวินัยขึ้น';
+
+  @override
+  String get onboardingStart => 'เริ่มต้นใช้งาน';
+
+  @override
+  String get onboardingSkipAll => 'ข้ามการแนะนำ';
+
+  @override
+  String get onboardingPersonalize => 'ปรับแอปให้เป็นของคุณ';
+
+  @override
+  String get onboardingPersonalizeDescription =>
+      'เลือกภาษาและธีมที่สบายตา\nเพื่อประสบการณ์ที่ดีขึ้น';
+
+  @override
+  String get onboardingChangeLater => 'เปลี่ยนภายหลังได้จากการตั้งค่า';
+
+  @override
+  String get onboardingLanguage => 'ภาษา';
+
+  @override
+  String get appTheme => 'ธีม';
+
+  @override
+  String get appThemeSystem => 'ตามระบบ';
+
+  @override
+  String get appThemeLight => 'สว่าง';
+
+  @override
+  String get appThemeDark => 'มืด';
+
+  @override
+  String get onboardingNext => 'ถัดไป';
+
+  @override
+  String get onboardingLater => 'ไว้ทีหลัง';
+
+  @override
+  String get onboardingSkip => 'ข้าม';
+
+  @override
+  String get onboardingSummaryTitle => 'สรุปงานประจำวัน';
+
+  @override
+  String get onboardingSummaryDescription =>
+      'รับสรุปงานวันนี้และงานที่เลยกำหนด\nทุกวันในเวลาที่คุณเลือก';
+
+  @override
+  String get onboardingSummaryScope =>
+      'เป็นสรุปรายวัน ไม่ใช่การเตือนแยกแต่ละงาน';
+
+  @override
+  String get onboardingSummaryEnable => 'เปิดสรุปงานประจำวัน';
+
+  @override
+  String get onboardingSummaryEnabled => 'เปิดสรุปงานประจำวันแล้ว';
+
+  @override
+  String get onboardingSummaryEnabledDescription =>
+      'เปลี่ยนเวลาแจ้งเตือนภายหลังได้จากการตั้งค่า';
+
+  @override
+  String get onboardingSummaryDenied => 'ยังไม่ได้เปิดการแจ้งเตือน';
+
+  @override
+  String get onboardingFirstTask => 'สร้างงานแรกกันเถอะ';
+
+  @override
+  String get onboardingFirstTaskDescription =>
+      'ลองเพิ่มสิ่งที่คุณอยากทำวันนี้\nเริ่มจากสิ่งเล็ก ๆ ก็ได้';
+
+  @override
+  String get onboardingTaskHint => 'เช่น อ่านหนังสือ';
+
+  @override
+  String get onboardingAddTask => 'เพิ่มงานแรก';
+
+  @override
+  String get onboardingTaskAdded => 'เพิ่มงานแรกแล้ว!';
+
+  @override
+  String get onboardingTaskAddedDescription =>
+      'เริ่มต้นได้ดีมาก 🎉\nค่อย ๆ ทำทีละงานไปด้วยกัน';
+
+  @override
+  String get onboardingEnterApp => 'เริ่มใช้งานแอป';
+
+  @override
+  String get onboardingReplay => 'ดูคำแนะนำอีกครั้ง';
+
+  @override
+  String onboardingProgress(int step, int total) {
+    return 'ขั้นตอนที่ $step จาก $total';
+  }
+
+  @override
+  String get onboardingSummaryWorking => 'กำลังเตรียมการแจ้งเตือน…';
 }

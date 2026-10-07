@@ -16,9 +16,9 @@ void main() {
         InMemorySharedPreferencesAsync.empty();
   });
 
-  test('unset preferences default to light mode and Thai', () async {
+  test('new installations default to system mode and Thai', () async {
     final preferences = await preferencesFixture.load();
-    expect(preferences.themeMode, ThemeMode.light);
+    expect(preferences.themeMode, ThemeMode.system);
     expect(preferences.locale, const Locale('th'));
   });
 
