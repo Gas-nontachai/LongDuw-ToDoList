@@ -1057,6 +1057,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App version'**
   String get settingsAppVersion;
+
+  /// No description provided for @settingsData.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get settingsData;
+
+  /// No description provided for @dataAndBackupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up and restore your data'**
+  String get dataAndBackupSubtitle;
+
+  /// No description provided for @backupOverviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a copy of your data'**
+  String get backupOverviewTitle;
+
+  /// No description provided for @backupOverviewDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a backup file to restore your tasks and settings later.'**
+  String get backupOverviewDescription;
+
+  /// No description provided for @backupTasksDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'All completed and remaining tasks'**
+  String get backupTasksDescription;
+
+  /// No description provided for @backupAppSettingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme and language'**
+  String get backupAppSettingsDescription;
+
+  /// No description provided for @backupNotificationSettingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily summary and reminder time'**
+  String get backupNotificationSettingsDescription;
 }
 
 class _AppLocalizationsDelegate

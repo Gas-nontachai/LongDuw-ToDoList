@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/home/screens/home_screen.dart';
 import '../features/backup/providers/backup_controller.dart';
 import '../features/backup/widgets/backup_flow.dart';
+import '../features/backup/screens/data_backup_screen.dart';
 import '../features/todo/screens/todo_screen.dart';
 import '../features/todo/providers/todo_provider.dart';
 import '../features/todo/services/todo_actions.dart';
@@ -41,6 +42,11 @@ class _AppShellState extends ConsumerState<AppShell> {
   int _navigationIndex = 0;
   int _restoreGeneration = 0;
   bool _backupOpen = false;
+  bool _backupSettingsOpen = false;
+
+  void _closeBackupSettings() {
+    setState(() => _backupSettingsOpen = false);
+  }
 
   Future<void> _openBackup(bool restore) async {
     if (_backupOpen || widget.createBackupController == null) return;
@@ -59,6 +65,7 @@ class _AppShellState extends ConsumerState<AppShell> {
         onGoHome: () {
           setState(() {
             _navigationIndex = 0;
+            _backupSettingsOpen = false;
             _isNavigationCompact = false;
           });
         },
@@ -100,154 +107,186 @@ class _AppShellState extends ConsumerState<AppShell> {
       l10n.navStats,
       l10n.navSettings,
     ];
-    return Scaffold(
-      extendBody: true,
-      // Own the FAB alongside the navigation so Scaffold positions it above
-      // the bar's actual height, including its animation and bottom safe area.
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _navigationIndex == 1
-          ? SizedBox(
-              width: 64,
-              height: 64,
-              child: FloatingActionButton(
-                onPressed: operations.isCreating
-                    ? null
-                    : () => _todoActions.add(context, ref),
-                tooltip: l10n.addTodoTooltip,
-                child: operations.isCreating
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(AppIcons.add, size: 34),
-              ),
-            )
-          : null,
-      bottomNavigationBar: LiquidGlassBottomNavigation(
-        items: [
-          LiquidGlassNavigationItem(
-            icon: CupertinoIcons.house,
-            label: l10n.navHome,
-          ),
-          LiquidGlassNavigationItem(
-            icon: CupertinoIcons.list_bullet,
-            label: l10n.navTasks,
-          ),
-          LiquidGlassNavigationItem(
-            icon: CupertinoIcons.chart_bar,
-            label: l10n.navStats,
-          ),
-          LiquidGlassNavigationItem(
-            icon: CupertinoIcons.gear,
-            label: l10n.navSettings,
-          ),
-        ],
-        selectedIndex: _navigationIndex,
-        isCompact: _isNavigationCompact,
-        onTapOutside: _collapseNavigation,
-        onSelected: (index) {
-          FocusScope.of(context).unfocus();
-          setState(() {
-            _navigationIndex = index;
-            _isNavigationCompact = false;
-          });
-        },
-      ),
-      appBar: AppBar(
-        toolbarHeight: _navigationIndex == 2
-            ? (96 * MediaQuery.textScalerOf(context).scale(15) / 15).clamp(
-                96.0,
-                double.infinity,
+    return PopScope(
+      canPop: !_backupSettingsOpen,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _backupSettingsOpen) _closeBackupSettings();
+      },
+      child: Scaffold(
+        extendBody: true,
+        // Own the FAB alongside the navigation so Scaffold positions it above
+        // the bar's actual height, including its animation and bottom safe area.
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: _navigationIndex == 1
+            ? SizedBox(
+                width: 64,
+                height: 64,
+                child: FloatingActionButton(
+                  onPressed: operations.isCreating
+                      ? null
+                      : () => _todoActions.add(context, ref),
+                  tooltip: l10n.addTodoTooltip,
+                  child: operations.isCreating
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(AppIcons.add, size: 34),
+                ),
               )
-            : 96,
-        titleSpacing: 24,
-        title: Row(
-          children: [
-            const AppIcon.asset(AppIconAssets.logo, size: 28),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _navigationIndex == 1
-                        ? l10n.appTitle
-                        : destinations[_navigationIndex],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (_navigationIndex == 2 ||
-                      (todos.hasValue && _navigationIndex != 3)) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      _navigationIndex == 2
-                          ? l10n.statsSubtitle
-                          : l10n.taskCount(taskCount),
-                      maxLines: _navigationIndex == 2 ? 1 : null,
-                      overflow: _navigationIndex == 2
-                          ? TextOverflow.ellipsis
-                          : null,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+            : null,
+        bottomNavigationBar: LiquidGlassBottomNavigation(
+          items: [
+            LiquidGlassNavigationItem(
+              icon: CupertinoIcons.house,
+              label: l10n.navHome,
+            ),
+            LiquidGlassNavigationItem(
+              icon: CupertinoIcons.list_bullet,
+              label: l10n.navTasks,
+            ),
+            LiquidGlassNavigationItem(
+              icon: CupertinoIcons.chart_bar,
+              label: l10n.navStats,
+            ),
+            LiquidGlassNavigationItem(
+              icon: CupertinoIcons.gear,
+              label: l10n.navSettings,
+            ),
+          ],
+          selectedIndex: _navigationIndex,
+          isCompact: _isNavigationCompact,
+          onTapOutside: _collapseNavigation,
+          onSelected: (index) {
+            FocusScope.of(context).unfocus();
+            setState(() {
+              _navigationIndex = index;
+              _backupSettingsOpen = false;
+              _isNavigationCompact = false;
+            });
+          },
+        ),
+        appBar: AppBar(
+          toolbarHeight: _navigationIndex == 2
+              ? (96 * MediaQuery.textScalerOf(context).scale(15) / 15).clamp(
+                  96.0,
+                  double.infinity,
+                )
+              : 96,
+          leading: _backupSettingsOpen
+              ? BackButton(onPressed: _closeBackupSettings)
+              : null,
+          titleSpacing: _backupSettingsOpen ? 0 : 24,
+          title: _backupSettingsOpen
+              ? Text(l10n.dataAndBackup)
+              : Row(
+                  children: [
+                    const AppIcon.asset(AppIconAssets.logo, size: 28),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _navigationIndex == 1
+                                ? l10n.appTitle
+                                : destinations[_navigationIndex],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (_navigationIndex == 2 ||
+                              (todos.hasValue && _navigationIndex != 3)) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              _navigationIndex == 2
+                                  ? l10n.statsSubtitle
+                                  : l10n.taskCount(taskCount),
+                              maxLines: _navigationIndex == 2 ? 1 : null,
+                              overflow: _navigationIndex == 2
+                                  ? TextOverflow.ellipsis
+                                  : null,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                   ],
+                ),
+          actions: _backupSettingsOpen
+              ? []
+              : [
+                  IconButton(
+                    tooltip: isDark
+                        ? l10n.switchToLightMode
+                        : l10n.switchToDarkMode,
+                    icon: Icon(
+                      isDark ? CupertinoIcons.sun_max : CupertinoIcons.moon,
+                    ),
+                    onPressed: () => widget.onThemeModeChanged(
+                      isDark ? ThemeMode.light : ThemeMode.dark,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: l10n.changeLanguage,
+                    icon: Text(
+                      isThai ? 'TH' : 'EN',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onPressed: () =>
+                        widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
+                  ),
+                ],
+        ),
+        body: NotificationListener<ScrollNotification>(
+          onNotification: _onBodyScroll,
+          child: IndexedStack(
+            index: _navigationIndex,
+            children: [
+              HomeScreen(
+                onOpenTasks: () {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    _navigationIndex = 1;
+                    _isNavigationCompact = false;
+                  });
+                },
+              ),
+              TodoScreen(key: ValueKey(_restoreGeneration)),
+              const StatsScreen(),
+              IndexedStack(
+                index: _backupSettingsOpen ? 1 : 0,
+                children: [
+                  SettingsScreen(
+                    onDataAndBackup: widget.createBackupController == null
+                        ? null
+                        : () => setState(() {
+                            _backupSettingsOpen = true;
+                            _isNavigationCompact = false;
+                          }),
+                    dailySummaryController: widget.dailySummaryController,
+                    onLocaleChanged: widget.onLocaleChanged,
+                    onThemeModeChanged: widget.onThemeModeChanged,
+                  ),
+                  DataBackupScreen(
+                    onBackup: () => _openBackup(false),
+                    onRestore: () => _openBackup(true),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: isDark ? l10n.switchToLightMode : l10n.switchToDarkMode,
-            icon: Icon(isDark ? CupertinoIcons.sun_max : CupertinoIcons.moon),
-            onPressed: () => widget.onThemeModeChanged(
-              isDark ? ThemeMode.light : ThemeMode.dark,
-            ),
+            ],
           ),
-          IconButton(
-            tooltip: l10n.changeLanguage,
-            icon: Text(
-              isThai ? 'TH' : 'EN',
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            onPressed: () =>
-                widget.onLocaleChanged(Locale(isThai ? 'en' : 'th')),
-          ),
-        ],
-      ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: _onBodyScroll,
-        child: IndexedStack(
-          index: _navigationIndex,
-          children: [
-            HomeScreen(
-              onOpenTasks: () {
-                FocusScope.of(context).unfocus();
-                setState(() {
-                  _navigationIndex = 1;
-                  _isNavigationCompact = false;
-                });
-              },
-            ),
-            TodoScreen(key: ValueKey(_restoreGeneration)),
-            const StatsScreen(),
-            SettingsScreen(
-              onBackup: widget.createBackupController == null
-                  ? null
-                  : () => _openBackup(false),
-              onRestore: widget.createBackupController == null
-                  ? null
-                  : () => _openBackup(true),
-              dailySummaryController: widget.dailySummaryController,
-              onLocaleChanged: widget.onLocaleChanged,
-              onThemeModeChanged: widget.onThemeModeChanged,
-            ),
-          ],
         ),
       ),
     );

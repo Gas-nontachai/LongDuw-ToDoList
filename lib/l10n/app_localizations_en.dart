@@ -555,4 +555,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAppVersion => 'App version';
+
+  @override
+  String get settingsData => 'Data';
+
+  @override
+  String get dataAndBackupSubtitle => 'Back up and restore your data';
+
+  @override
+  String get backupOverviewTitle => 'Keep a copy of your data';
+
+  @override
+  String get backupOverviewDescription =>
+      'Save a backup file to restore your tasks and settings later.';
+
+  @override
+  String get backupTasksDescription => 'All completed and remaining tasks';
+
+  @override
+  String get backupAppSettingsDescription => 'Theme and language';
+
+  @override
+  String get backupNotificationSettingsDescription =>
+      'Daily summary and reminder time';
 }

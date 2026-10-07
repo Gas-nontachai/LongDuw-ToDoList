@@ -120,7 +120,7 @@ void main() {
     await open(tester);
     expect(find.text('1 task'), findsOneWidget);
     expect(find.text('todo_backup_2026-10-06.todo'), findsOneWidget);
-    await tester.tap(find.text('Create backup'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Create backup'));
     await tester.pumpAndSettle();
     expect(files.saves, 1);
     expect(files.savedName, 'todo_backup_2026-10-06.todo');
@@ -144,7 +144,7 @@ void main() {
     await prepare();
     files.saveResult = false;
     await open(tester);
-    await tester.tap(find.text('Create backup'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Create backup'));
     await tester.pumpAndSettle();
     expect(find.text('Backup created'), findsNothing);
     expect(find.text('Open'), findsOneWidget);
@@ -154,7 +154,7 @@ void main() {
     await prepare();
     files.failSave = true;
     await open(tester);
-    await tester.tap(find.text('Create backup'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Create backup'));
     await tester.pumpAndSettle();
     expect(find.text('Unable to create backup'), findsOneWidget);
     files.failSave = false;
@@ -337,7 +337,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     await prepare();
     await open(tester, language: 'th', dark: true, scale: 1.5);
-    expect(find.text('สำรองข้อมูล'), findsOneWidget);
+    expect(find.text('สร้างข้อมูลสำรอง'), findsNWidgets(2));
     expect(tester.takeException(), isNull);
     await tester.tap(find.text('ยกเลิก'));
     await tester.pumpAndSettle();

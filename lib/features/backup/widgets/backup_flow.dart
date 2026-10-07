@@ -8,6 +8,7 @@ import '../../../shared/widgets/app_expandable_sheet.dart';
 import '../../notifications/providers/daily_summary_controller.dart';
 import '../providers/backup_controller.dart';
 import '../services/backup_service.dart';
+import 'backup_illustration.dart';
 
 Future<void> showBackupFlow(
   BuildContext context,
@@ -16,14 +17,22 @@ Future<void> showBackupFlow(
   required VoidCallback onGoHome,
 }) async {
   try {
-    final complete = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _BackupSheet(controller: controller, restore: restore),
-    );
+    final complete = restore
+        ? await showModalBottomSheet<bool>(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: false,
+            enableDrag: false,
+            backgroundColor: Colors.transparent,
+            builder: (_) =>
+                _BackupFlowView(controller: controller, restore: true),
+          )
+        : await Navigator.of(context).push<bool>(
+            MaterialPageRoute(
+              builder: (_) =>
+                  _BackupFlowView(controller: controller, restore: false),
+            ),
+          );
     if (complete != true || !context.mounted) return;
     await Navigator.of(context).push<bool>(
       MaterialPageRoute(
@@ -37,15 +46,15 @@ Future<void> showBackupFlow(
   }
 }
 
-class _BackupSheet extends StatefulWidget {
-  const _BackupSheet({required this.controller, required this.restore});
+class _BackupFlowView extends StatefulWidget {
+  const _BackupFlowView({required this.controller, required this.restore});
   final BackupController controller;
   final bool restore;
   @override
-  State<_BackupSheet> createState() => _BackupSheetState();
+  State<_BackupFlowView> createState() => _BackupFlowViewState();
 }
 
-class _BackupSheetState extends State<_BackupSheet> {
+class _BackupFlowViewState extends State<_BackupFlowView> {
   BackupController get controller => widget.controller;
   bool _closing = false;
   @override
@@ -94,22 +103,49 @@ class _BackupSheetState extends State<_BackupSheet> {
       case BackupStep.summary:
         title = l.backupData;
         body = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l.backupDescription),
-            const SizedBox(height: 24),
-            Text(l.backupIncluded),
-            _Included(count: controller.taskCount),
+            const BackupIllustration(),
             const SizedBox(height: 16),
+            Text(
+              l.backupDataSubtitle,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l.backupDescription,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.onSurfaceVariant),
+            ),
+            const SizedBox(height: 24),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.backupIncluded,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 12),
+                    _Included(count: controller.taskCount, detailed: true),
+                  ],
+                ),
+              ),
+            ),
             _FileCard(name: controller.fileName),
           ],
         );
         actions.addAll([
-          cancelButton(),
-          FilledButton(
+          FilledButton.icon(
             onPressed: controller.createBackup,
-            child: Text(l.createBackup),
+            icon: const Icon(Icons.cloud_upload_outlined),
+            label: Text(l.createBackup),
           ),
+          TextButton(onPressed: cancel, child: Text(l.cancel)),
         ]);
       case BackupStep.preview:
         title = l.restoreBackup;
@@ -259,6 +295,46 @@ class _BackupSheetState extends State<_BackupSheet> {
           ),
         );
     }
+    if (!widget.restore) {
+      return PopScope(
+        canPop: !controller.busy,
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 64 * MediaQuery.textScalerOf(context).scale(16) / 16,
+            title: Text(
+              controller.step == BackupStep.summary ? l.createBackup : title,
+            ),
+            leading: BackButton(onPressed: controller.busy ? null : cancel),
+            automaticallyImplyLeading: false,
+          ),
+          body: SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                        child: body,
+                      ),
+                    ),
+                    if (actions.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: actions,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return PopScope(
       canPop: !controller.busy,
       child: AppExpandableSheet(
@@ -382,35 +458,70 @@ class _BackupComplete extends StatelessWidget {
 }
 
 class _Included extends StatelessWidget {
-  const _Included({required this.count, this.restored = false});
+  const _Included({
+    required this.count,
+    this.restored = false,
+    this.detailed = false,
+  });
   final int count;
   final bool restored;
+  final bool detailed;
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final labels = [
+      restored ? l.restoreTaskCount(count) : l.backupTaskCount(count),
+      restored ? l.restoreAppSettingsComplete : l.backupAppSettings,
+      restored ? l.restoreNotificationsComplete : l.backupNotificationSettings,
+    ];
+    final descriptions = [
+      l.backupTasksDescription,
+      l.backupAppSettingsDescription,
+      l.backupNotificationSettingsDescription,
+    ];
+    final icons = [
+      Icons.task_alt_outlined,
+      Icons.settings_outlined,
+      Icons.notifications_outlined,
+    ];
     return Column(
       children: [
-        for (final text in [
-          restored ? l.restoreTaskCount(count) : l.backupTaskCount(count),
-          restored ? l.restoreAppSettingsComplete : l.backupAppSettings,
-          restored
-              ? l.restoreNotificationsComplete
-              : l.backupNotificationSettings,
-        ])
+        for (var i = 0; i < labels.length; i++) ...[
+          if (detailed && i > 0) const Divider(height: 20, indent: 44),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
                 Icon(
-                  Icons.check_circle_outline,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.primary,
+                  detailed ? icons[i] : Icons.check_circle_outline,
+                  size: detailed ? 28 : 20,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 12),
-                Expanded(child: Text(text)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(labels[i]),
+                      if (detailed) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          descriptions[i],
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+        ],
       ],
     );
   }

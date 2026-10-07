@@ -67,9 +67,10 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
       select(3);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Restore backup'));
-      await tester.drag(find.byType(ListView).last, const Offset(0, -180));
+      await tester.ensureVisible(find.text('Data & Backup'));
+      await tester.tap(find.text('Data & Backup'));
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Restore backup'));
       // Exercise the actual compute-based validator in its real async zone.
       await tester.tap(find.text('Restore backup'));
       await tester.pump();
@@ -118,6 +119,104 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+
+  for (final language in ['en', 'th']) {
+    for (final dark in [false, true]) {
+      testWidgets(
+        'backup settings navigation: $language, dark=$dark, large text',
+        (tester) async {
+          tester.view.physicalSize = const Size(375, 667);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+          tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+          addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+          final preferences = await fixture.load();
+          await preferences.saveLocale(Locale(language));
+          await preferences.saveThemeMode(
+            dark ? ThemeMode.dark : ThemeMode.light,
+          );
+          final files = FakeBackupFiles();
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                appDatabaseProvider.overrideWithValue(fixture.database),
+                notificationServiceProvider.overrideWithValue(
+                  FakeNotifications(),
+                ),
+                backupFileGatewayProvider.overrideWithValue(files),
+              ],
+              child: TodoApp(preferences: preferences),
+            ),
+          );
+          await tester.pumpAndSettle();
+          void select(int index) => tester
+              .widget<LiquidGlassBottomNavigation>(
+                find.byType(LiquidGlassBottomNavigation),
+              )
+              .onSelected(index);
+          final data = language == 'th'
+              ? 'ข้อมูลและการสำรองข้อมูล'
+              : 'Data & Backup';
+          final create = language == 'th'
+              ? 'สร้างข้อมูลสำรอง'
+              : 'Create backup';
+          select(3);
+          await tester.pumpAndSettle();
+          await tester.scrollUntilVisible(
+            find.text(data),
+            140,
+            scrollable: find.byType(Scrollable).last,
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(data));
+          await tester.pumpAndSettle();
+          expect(
+            tester
+                .widget<LiquidGlassBottomNavigation>(
+                  find.byType(LiquidGlassBottomNavigation),
+                )
+                .selectedIndex,
+            3,
+          );
+          expect(find.byType(BackButton), findsOneWidget);
+          expect(tester.takeException(), isNull);
+          await tester.binding.handlePopRoute();
+          await tester.pumpAndSettle();
+          expect(find.byType(BackButton), findsNothing);
+          await tester.tap(find.text(data));
+          await tester.pumpAndSettle();
+          await tester.scrollUntilVisible(
+            find.text(create),
+            140,
+            scrollable: find.byType(Scrollable).last,
+          );
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(create));
+          // A second tap must not open a second backup flow.
+          await tester.tap(find.text(create), warnIfMissed: false);
+          await tester.pumpAndSettle();
+          expect(find.widgetWithText(FilledButton, create), findsOneWidget);
+          expect(tester.takeException(), isNull);
+          await tester.tap(find.byType(BackButton).last);
+          await tester.pumpAndSettle();
+          expect(find.text(create), findsOneWidget);
+          expect(files.saves, 0);
+          await tester.tap(find.byType(BackButton));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(data));
+          await tester.pumpAndSettle();
+          select(0);
+          await tester.pumpAndSettle();
+          select(3);
+          await tester.pumpAndSettle();
+          expect(find.byType(BackButton), findsNothing);
+          expect(find.text(data), findsOneWidget);
+          await tester.pumpWidget(const SizedBox());
+        },
+      );
+    }
+  }
 
   testWidgets('unsupported platforms hide Data & Backup', (tester) async {
     final preferences = await fixture.load();

@@ -522,4 +522,28 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get settingsAppVersion => 'เวอร์ชันแอพ';
+
+  @override
+  String get settingsData => 'ข้อมูล';
+
+  @override
+  String get dataAndBackupSubtitle => 'สำรองและกู้คืนข้อมูล';
+
+  @override
+  String get backupOverviewTitle => 'สำรองข้อมูลของคุณ';
+
+  @override
+  String get backupOverviewDescription =>
+      'เก็บไฟล์สำรองไว้ เพื่อกู้คืนงานและการตั้งค่าของคุณภายหลัง';
+
+  @override
+  String get backupTasksDescription =>
+      'งานทั้งหมด ทั้งที่เสร็จแล้วและยังไม่เสร็จ';
+
+  @override
+  String get backupAppSettingsDescription => 'ธีมและภาษา';
+
+  @override
+  String get backupNotificationSettingsDescription =>
+      'สรุปงานรายวันและเวลาแจ้งเตือน';
 }

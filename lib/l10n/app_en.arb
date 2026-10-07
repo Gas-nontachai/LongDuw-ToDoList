@@ -246,5 +246,12 @@
     }
   },
   "settingsAbout": "About",
-  "settingsAppVersion": "App version"
+  "settingsAppVersion": "App version",
+  "settingsData": "Data",
+  "dataAndBackupSubtitle": "Back up and restore your data",
+  "backupOverviewTitle": "Keep a copy of your data",
+  "backupOverviewDescription": "Save a backup file to restore your tasks and settings later.",
+  "backupTasksDescription": "All completed and remaining tasks",
+  "backupAppSettingsDescription": "Theme and language",
+  "backupNotificationSettingsDescription": "Daily summary and reminder time"
 }

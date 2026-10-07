@@ -155,6 +155,87 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  for (final language in ['en', 'th']) {
+    testWidgets('reminder uses 24-hour time on a 12-hour device ($language)', (
+      tester,
+    ) async {
+      tester.platformDispatcher.alwaysUse24HourFormatTestValue = false;
+      addTearDown(tester.platformDispatcher.clearAlwaysUse24HourTestValue);
+      final prefs = await preferencesFixture.load();
+      await prefs.saveLocale(Locale(language));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            notificationServiceProvider.overrideWithValue(FakeNotifications()),
+            todoServiceProvider.overrideWithValue(MemoryTodos()),
+          ],
+          child: TodoApp(preferences: prefs),
+        ),
+      );
+      await tester.pumpAndSettle();
+      tester
+          .widget<LiquidGlassBottomNavigation>(
+            find.byType(LiquidGlassBottomNavigation),
+          )
+          .onSelected(3);
+      await tester.pumpAndSettle();
+      final reminder = language == 'th' ? 'เวลาแจ้งเตือน' : 'Reminder Time';
+      expect(find.text('09:00'), findsOneWidget);
+      for (final value in ['00:00', '09:00', '13:30', '23:59']) {
+        await tester.tap(find.text(reminder));
+        await tester.pumpAndSettle();
+        final dialog = find.byType(TimePickerDialog);
+        final context = tester.element(dialog);
+        final material = MaterialLocalizations.of(context);
+        expect(find.text(material.anteMeridiemAbbreviation), findsNothing);
+        expect(find.text(material.postMeridiemAbbreviation), findsNothing);
+        await tester.tap(find.byTooltip(material.inputTimeModeButtonLabel));
+        await tester.pumpAndSettle();
+        final fields = find.descendant(
+          of: dialog,
+          matching: find.byType(TextField),
+        );
+        final parts = value.split(':');
+        await tester.enterText(fields.at(0), parts[0]);
+        await tester.enterText(fields.at(1), parts[1]);
+        await tester.tap(find.text(material.okButtonLabel));
+        await tester.pumpAndSettle();
+        expect(find.text(value), findsOneWidget);
+        expect(
+          (await preferencesFixture.load()).reminderMinutes,
+          int.parse(parts[0]) * 60 + int.parse(parts[1]),
+        );
+        // Reopening must show the persisted hour without AM/PM conversion.
+        await tester.tap(find.text(reminder));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<TimePickerDialog>(dialog).initialTime,
+          TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1])),
+        );
+        await tester.tap(find.byTooltip(material.inputTimeModeButtonLabel));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<TextField>(fields.at(0)).controller!.text,
+          parts[0],
+        );
+        expect(
+          tester.widget<TextField>(fields.at(1)).controller!.text,
+          parts[1],
+        );
+        await tester.enterText(fields.at(0), '12');
+        await tester.tap(find.text(material.cancelButtonLabel));
+        await tester.pumpAndSettle();
+        expect(find.text(value), findsOneWidget);
+        expect(
+          (await preferencesFixture.load()).reminderMinutes,
+          int.parse(parts[0]) * 60 + int.parse(parts[1]),
+        );
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+
   testWidgets(
     'settings persist time, request permission on enable, update after Todo changes',
     (tester) async {

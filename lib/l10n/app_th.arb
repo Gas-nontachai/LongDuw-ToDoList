@@ -246,5 +246,12 @@
     }
   },
   "settingsAbout": "เกี่ยวกับแอพ",
-  "settingsAppVersion": "เวอร์ชันแอพ"
+  "settingsAppVersion": "เวอร์ชันแอพ",
+  "settingsData": "ข้อมูล",
+  "dataAndBackupSubtitle": "สำรองและกู้คืนข้อมูล",
+  "backupOverviewTitle": "สำรองข้อมูลของคุณ",
+  "backupOverviewDescription": "เก็บไฟล์สำรองไว้ เพื่อกู้คืนงานและการตั้งค่าของคุณภายหลัง",
+  "backupTasksDescription": "งานทั้งหมด ทั้งที่เสร็จแล้วและยังไม่เสร็จ",
+  "backupAppSettingsDescription": "ธีมและภาษา",
+  "backupNotificationSettingsDescription": "สรุปงานรายวันและเวลาแจ้งเตือน"
 }

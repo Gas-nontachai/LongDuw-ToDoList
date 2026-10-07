@@ -12,22 +12,21 @@ class SettingsScreen extends StatelessWidget {
     required this.onLocaleChanged,
     required this.onThemeModeChanged,
     this.dailySummaryController,
-    this.onBackup,
-    this.onRestore,
+    this.onDataAndBackup,
   });
   final ValueChanged<Locale> onLocaleChanged;
   final ValueChanged<ThemeMode> onThemeModeChanged;
   final DailySummaryController? dailySummaryController;
-  final VoidCallback? onBackup;
-  final VoidCallback? onRestore;
+  final VoidCallback? onDataAndBackup;
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isThai = Localizations.localeOf(context).languageCode == 'th';
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 112),
       children: [
+        const _AppVersionSettings(),
         if (dailySummaryController != null)
           _DailySummarySettings(controller: dailySummaryController!),
         Card(
@@ -47,44 +46,33 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => onLocaleChanged(Locale(isThai ? 'en' : 'th')),
           ),
         ),
-        if (onBackup != null && onRestore != null) ...[
+        if (onDataAndBackup != null) ...[
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              l10n.dataAndBackup,
+              l10n.settingsData,
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.upload_outlined),
-                  title: Text(l10n.backupData),
-                  subtitle: Text(l10n.backupDataSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: onBackup,
-                ),
-                const Divider(height: 1, indent: 56),
-                ListTile(
-                  leading: const Icon(Icons.download_outlined),
-                  title: Text(l10n.restoreBackup),
-                  subtitle: Text(l10n.restoreBackupSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: onRestore,
-                ),
-              ],
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              minTileHeight: 48,
+              leading: Icon(
+                CupertinoIcons.tray_full,
+                size: 22,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              title: Text(l10n.dataAndBackup),
+              trailing: Icon(
+                Icons.chevron_right,
+                size: 20,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              onTap: onDataAndBackup,
             ),
           ),
         ],
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-          child: Text(
-            l10n.settingsAbout,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        const _AppVersionSettings(),
       ],
     );
   }
@@ -110,11 +98,22 @@ class _AppVersionSettingsState extends State<_AppVersionSettings> {
           : info.buildNumber.isEmpty
           ? info.version
           : '${info.version}+${info.buildNumber}';
-      return Card(
-        child: ListTile(
-          leading: const Icon(CupertinoIcons.info),
-          title: Text(AppLocalizations.of(context)!.settingsAppVersion),
-          subtitle: Text(version),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: DefaultTextStyle(
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontSize: 13,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: 16,
+            runSpacing: 4,
+            children: [
+              Text(AppLocalizations.of(context)!.settingsAppVersion),
+              Text(version),
+            ],
+          ),
         ),
       );
     },
@@ -152,13 +151,20 @@ class _DailySummarySettings extends StatelessWidget {
             ListTile(
               leading: const Icon(CupertinoIcons.clock),
               title: Text(l10n.reminderTime),
-              trailing: Text(time.format(context)),
+              trailing: Text(
+                '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}',
+              ),
               enabled: controller.supported && !controller.busy,
               onTap: controller.supported && !controller.busy
                   ? () async {
                       final selected = await showTimePicker(
                         context: context,
                         initialTime: time,
+                        builder: (context, child) => MediaQuery(
+                          data: MediaQuery.of(context)
+                              .copyWith(alwaysUse24HourFormat: true),
+                          child: child!,
+                        ),
                       );
                       if (selected != null) {
                         await controller.setReminderMinutes(
