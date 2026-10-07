@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:longdow_todo_list/app/app.dart';
+import 'package:longdow_todo_list/app/app_preferences.dart';
 import 'package:longdow_todo_list/core/config/dev_config.dart';
 import 'package:longdow_todo_list/core/database/app_database.dart';
 import 'package:longdow_todo_list/features/notifications/widgets/daily_summary_host.dart';
@@ -46,7 +47,9 @@ void main() {
     preferencesFixture = TestPreferences();
     tz_data.initializeTimeZones();
     SharedPreferencesAsyncPlatform.instance =
-        InMemorySharedPreferencesAsync.empty();
+        InMemorySharedPreferencesAsync.withData({
+          AppPreferences.languageCodeKey: 'en',
+        });
   });
 
   testWidgets(
@@ -132,6 +135,8 @@ void main() {
     platform.localesTestValue = const [Locale('en')];
     addTearDown(platform.clearLocaleTestValue);
     addTearDown(platform.clearLocalesTestValue);
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     final notifications = FakeNotifications();
     await tester.pumpWidget(
       ProviderScope(
@@ -149,9 +154,9 @@ void main() {
         )
         .onSelected(3);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Daily Summary'));
+    await tester.tap(find.text('สรุปงานรายวัน'));
     await tester.pumpAndSettle();
-    expect(notifications.titles.values.toSet(), {'Daily Summary'});
+    expect(notifications.titles.values.toSet(), {'สรุปงานรายวัน'});
     await tester.pumpWidget(const SizedBox());
   });
 

@@ -48,17 +48,19 @@ void main() {
         InMemorySharedPreferencesAsync.empty();
   });
 
-  testWidgets('theme follows the system and can switch beside language', (
+  testWidgets('theme defaults to light and can switch beside language', (
     tester,
   ) async {
     final platform = tester.binding.platformDispatcher;
     platform.platformBrightnessTestValue = Brightness.dark;
     addTearDown(platform.clearPlatformBrightnessTestValue);
+    final preferences = await preferencesFixture.load();
+    await preferences.saveLocale(const Locale('en'));
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [todoServiceProvider.overrideWithValue(FakeTodoService())],
-        child: TodoApp(preferences: (await preferencesFixture.load())),
+        child: TodoApp(preferences: preferences),
       ),
     );
     await tester.pumpAndSettle();
@@ -69,7 +71,7 @@ void main() {
     Brightness screenBrightness() =>
         Theme.of(tester.element(find.byType(AppShell))).brightness;
 
-    expect(screenBrightness(), Brightness.dark);
+    expect(screenBrightness(), Brightness.light);
     platform.platformBrightnessTestValue = Brightness.light;
     await tester.pumpAndSettle();
     expect(screenBrightness(), Brightness.light);
@@ -339,7 +341,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('home-view-all')));
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add todo'));
+    await tester.tap(find.byTooltip('เพิ่มรายการ'));
     await tester.pumpAndSettle();
     final fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), 'Test todo');
@@ -354,16 +356,21 @@ void main() {
     );
     await tester.tap(find.byType(DropdownButtonFormField<String>));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('High').last);
+    await tester.tap(find.text('สูง').last);
     await tester.pumpAndSettle();
     await tester.tap(fields.last);
     await tester.pumpAndSettle();
     final selectedDate = tester
         .widget<DatePickerDialog>(find.byType(DatePickerDialog))
         .initialDate!;
-    await tester.tap(find.text('OK'));
+    await tester.tap(
+      find.text(
+        MaterialLocalizations.of(tester.element(find.byType(DatePickerDialog)))
+            .okButtonLabel,
+      ),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Add todo'));
+    await tester.tap(find.widgetWithText(FilledButton, 'เพิ่มรายการ'));
     await tester.pumpAndSettle();
 
     expect(find.text('Test todo'), findsOneWidget);

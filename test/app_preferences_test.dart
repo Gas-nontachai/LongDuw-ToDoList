@@ -16,10 +16,10 @@ void main() {
         InMemorySharedPreferencesAsync.empty();
   });
 
-  test('unset preferences follow the system', () async {
+  test('unset preferences default to light mode and Thai', () async {
     final preferences = await preferencesFixture.load();
-    expect(preferences.themeMode, ThemeMode.system);
-    expect(preferences.locale, isNull);
+    expect(preferences.themeMode, ThemeMode.light);
+    expect(preferences.locale, const Locale('th'));
   });
 
   test('theme and language survive creating a new preferences cache', () async {
@@ -36,21 +36,24 @@ void main() {
     }
   });
 
-  test('invalid or unsupported saved values fall back to the system', () async {
-    for (final values in [
-      {
-        AppPreferences.themeModeKey: 'unknown',
-        AppPreferences.languageCodeKey: 'fr',
-      },
-      {AppPreferences.themeModeKey: 42, AppPreferences.languageCodeKey: true},
-    ]) {
-      await preferencesFixture.close();
-      preferencesFixture = TestPreferences();
-      SharedPreferencesAsyncPlatform.instance =
-          InMemorySharedPreferencesAsync.withData(values);
-      final preferences = await preferencesFixture.load();
-      expect(preferences.themeMode, ThemeMode.system);
-      expect(preferences.locale, isNull);
-    }
-  });
+  test(
+    'invalid or unsupported saved values fall back to light and Thai',
+    () async {
+      for (final values in [
+        {
+          AppPreferences.themeModeKey: 'unknown',
+          AppPreferences.languageCodeKey: 'fr',
+        },
+        {AppPreferences.themeModeKey: 42, AppPreferences.languageCodeKey: true},
+      ]) {
+        await preferencesFixture.close();
+        preferencesFixture = TestPreferences();
+        SharedPreferencesAsyncPlatform.instance =
+            InMemorySharedPreferencesAsync.withData(values);
+        final preferences = await preferencesFixture.load();
+        expect(preferences.themeMode, ThemeMode.light);
+        expect(preferences.locale, const Locale('th'));
+      }
+    },
+  );
 }

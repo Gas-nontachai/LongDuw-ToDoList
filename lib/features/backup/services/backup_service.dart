@@ -52,11 +52,11 @@ class BackupService {
                 'dark',
               }.contains(settings[AppPreferences.themeModeKey])
               ? settings[AppPreferences.themeModeKey]
-              : 'system',
+              : 'light',
           'languageCode':
               {'en', 'th'}.contains(settings[AppPreferences.languageCodeKey])
               ? settings[AppPreferences.languageCodeKey]
-              : null,
+              : 'th',
         },
         notificationSettings: {
           'dailySummaryEnabled':

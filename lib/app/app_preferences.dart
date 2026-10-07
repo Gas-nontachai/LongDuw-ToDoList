@@ -100,7 +100,7 @@ class AppPreferences extends ChangeNotifier {
     final saved = _values[themeModeKey];
     return ThemeMode.values.firstWhere(
       (mode) => mode.name == saved,
-      orElse: () => ThemeMode.system,
+      orElse: () => ThemeMode.light,
     );
   }
 
@@ -109,7 +109,7 @@ class AppPreferences extends ChangeNotifier {
     for (final locale in AppLocalizations.supportedLocales) {
       if (locale.languageCode == saved) return locale;
     }
-    return null;
+    return const Locale('th');
   }
 
   Future<void> saveThemeMode(ThemeMode mode) => _save(themeModeKey, mode.name);
