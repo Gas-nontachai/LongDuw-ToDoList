@@ -2,6 +2,14 @@
 
 A new Flutter project.
 
+## Android CI and APK releases
+
+PR และ push เข้า `main` จะตรวจ analyze และ test ด้วย GitHub Actions
+เมื่อต้องการแจก APK ให้ push tag เช่น `v1.0.0` ที่ตรงกับ version ใน pubspec
+ระบบจะ build, sign และแนบ APK ใน GitHub Release หลังตรวจผ่าน
+ต้องตั้ง signing Secrets ก่อน release ครั้งแรก ดูขั้นตอนทั้งหมดที่
+[Android APK release](docs/android-release.md)
+
 ## App icon
 
 หัวแอปและหน้ารายละเอียดงานใช้โลโก้ `no-text` แบบ WebP โปร่งใส
