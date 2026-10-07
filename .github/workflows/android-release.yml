@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Validate release tag and build number
+      - name: Resolve release version from tag and validate build number
         id: version
         env:
           RELEASE_TAG: ${{ github.ref_name }}

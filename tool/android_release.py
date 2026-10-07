@@ -16,8 +16,8 @@ def metadata():
     version = match.group(1)
     pubspec = Path("pubspec.yaml").read_text()
     source = re.search(r"^version:\s*(\d+\.\d+\.\d+)\+(\d+)\s*$", pubspec, re.MULTILINE)
-    if source is None or source.group(1) != version:
-        raise ValueError("Tag version must match version in pubspec.yaml")
+    if source is None:
+        raise ValueError("pubspec.yaml version must be MAJOR.MINOR.PATCH+BUILD")
     try:
         run_number = int(os.environ["GITHUB_RUN_NUMBER"])
         offset = int(os.environ.get("BUILD_OFFSET", "1"))

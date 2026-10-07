@@ -72,8 +72,8 @@ CI pin Flutter `3.47.6` ให้ตรงกับ SDK ที่ใช้ใน
 
 ## ปล่อย APK
 
-1. เปลี่ยน version ใน `pubspec.yaml` เช่น `1.0.1+1` ผ่าน PR เข้า `main`
-   ตัวเลขหลัง `+` เป็นเลขสำหรับ local build; CI ส่งเลข build แยกตอนสร้าง APK
+1. รวมการเปลี่ยนแปลงผ่าน PR เข้า `main` ไม่ต้องแก้ version ใน `pubspec.yaml`
+   ทุกครั้งที่ release; CI ใช้เวอร์ชันจาก tag และคำนวณเลข build อัตโนมัติ
 2. ทดสอบฟีเจอร์บน Android จริง รวมถึง notification และ backup/restore
    unit/widget tests ใน CI ไม่ครอบคลุม native dialogs หรือการแจ้งเตือนจริง
 3. ดึง `main` ล่าสุดและติด tag ให้ commit ที่ผ่านการทดสอบ:
@@ -86,7 +86,7 @@ git push origin v1.0.1
 ```
 
 workflow **Android APK Release** ตรวจว่า commit อยู่ในประวัติ `main`
-และ tag รูปแบบ `vMAJOR.MINOR.PATCH` ตรงกับ version ใน pubspec
+และ tag รูปแบบ `vMAJOR.MINOR.PATCH` โดยใช้เวอร์ชันจาก tag เป็นเวอร์ชัน APK
 จากนั้นตรวจโค้ด, build universal APK แบบ release, sign ด้วย key จาก Secrets,
 ตรวจลายเซ็น APK และสร้าง GitHub Release พร้อม APK และ `SHA256SUMS`
 APK เดียวรองรับสถาปัตยกรรม Android ที่ Flutter build รวมไว้
@@ -97,7 +97,9 @@ APK เดียวรองรับสถาปัตยกรรม Android �
 ถ้าเคยแจก build ที่สูงกว่านี้ หรือต้องสร้าง workflow ใหม่จนเลข run เริ่มใหม่
 ให้เพิ่ม Repository **Variable** `ANDROID_BUILD_NUMBER_OFFSET`
 เพื่อให้เลข build ใหม่สูงกว่าทุก build ที่เคยแจก อย่าลด offset หลังเริ่มแจก
-CI ไม่แก้หรือ commit เลข build กลับเข้า repo
+CI ไม่แก้หรือ commit เวอร์ชันหรือเลข build กลับเข้า repo
+version ใน `pubspec.yaml` ใช้สำหรับ local build และไม่ต้องตรงกับ release tag
+แต่เลข build ของ CI ต้องสูงกว่าเลขหลัง `+` ใน `pubspec.yaml` ด้วย
 
 เมื่อสำเร็จ เปิดหน้า **Releases → Assets** แล้วดาวน์โหลด `longduw-1.0.1.apk`
 repo private ต้องมีสิทธิ์เข้าถึงจึงดาวน์โหลดได้ ผู้ติดตั้งต้องอนุญาต
