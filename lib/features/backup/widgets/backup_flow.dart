@@ -137,6 +137,11 @@ class _BackupFlowViewState extends State<_BackupFlowView> {
               ),
             ),
             _FileCard(name: controller.fileName),
+            const SizedBox(height: 16),
+            _Notice(
+              text: l.backupPrivacyNotice,
+              icon: Icons.lock_open_outlined,
+            ),
           ],
         );
         actions.addAll([

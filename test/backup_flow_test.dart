@@ -119,6 +119,11 @@ void main() {
     await prepare();
     await open(tester);
     expect(find.text('1 task'), findsOneWidget);
+    expect(
+      find.textContaining('Backup files are not encrypted.'),
+      findsOneWidget,
+    );
+    expect(files.saves, 0);
     expect(find.text('todo_backup_2026-10-06.todo'), findsOneWidget);
     await tester.tap(find.widgetWithText(FilledButton, 'Create backup'));
     await tester.pumpAndSettle();
@@ -338,6 +343,7 @@ void main() {
     await prepare();
     await open(tester, language: 'th', dark: true, scale: 1.5);
     expect(find.text('สร้างข้อมูลสำรอง'), findsNWidgets(2));
+    expect(find.textContaining('ไฟล์สำรองไม่ได้เข้ารหัส'), findsOneWidget);
     expect(tester.takeException(), isNull);
     await tester.tap(find.text('ยกเลิก'));
     await tester.pumpAndSettle();

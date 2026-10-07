@@ -1,0 +1,13 @@
+Source availability for dbus 0.7.15 (Linux notifications dependency)
+
+The dbus package is licensed under the Mozilla Public License 2.0.
+The unmodified source code for the version used by this application is
+available at:
+https://pub.dev/api/archives/dbus-0.7.15.tar.gz
+
+Package and license information:
+https://pub.dev/packages/dbus/versions/0.7.15
+https://www.mozilla.org/MPL/2.0/
+
+The archive includes the MPL-2.0 license and source notices. The full
+license is also included in this application's software licenses.

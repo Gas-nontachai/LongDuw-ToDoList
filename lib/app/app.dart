@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../features/notifications/widgets/daily_summary_host.dart';
 import '../l10n/app_localizations.dart';
 import 'app_preferences.dart';
+import 'app_licenses.dart';
 import 'theme.dart';
 
 class TodoApp extends StatefulWidget {
@@ -19,6 +20,7 @@ class _TodoAppState extends State<TodoApp> {
   @override
   void initState() {
     super.initState();
+    registerAppLicenses();
     widget.preferences.addListener(_preferencesChanged);
   }
 
