@@ -38,7 +38,7 @@ tasks.configureEach {
 }
 
 android {
-    namespace = "com.example.longdow_todo_list"
+    namespace = "com.longduw.todo"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -49,8 +49,8 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.longdow_todo_list"
+        // Keep this application ID stable so releases update the same app.
+        applicationId = "com.longduw.todo"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

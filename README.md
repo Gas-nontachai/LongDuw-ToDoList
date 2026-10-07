@@ -264,3 +264,16 @@ The app logo is original artwork owned by this project, as confirmed by its owne
 The export summary explains that backups are not encrypted and anyone with a
 backup file can read tasks and settings. SHA-256 checksums detect corruption;
 they do not provide encryption or prove who created a file.
+
+## Application identity
+
+Android's application ID and namespace, iOS/macOS bundle identifiers, and
+Linux's GTK application ID use `com.longduw.todo`. Apple test targets use
+`com.longduw.todo.RunnerTests`; iOS backup files use the type identifier
+`com.longduw.todo.backup` and keep the `.todo` extension and backup format.
+The Dart package name remains `longdow_todo_list`.
+
+This identity replaces the development identifiers. Existing installations
+with the old identifiers are separate apps: export a `.todo` backup in the
+old mobile app and restore it in the new app to transfer tasks and settings.
+Keep the application ID and Android signing key stable for future updates.

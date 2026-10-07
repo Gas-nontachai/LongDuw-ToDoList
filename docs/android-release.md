@@ -55,7 +55,7 @@ workflow ใช้ `GITHUB_TOKEN` ที่ GitHub สร้างให้เ�
 workflow ขอ `contents: write` ได้
 
 ก่อนแจกครั้งแรก ตรวจ application ID ใน `android/app/build.gradle.kts`
-ตอนนี้เป็น `com.example.longdow_todo_list` ถ้าจะเปลี่ยนให้ทำก่อนเริ่มแจก
+รหัสถาวรคือ `com.longduw.todo` ซึ่งใช้ร่วมกับ iOS, macOS และ Linux
 หลังแจกแล้วควรคง application ID และ signing key เดิมเพื่อให้อัปเดตทับได้
 
 ## พัฒนาและรวมงาน
