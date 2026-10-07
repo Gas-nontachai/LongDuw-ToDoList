@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -93,9 +94,10 @@ class _AppVersionSettingsState extends State<_AppVersionSettings> {
     future: _packageInfo,
     builder: (context, snapshot) {
       final info = snapshot.data;
+      const showBuildNumber = kDebugMode || bool.fromEnvironment('DEV_TOOLS');
       final version = info == null
           ? '—'
-          : info.buildNumber.isEmpty
+          : !showBuildNumber || info.buildNumber.isEmpty
           ? info.version
           : '${info.version}+${info.buildNumber}';
       return Padding(
