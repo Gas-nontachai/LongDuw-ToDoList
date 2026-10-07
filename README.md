@@ -248,3 +248,32 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Software licenses and backup privacy
+
+Settings → Software licenses displays Flutter's bundled package licenses,
+Kanit's SIL OFL 1.1, and the source availability notice for the unmodified
+MPL-2.0 `dbus` package used by Linux notifications. `assets/fonts/OFL.txt`
+and `assets/licenses/dbus-source.txt` are bundled with the app. When upgrading
+`dbus`, update the exact-version source archive URL in that notice and verify
+that it matches `pubspec.lock`. Changes to MPL-covered files must also be made
+available under MPL when distributing them.
+
+The app logo is original artwork owned by this project, as confirmed by its owner.
+
+The export summary explains that backups are not encrypted and anyone with a
+backup file can read tasks and settings. SHA-256 checksums detect corruption;
+they do not provide encryption or prove who created a file.
+
+## Application identity
+
+Android's application ID and namespace, iOS/macOS bundle identifiers, and
+Linux's GTK application ID use `com.longduw.todo`. Apple test targets use
+`com.longduw.todo.RunnerTests`; iOS backup files use the type identifier
+`com.longduw.todo.backup` and keep the `.todo` extension and backup format.
+The Dart package name remains `longdow_todo_list`.
+
+This identity replaces the development identifiers. Existing installations
+with the old identifiers are separate apps: export a `.todo` backup in the
+old mobile app and restore it in the new app to transfer tasks and settings.
+Keep the application ID and Android signing key stable for future updates.

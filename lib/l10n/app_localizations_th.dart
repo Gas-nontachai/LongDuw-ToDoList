@@ -518,7 +518,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get settingsAbout => 'เกี่ยวกับแอพ';
+  String get settingsAbout => 'เกี่ยวกับแอป';
 
   @override
   String get settingsAppVersion => 'เวอร์ชันแอพ';
@@ -657,4 +657,11 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get onboardingSummaryWorking => 'กำลังเตรียมการแจ้งเตือน…';
+
+  @override
+  String get softwareLicenses => 'ใบอนุญาตซอฟต์แวร์';
+
+  @override
+  String get backupPrivacyNotice =>
+      'ไฟล์สำรองไม่ได้เข้ารหัส ผู้ที่มีไฟล์สามารถอ่านงานและการตั้งค่าของคุณได้ ควรเก็บไว้ในที่ส่วนตัวและแชร์เฉพาะกับคนที่ไว้ใจ';
 }

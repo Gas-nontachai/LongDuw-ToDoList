@@ -1049,7 +1049,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAbout.
   ///
   /// In en, this message translates to:
-  /// **'About'**
+  /// **'About the app'**
   String get settingsAbout;
 
   /// No description provided for @settingsAppVersion.
@@ -1303,6 +1303,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preparing notifications…'**
   String get onboardingSummaryWorking;
+
+  /// No description provided for @softwareLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Software licenses'**
+  String get softwareLicenses;
+
+  /// No description provided for @backupPrivacyNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.'**
+  String get backupPrivacyNotice;
 }
 
 class _AppLocalizationsDelegate

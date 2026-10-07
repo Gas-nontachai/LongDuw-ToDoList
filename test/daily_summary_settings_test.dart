@@ -314,7 +314,7 @@ void main() {
       expect(notifications.bodies.values.toSet(), {
         'วันนี้ไม่มีงาน 🎉 วางแผนงานถัดไปกันไหม',
       });
-      await tester.ensureVisible(find.text('สรุปงานรายวัน'));
+      await tester.scrollUntilVisible(find.text('สรุปงานรายวัน'), -200);
       await tester.pumpAndSettle();
       await tester.tap(find.text('สรุปงานรายวัน'));
       await tester.pumpAndSettle();
