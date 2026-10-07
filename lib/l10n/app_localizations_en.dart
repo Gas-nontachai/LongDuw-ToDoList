@@ -551,7 +551,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settingsAbout => 'About';
+  String get settingsAbout => 'About the app';
 
   @override
   String get settingsAppVersion => 'App version';
@@ -689,4 +689,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSummaryWorking => 'Preparing notifications…';
+
+  @override
+  String get softwareLicenses => 'Software licenses';
+
+  @override
+  String get backupPrivacyNotice =>
+      'Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.';
 }

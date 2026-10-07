@@ -7,6 +7,7 @@ import '../../../shared/widgets/app_theme_selector.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/config/dev_config.dart';
 import '../../notifications/providers/daily_summary_controller.dart';
+import 'software_licenses_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({
@@ -125,14 +126,6 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => _chooseLanguage(context),
           ),
         ),
-        if (onReplayOnboarding != null)
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.help_outline),
-              title: Text(l10n.onboardingReplay),
-              onTap: onReplayOnboarding,
-            ),
-          ),
         if (onDataAndBackup != null) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -160,6 +153,39 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            l10n.settingsAbout,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ),
+        Card(
+          child: Column(
+            children: [
+              if (onReplayOnboarding != null) ...[
+                ListTile(
+                  leading: const Icon(Icons.help_outline),
+                  title: Text(l10n.onboardingReplay),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: onReplayOnboarding,
+                ),
+                const Divider(height: 1, indent: 56, endIndent: 16),
+              ],
+              ListTile(
+                key: const ValueKey('settings-licenses'),
+                leading: const Icon(Icons.description_outlined),
+                title: Text(l10n.softwareLicenses),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (_) => const SoftwareLicensesScreen(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

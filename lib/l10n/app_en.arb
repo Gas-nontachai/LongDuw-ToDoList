@@ -297,5 +297,8 @@
       }
     }
   },
-  "onboardingSummaryWorking": "Preparing notifications…"
+  "onboardingSummaryWorking": "Preparing notifications…",
+  "softwareLicenses": "Software licenses",
+  "backupPrivacyNotice": "Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.",
+  "settingsAbout": "About the app"
 }
