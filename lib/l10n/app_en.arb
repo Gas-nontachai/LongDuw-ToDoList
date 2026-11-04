@@ -245,7 +245,7 @@
       }
     }
   },
-  "settingsAbout": "About",
+  "settingsAbout": "About the app",
   "settingsAppVersion": "App version",
   "settingsData": "Data",
   "dataAndBackupSubtitle": "Back up and restore your data",
@@ -300,5 +300,10 @@
   "onboardingSummaryWorking": "Preparing notifications…",
   "softwareLicenses": "Software licenses",
   "backupPrivacyNotice": "Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.",
-  "settingsAbout": "About the app"
+  "forceUpdateTitle": "Update required",
+  "forceUpdateDescription": "Please update the app to continue. Your tasks and settings will be kept.",
+  "forceUpdateNow": "Update Now",
+  "forceUpdateOpening": "Opening Store…",
+  "forceUpdateUnavailable": "The update link is currently unavailable. Please check the Store or try again later.",
+  "forceUpdateFailed": "Unable to open the Store. Please try again."
 }

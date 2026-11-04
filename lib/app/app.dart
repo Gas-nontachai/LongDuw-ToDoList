@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../features/app_update/services/update_controller.dart';
+import '../features/app_update/widgets/update_gate.dart';
 import '../features/notifications/widgets/daily_summary_host.dart';
 import '../l10n/app_localizations.dart';
 import 'app_preferences.dart';
@@ -8,7 +10,9 @@ import 'app_licenses.dart';
 import 'theme.dart';
 
 class TodoApp extends StatefulWidget {
-  const TodoApp({super.key, required this.preferences});
+  const TodoApp({super.key, required this.preferences, this.updateController});
+
+  final UpdateController? updateController;
 
   final AppPreferences preferences;
 
@@ -27,6 +31,9 @@ class _TodoAppState extends State<TodoApp> {
   @override
   void didUpdateWidget(covariant TodoApp oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.updateController != widget.updateController) {
+      oldWidget.updateController?.dispose();
+    }
     if (oldWidget.preferences != widget.preferences) {
       oldWidget.preferences.removeListener(_preferencesChanged);
       widget.preferences.addListener(_preferencesChanged);
@@ -40,6 +47,7 @@ class _TodoAppState extends State<TodoApp> {
   @override
   void dispose() {
     widget.preferences.removeListener(_preferencesChanged);
+    widget.updateController?.dispose();
     super.dispose();
   }
 
@@ -78,6 +86,13 @@ class _TodoAppState extends State<TodoApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
+    builder: (context, child) => widget.updateController == null
+        ? child!
+        : UpdateGate(
+            key: ObjectKey(widget.updateController),
+            controller: widget.updateController!,
+            child: child!,
+          ),
     home: DailySummaryHost(
       preferences: widget.preferences,
       onLocaleChanged: _changeLocale,

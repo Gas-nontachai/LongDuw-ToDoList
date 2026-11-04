@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
+import 'features/app_update/services/firebase_update_source.dart';
 import 'core/database/app_database.dart';
 import 'features/todo/providers/todo_provider.dart';
 import 'app/app_preferences.dart';
@@ -15,7 +16,10 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [appDatabaseProvider.overrideWithValue(database)],
-      child: TodoApp(preferences: preferences),
+      child: TodoApp(
+        preferences: preferences,
+        updateController: createUpdateController(),
+      ),
     ),
   );
 }

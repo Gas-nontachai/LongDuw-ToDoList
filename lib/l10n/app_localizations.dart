@@ -1315,6 +1315,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.'**
   String get backupPrivacyNotice;
+
+  /// No description provided for @forceUpdateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update required'**
+  String get forceUpdateTitle;
+
+  /// No description provided for @forceUpdateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please update the app to continue. Your tasks and settings will be kept.'**
+  String get forceUpdateDescription;
+
+  /// No description provided for @forceUpdateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get forceUpdateNow;
+
+  /// No description provided for @forceUpdateOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening Store…'**
+  String get forceUpdateOpening;
+
+  /// No description provided for @forceUpdateUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The update link is currently unavailable. Please check the Store or try again later.'**
+  String get forceUpdateUnavailable;
+
+  /// No description provided for @forceUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open the Store. Please try again.'**
+  String get forceUpdateFailed;
 }
 
 class _AppLocalizationsDelegate
