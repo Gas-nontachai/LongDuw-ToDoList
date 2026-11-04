@@ -61,7 +61,7 @@ jobs:
             printf '%s' "$FIREBASE_ANDROID_CONFIG" > "$RUNNER_TEMP/firebase-config.json"
           else
             printf '{}' > "$RUNNER_TEMP/firebase-config.json"
-            echo "::warning::Firebase app configuration is absent; force update uses cached policy or allows access."
+            echo "::warning::Firebase app configuration is absent; update notice uses cached policy or stays hidden."
           fi
           flutter build apk --release --build-name="$RELEASE_VERSION" --build-number="$RELEASE_BUILD" --dart-define-from-file="$RUNNER_TEMP/firebase-config.json"
       - name: Remove signing key

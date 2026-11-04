@@ -278,7 +278,7 @@ with the old identifiers are separate apps: export a `.todo` backup in the
 old mobile app and restore it in the new app to transfer tasks and settings.
 Keep the application ID and Android signing key stable for future updates.
 
-## Force update (Android / iOS)
+## Optional update notice (Android / iOS)
 
 See [configuration and release setup](config/README.md) for Firebase app settings,
 Remote Config policy, Store URLs, offline behavior, and the 1.0.4 rollout.

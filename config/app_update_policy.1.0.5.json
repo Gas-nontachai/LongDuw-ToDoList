@@ -1,11 +1,11 @@
 {
   "android": {
-    "minimum_version": "1.0.5",
+    "minimum_version": "1.0.3",
     "latest_version": "1.0.5",
     "store_url": ""
   },
   "ios": {
-    "minimum_version": "1.0.5",
+    "minimum_version": "1.0.3",
     "latest_version": "1.0.5",
     "store_url": ""
   }

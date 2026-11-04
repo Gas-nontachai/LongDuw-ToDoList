@@ -23,14 +23,25 @@ class UpdateController extends ChangeNotifier {
   final Duration timeout;
   UpdatePolicy? policy;
   String? version;
-  bool ready = false;
+  bool _cacheLoaded = false;
   bool _disposed = false;
   Future<void>? _pending;
 
-  bool get updateRequired {
-    if (version == null || policy == null) return false;
+  String? _dismissedVersion;
+
+  void dismiss() {
+    _dismissedVersion = policy?.latest.toString();
+    _notify();
+  }
+
+  bool get updateAvailable {
+    if (version == null ||
+        policy == null ||
+        _dismissedVersion == policy!.latest.toString()) {
+      return false;
+    }
     try {
-      return policy!.requiresUpdate(version!);
+      return policy!.hasUpdate(version!);
     } on FormatException {
       return false;
     }
@@ -42,7 +53,7 @@ class UpdateController extends ChangeNotifier {
   Future<void> _check() async {
     try {
       version ??= await installedVersion().timeout(timeout);
-      if (!ready) {
+      if (!_cacheLoaded) {
         try {
           final cached = await readCache().timeout(timeout);
           if (cached != null) policy = UpdatePolicy.parse(cached, platform);
@@ -50,8 +61,8 @@ class UpdateController extends ChangeNotifier {
           debugPrint('Update policy cache unavailable: $error');
         }
       }
-      // Cached enforcement is visible while a fresh policy is being fetched.
-      ready = policy != null;
+      // Show cached update information while refreshing in the background.
+      _cacheLoaded = true;
       _notify();
       try {
         final source = await fetch().timeout(timeout);
@@ -60,13 +71,12 @@ class UpdateController extends ChangeNotifier {
         _notify();
         await writeCache(source).timeout(timeout);
       } catch (error) {
-        // Keep the last validated policy; with no policy, allow offline access.
+        // Retain the last validated update information when offline.
         debugPrint('Update policy refresh unavailable: $error');
       }
     } catch (error) {
       debugPrint('Installed app version unavailable: $error');
     } finally {
-      ready = true;
       _notify();
     }
   }

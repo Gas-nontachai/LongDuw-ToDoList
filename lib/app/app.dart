@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../features/app_update/services/update_controller.dart';
-import '../features/app_update/widgets/update_gate.dart';
+import '../features/app_update/widgets/update_host.dart';
 import '../features/notifications/widgets/daily_summary_host.dart';
 import '../l10n/app_localizations.dart';
 import 'app_preferences.dart';
@@ -88,7 +88,7 @@ class _TodoAppState extends State<TodoApp> {
     supportedLocales: AppLocalizations.supportedLocales,
     builder: (context, child) => widget.updateController == null
         ? child!
-        : UpdateGate(
+        : UpdateHost(
             key: ObjectKey(widget.updateController),
             controller: widget.updateController!,
             child: child!,

@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:pub_semver/pub_semver.dart';
 
 class UpdatePolicy {
-  const UpdatePolicy._(this.minimum, this.latest, this.storeUrl);
+  const UpdatePolicy._(this.latest, this.storeUrl);
 
-  final Version minimum;
   final Version latest;
   final Uri? storeUrl;
 
-  bool requiresUpdate(String installed) => _version(installed) < minimum;
+  bool hasUpdate(String installed) => _version(installed) < latest;
 
   static UpdatePolicy parse(String source, String platform) {
     final decoded = jsonDecode(source);
@@ -17,11 +16,7 @@ class UpdatePolicy {
       throw const FormatException('Missing platform update policy');
     }
     final values = decoded[platform] as Map;
-    final minimum = _version(values['minimum_version']);
     final latest = _version(values['latest_version']);
-    if (latest < minimum) {
-      throw const FormatException('Latest version is below minimum');
-    }
     final url = values['store_url'];
     if (url is! String) throw const FormatException('Missing store URL');
     Uri? uri;
@@ -41,7 +36,7 @@ class UpdatePolicy {
         throw const FormatException('Invalid Store listing URL');
       }
     }
-    return UpdatePolicy._(minimum, latest, uri);
+    return UpdatePolicy._(latest, uri);
   }
 
   static Version _version(Object? value) {
