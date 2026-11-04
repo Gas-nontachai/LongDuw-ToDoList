@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:longdow_todo_list/features/app_update/models/update_policy.dart';
 import 'package:longdow_todo_list/features/app_update/services/update_controller.dart';
-import 'package:longdow_todo_list/features/app_update/widgets/update_gate.dart';
+import 'package:longdow_todo_list/features/app_update/widgets/update_host.dart';
 import 'package:longdow_todo_list/l10n/app_localizations.dart';
 import 'package:longdow_todo_list/app/theme.dart';
 
@@ -37,30 +37,24 @@ void main() {
   }.entries) {
     test('${entry.key} compared numerically to 1.0.5', () {
       expect(
-        UpdatePolicy.parse(policy(), 'android').requiresUpdate(entry.key),
+        UpdatePolicy.parse(policy(), 'android').hasUpdate(entry.key),
         entry.value,
       );
     });
   }
-  test(
-    'platform minimums are independent and prerelease sorts before release',
-    () {
-      expect(
-        UpdatePolicy.parse(policy(), 'ios').requiresUpdate('1.0.4'),
-        false,
-      );
-      expect(
-        UpdatePolicy.parse(policy(), 'android').requiresUpdate('1.0.5-beta.1'),
-        true,
-      );
-    },
-  );
+  test('platform latest versions are independent and prerelease sorts before release', () {
+    expect(UpdatePolicy.parse(policy(), 'ios').hasUpdate('1.0.4'), false);
+    expect(
+      UpdatePolicy.parse(policy(), 'android').hasUpdate('1.0.5-beta.1'),
+      true,
+    );
+  });
   test('build metadata does not affect precedence', () {
     expect(
       UpdatePolicy.parse(
         policy(minimum: '1.0.5+99', latest: '1.0.5+1'),
         'android',
-      ).requiresUpdate('1.0.5+2'),
+      ).hasUpdate('1.0.5+2'),
       false,
     );
   });
@@ -69,10 +63,9 @@ void main() {
       '',
       '{}',
       '[]',
-      policy(minimum: 'garbage'),
-      policy(minimum: '1.0.5-01'),
-      policy(minimum: '1.0'),
-      policy(minimum: '2.0.0'),
+      policy(latest: 'garbage'),
+      policy(latest: '1.0.5-01'),
+      policy(latest: '1.0'),
       policy(url: 'https://example.com'),
       policy(url: 'javascript:alert(1)'),
     ]) {
@@ -117,14 +110,13 @@ void main() {
     final c = controller();
     addTearDown(c.dispose);
     await c.check();
-    expect(c.ready, true);
-    expect(c.updateRequired, false);
+    expect(c.updateAvailable, false);
   });
-  test('offline startup retains cached enforcement', () async {
+  test('offline startup retains cached update information', () async {
     final c = controller(cached: policy());
     addTearDown(c.dispose);
     await c.check();
-    expect(c.updateRequired, true);
+    expect(c.updateAvailable, true);
   });
   test('invalid remote policy never replaces validated cache', () async {
     var writes = 0;
@@ -137,20 +129,20 @@ void main() {
     );
     addTearDown(c.dispose);
     await c.check();
-    expect(c.updateRequired, true);
+    expect(c.updateAvailable, true);
     expect(writes, 0);
   });
   test('invalid cache and failed remote allow access', () async {
     final c = controller(cached: 'invalid');
     addTearDown(c.dispose);
     await c.check();
-    expect(c.updateRequired, false);
+    expect(c.updateAvailable, false);
   });
   test(
-    'validated remote is persisted and may lower a cached minimum',
+    'validated remote is persisted and can remove an obsolete notice',
     () async {
       String? saved;
-      final source = policy(minimum: '1.0.3');
+      final source = policy(latest: '1.0.4');
       final c = controller(
         cached: policy(),
         fetch: () async => source,
@@ -161,7 +153,7 @@ void main() {
       addTearDown(c.dispose);
       await c.check();
       expect(saved, source);
-      expect(c.updateRequired, false);
+      expect(c.updateAvailable, false);
     },
   );
   test('timeout retains cache and concurrent checks share a fetch', () async {
@@ -177,11 +169,11 @@ void main() {
     addTearDown(c.dispose);
     await Future.wait([c.check(), c.check()]);
     expect(calls, 1);
-    expect(c.updateRequired, true);
+    expect(c.updateAvailable, true);
   });
   for (final dark in [false, true]) {
     testWidgets(
-      'update screen supports large Thai text and Store failure (dark=$dark)',
+      'update notice supports large Thai text and Store failure (dark=$dark)',
       (tester) async {
         const launcher = MethodChannel('plugins.flutter.io/url_launcher');
         String? launchedUrl;
@@ -222,13 +214,17 @@ void main() {
                   .copyWith(textScaler: TextScaler.linear(2)),
               child: child!,
             ),
-            home: ForceUpdateScreen(controller: c),
+            home: Scaffold(
+              body: SingleChildScrollView(child: UpdateNotice(controller: c)),
+            ),
           ),
         );
         await tester.pumpAndSettle();
-        expect(find.text('กรุณาอัปเดตแอป'), findsOneWidget);
-        await tester.ensureVisible(find.byType(FilledButton));
-        await tester.tap(find.byType(FilledButton));
+        expect(find.text('มีอัปเดตใหม่'), findsOneWidget);
+        await tester.ensureVisible(
+          find.widgetWithText(TextButton, 'อัปเดตตอนนี้'),
+        );
+        await tester.tap(find.widgetWithText(TextButton, 'อัปเดตตอนนี้'));
         await tester.pumpAndSettle();
         expect(
           launchedUrl,
@@ -242,11 +238,27 @@ void main() {
       },
     );
   }
+  test('legacy minimum version is ignored, including invalid values', () {
+    expect(
+      UpdatePolicy.parse(
+        policy(minimum: '9.0.0', latest: '1.0.4'),
+        'android',
+      ).hasUpdate('1.0.4'),
+      false,
+    );
+    expect(
+      UpdatePolicy.parse(
+        policy(minimum: 'invalid'),
+        'android',
+      ).hasUpdate('1.0.4'),
+      true,
+    );
+  });
   testWidgets(
-    'startup gate waits, blocks pushed deep links and back, rechecks on resume',
+    'startup and links stay usable; Later survives refresh and resume',
     (tester) async {
       var calls = 0;
-      var source = policy(minimum: '1.0.3');
+      var source = policy(latest: '1.0.4');
       final pending = Completer<String>();
       final c = controller(
         fetch: () {
@@ -263,34 +275,54 @@ void main() {
           ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          builder: (_, child) => UpdateGate(controller: c, child: child!),
-          home: const Scaffold(body: Text('App content')),
+          builder: (_, child) => UpdateHost(controller: c, child: child!),
+          home: Scaffold(
+            body: TextButton(
+              onPressed: () {},
+              child: const Text('App content'),
+            ),
+          ),
         ),
       );
       await tester.pump();
-      expect(find.text('App content'), findsNothing);
+      expect(find.text('App content'), findsOneWidget);
+      await tester.tap(find.text('App content'));
       pending.complete(source);
       await tester.pumpAndSettle();
-      expect(find.text('App content'), findsOneWidget);
+      expect(find.text('Update available'), findsNothing);
       source = policy();
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pumpAndSettle();
       expect(calls, 2);
-      expect(find.text('Update required'), findsOneWidget);
+      expect(find.text('Update available'), findsOneWidget);
+      expect(find.text('App content'), findsOneWidget);
       await tester.binding.handlePushRoute('/deep-link');
       await tester.pumpAndSettle();
-      expect(find.text('Deep link destination'), findsNothing);
+      expect(find.text('Deep link destination'), findsOneWidget);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('Update required'), findsOneWidget);
-      expect(find.text('App content'), findsNothing);
-      await tester.pump();
+      expect(find.text('App content'), findsOneWidget);
+      await tester.tap(find.text('Later'));
+      await tester.pumpAndSettle();
+      expect(find.text('Update available'), findsNothing);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pumpAndSettle();
-      expect(calls, 2);
+      expect(calls, 3);
+      expect(find.text('Update available'), findsNothing);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(calls, 3);
+      source = policy(latest: '1.0.6');
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(find.text('Update available'), findsOneWidget);
       expect(
-        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        tester
+            .widget<TextButton>(find.widgetWithText(TextButton, 'Update Now'))
+            .onPressed,
         isNull,
       );
     },

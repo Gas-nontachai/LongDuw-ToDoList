@@ -666,22 +666,25 @@ class AppLocalizationsTh extends AppLocalizations {
       'ไฟล์สำรองไม่ได้เข้ารหัส ผู้ที่มีไฟล์สามารถอ่านงานและการตั้งค่าของคุณได้ ควรเก็บไว้ในที่ส่วนตัวและแชร์เฉพาะกับคนที่ไว้ใจ';
 
   @override
-  String get forceUpdateTitle => 'กรุณาอัปเดตแอป';
+  String get appUpdateTitle => 'มีอัปเดตใหม่';
 
   @override
-  String get forceUpdateDescription =>
-      'กรุณาอัปเดตแอปเพื่อใช้งานต่อ งานและการตั้งค่าของคุณจะยังอยู่ครบ';
+  String get appUpdateDescription =>
+      'มีแอปเวอร์ชันใหม่ คุณสามารถอัปเดตตอนนี้หรือใช้งานต่อได้ตามปกติ';
 
   @override
-  String get forceUpdateNow => 'อัปเดตตอนนี้';
+  String get appUpdateNow => 'อัปเดตตอนนี้';
 
   @override
-  String get forceUpdateOpening => 'กำลังเปิด Store…';
+  String get appUpdateOpening => 'กำลังเปิด Store…';
 
   @override
-  String get forceUpdateUnavailable =>
+  String get appUpdateUnavailable =>
       'ลิงก์อัปเดตยังไม่พร้อมใช้งาน กรุณาตรวจสอบใน Store หรือลองใหม่ภายหลัง';
 
   @override
-  String get forceUpdateFailed => 'เปิด Store ไม่สำเร็จ กรุณาลองอีกครั้ง';
+  String get appUpdateFailed => 'เปิด Store ไม่สำเร็จ กรุณาลองอีกครั้ง';
+
+  @override
+  String get appUpdateLater => 'ไว้ทีหลัง';
 }

@@ -1316,41 +1316,47 @@ abstract class AppLocalizations {
   /// **'Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.'**
   String get backupPrivacyNotice;
 
-  /// No description provided for @forceUpdateTitle.
+  /// No description provided for @appUpdateTitle.
   ///
   /// In en, this message translates to:
-  /// **'Update required'**
-  String get forceUpdateTitle;
+  /// **'Update available'**
+  String get appUpdateTitle;
 
-  /// No description provided for @forceUpdateDescription.
+  /// No description provided for @appUpdateDescription.
   ///
   /// In en, this message translates to:
-  /// **'Please update the app to continue. Your tasks and settings will be kept.'**
-  String get forceUpdateDescription;
+  /// **'A newer version is available. You can update now or keep using the app.'**
+  String get appUpdateDescription;
 
-  /// No description provided for @forceUpdateNow.
+  /// No description provided for @appUpdateNow.
   ///
   /// In en, this message translates to:
   /// **'Update Now'**
-  String get forceUpdateNow;
+  String get appUpdateNow;
 
-  /// No description provided for @forceUpdateOpening.
+  /// No description provided for @appUpdateOpening.
   ///
   /// In en, this message translates to:
   /// **'Opening Store…'**
-  String get forceUpdateOpening;
+  String get appUpdateOpening;
 
-  /// No description provided for @forceUpdateUnavailable.
+  /// No description provided for @appUpdateUnavailable.
   ///
   /// In en, this message translates to:
   /// **'The update link is currently unavailable. Please check the Store or try again later.'**
-  String get forceUpdateUnavailable;
+  String get appUpdateUnavailable;
 
-  /// No description provided for @forceUpdateFailed.
+  /// No description provided for @appUpdateFailed.
   ///
   /// In en, this message translates to:
   /// **'Unable to open the Store. Please try again.'**
-  String get forceUpdateFailed;
+  String get appUpdateFailed;
+
+  /// No description provided for @appUpdateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get appUpdateLater;
 }
 
 class _AppLocalizationsDelegate

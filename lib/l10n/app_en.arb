@@ -300,10 +300,11 @@
   "onboardingSummaryWorking": "Preparing notifications…",
   "softwareLicenses": "Software licenses",
   "backupPrivacyNotice": "Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.",
-  "forceUpdateTitle": "Update required",
-  "forceUpdateDescription": "Please update the app to continue. Your tasks and settings will be kept.",
-  "forceUpdateNow": "Update Now",
-  "forceUpdateOpening": "Opening Store…",
-  "forceUpdateUnavailable": "The update link is currently unavailable. Please check the Store or try again later.",
-  "forceUpdateFailed": "Unable to open the Store. Please try again."
+  "appUpdateTitle": "Update available",
+  "appUpdateDescription": "A newer version is available. You can update now or keep using the app.",
+  "appUpdateNow": "Update Now",
+  "appUpdateOpening": "Opening Store…",
+  "appUpdateUnavailable": "The update link is currently unavailable. Please check the Store or try again later.",
+  "appUpdateFailed": "Unable to open the Store. Please try again.",
+  "appUpdateLater": "Later"
 }
