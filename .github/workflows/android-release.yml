@@ -52,11 +52,18 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/android-release.jks
+          FIREBASE_ANDROID_CONFIG: ${{ vars.FIREBASE_ANDROID_CONFIG }}
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
           RELEASE_BUILD: ${{ steps.version.outputs.build_number }}
         run: |
           python3 tool/android_release.py keystore
-          flutter build apk --release --build-name="$RELEASE_VERSION" --build-number="$RELEASE_BUILD"
+          if [ -n "$FIREBASE_ANDROID_CONFIG" ]; then
+            printf '%s' "$FIREBASE_ANDROID_CONFIG" > "$RUNNER_TEMP/firebase-config.json"
+          else
+            printf '{}' > "$RUNNER_TEMP/firebase-config.json"
+            echo "::warning::Firebase app configuration is absent; force update uses cached policy or allows access."
+          fi
+          flutter build apk --release --build-name="$RELEASE_VERSION" --build-number="$RELEASE_BUILD" --dart-define-from-file="$RUNNER_TEMP/firebase-config.json"
       - name: Remove signing key
         if: always()
         run: rm -f "$RUNNER_TEMP/android-release.jks"

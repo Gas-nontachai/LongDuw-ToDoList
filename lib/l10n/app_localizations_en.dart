@@ -696,4 +696,24 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get backupPrivacyNotice =>
       'Backup files are not encrypted. Anyone with the file can read your tasks and settings. Save it somewhere private and share it only with people you trust.';
+
+  @override
+  String get forceUpdateTitle => 'Update required';
+
+  @override
+  String get forceUpdateDescription =>
+      'Please update the app to continue. Your tasks and settings will be kept.';
+
+  @override
+  String get forceUpdateNow => 'Update Now';
+
+  @override
+  String get forceUpdateOpening => 'Opening Store…';
+
+  @override
+  String get forceUpdateUnavailable =>
+      'The update link is currently unavailable. Please check the Store or try again later.';
+
+  @override
+  String get forceUpdateFailed => 'Unable to open the Store. Please try again.';
 }

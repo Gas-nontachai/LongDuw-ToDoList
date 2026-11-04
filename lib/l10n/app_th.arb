@@ -245,7 +245,7 @@
       }
     }
   },
-  "settingsAbout": "เกี่ยวกับแอพ",
+  "settingsAbout": "เกี่ยวกับแอป",
   "settingsAppVersion": "เวอร์ชันแอพ",
   "settingsData": "ข้อมูล",
   "dataAndBackupSubtitle": "สำรองและกู้คืนข้อมูล",
@@ -300,5 +300,10 @@
   "onboardingSummaryWorking": "กำลังเตรียมการแจ้งเตือน…",
   "softwareLicenses": "ใบอนุญาตซอฟต์แวร์",
   "backupPrivacyNotice": "ไฟล์สำรองไม่ได้เข้ารหัส ผู้ที่มีไฟล์สามารถอ่านงานและการตั้งค่าของคุณได้ ควรเก็บไว้ในที่ส่วนตัวและแชร์เฉพาะกับคนที่ไว้ใจ",
-  "settingsAbout": "เกี่ยวกับแอป"
+  "forceUpdateTitle": "กรุณาอัปเดตแอป",
+  "forceUpdateDescription": "กรุณาอัปเดตแอปเพื่อใช้งานต่อ งานและการตั้งค่าของคุณจะยังอยู่ครบ",
+  "forceUpdateNow": "อัปเดตตอนนี้",
+  "forceUpdateOpening": "กำลังเปิด Store…",
+  "forceUpdateUnavailable": "ลิงก์อัปเดตยังไม่พร้อมใช้งาน กรุณาตรวจสอบใน Store หรือลองใหม่ภายหลัง",
+  "forceUpdateFailed": "เปิด Store ไม่สำเร็จ กรุณาลองอีกครั้ง"
 }
